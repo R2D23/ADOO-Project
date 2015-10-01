@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adooui;
+package core;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +21,10 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     public GUI(){
 	canvas = new JPanel();
 	toolkit = new JPanel();
-	members = new Members(this);
+	members = new Members();{
+	    members.addActionListener(this);
+	    members.setActionCommand("collaborators");
+	}
     }
     
     @Override
@@ -30,7 +33,6 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.setMinimumSize(new Dimension(800, 600));
 	this.getContentPane().setLayout(null);
 	
-	members.setActionDesc("collaborators");
 	
 	canvas.setBackground(Color.WHITE);
 	canvas.setLocation(50, 50);
