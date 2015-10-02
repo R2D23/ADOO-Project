@@ -13,15 +13,23 @@ import java.awt.event.*;
  * @author LuisArturo
  */
 public class Members extends CustomButton{
-    
-    public Members() {
-	super();
+
+    public Members(){
 	this.setSize(50, 200);
 	this.setLocation(0, 75);
     }
     
     @Override
     public void paint(Graphics g){
+	{
+	    if(model.isRollover())
+		setBackground(Util.rollOverColor);
+	    if(model.isPressed())
+		setBackground(Util.pressedColor);
+	    if(!model.isRollover() && !model.isPressed())
+		setBackground(Util.normalColor);
+	}
+	
 	Graphics2D g2 = (Graphics2D) g;
 	g2.setColor(getBackground());
 	g2.fillRoundRect(-10, 0, getWidth() + 9, getHeight() - 1, 20, 20);
