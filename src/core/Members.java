@@ -14,7 +14,12 @@ import java.awt.event.*;
  */
 public class Members extends CustomButton{
 
+<<<<<<< HEAD
     public Members(){
+=======
+    public Members(ActionListener al) {
+	super(al);
+>>>>>>> origin/master
 	this.setSize(50, 200);
 	this.setLocation(0, 75);
     }
