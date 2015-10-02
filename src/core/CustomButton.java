@@ -14,25 +14,6 @@ import java.awt.event.*;
 public abstract class CustomButton extends JButton{
     
     public CustomButton(){
-	setBackground(new Color(230, 230, 230));
 	
-	this.addMouseListener(new MouseAdapter(){
-	    @Override
-	    public void mousePressed(MouseEvent me){
-		setBackground(new Color(110, 110, 110));
-		repaint();
-	    }
-	    
-	    @Override
-	    public void mouseReleased(MouseEvent me){
-		setBackground(new Color(230, 230, 230));
-		repaint();
-	    }
-	    
-	    @Override
-	    public void mouseEntered(MouseEvent me){
-		repaint();
-	    }
-	});
     }
 }

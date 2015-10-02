@@ -13,8 +13,9 @@ import java.awt.event.*;
  * @author LuisArturo
  */
 public class Members extends CustomButton{
-
-    public Members(){
+    
+    public Members() {
+	super();
 	this.setSize(50, 200);
 	this.setLocation(0, 75);
     }
