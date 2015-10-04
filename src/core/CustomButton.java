@@ -12,8 +12,12 @@ import java.awt.event.*;
  * @author LuisArturo
  */
 public abstract class CustomButton extends JButton{
-    
-    public CustomButton(){
-	
+    public void paintRules(){
+	if(model.isRollover())
+	    setBackground(Util.rollOverColor);
+	if(model.isPressed())
+	    setBackground(Util.pressedColor);
+	if(!model.isRollover() && !model.isPressed())
+	    setBackground(Util.normalColor);
     }
 }
