@@ -6,21 +6,30 @@
 package core;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author LuisArturo
  */
 public class GUI extends JFrame implements Runnable, ActionListener{
+    //The Components
     private JPanel canvas;
-    private JPanel toolkit;
     private Members members;
+    private ArrayList<JButton> toolKit;
+    
+    //The UI parameters
+    private final static int gap = 50;
     
     public GUI(){
 	canvas = new JPanel();
-	toolkit = new JPanel();
+	toolKit = new ArrayList<JButton>();{
+	    toolKit.add(new ToolButton(GraphicDrawer.FILE));
+		toolKit.get(0).addActionListener(this);
+		toolKit.get(0).setActionCommand("file");
+	}
+	
 	members = new Members();{
 	    members.addActionListener(this);
 	    members.setActionCommand("collaborators");
@@ -33,16 +42,29 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.setMinimumSize(new Dimension(800, 600));
 	this.getContentPane().setLayout(null);
 	
-	
-	canvas.setBackground(Color.WHITE);
-	canvas.setLocation(50, 50);
-	canvas.setSize(this.getWidth() - 100, this.getHeight() - 100);
 	this.getContentPane().add(members);
 	this.getContentPane().add(canvas);
-	
-	this.pack();
-	
+	for(int i = 0; i < toolKit.size(); i++)
+	    getContentPane().add(toolKit.get(i));
+	pack();
+	updateGUI();
 	showGUI();
+    }
+    
+    public void updateGUI(){
+	canvas.setBackground(Color.WHITE);
+	canvas.setLocation(gap, gap);
+	canvas.setSize(
+		new Dimension(	getContentPane().getWidth()  - gap*2,
+				getContentPane().getHeight() - gap*2));
+	canvas.updateUI();
+	
+	for(int i = 0; i < toolKit.size(); i++){
+	    toolKit.get(0).setLocation
+	(getContentPane().getWidth() - gap, gap * (1 + i));
+	    toolKit.get(0).setSize(gap, gap);
+	    toolKit.get(0).updateUI();
+	}
     }
     
     private void showGUI(){
@@ -50,13 +72,13 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     }
     
     @Override
-    public void update(Graphics g){
-	super.update(g);
+    public void paint(Graphics g){
+	super.paint(g);
+	updateGUI();
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-	if(ae.getActionCommand().equals("collaborators"))
-	    System.out.println("Collaborator Window");
+	System.out.println(ae.getActionCommand());
     }
 }

@@ -21,15 +21,7 @@ public class Members extends CustomButton{
     
     @Override
     public void paint(Graphics g){
-	{
-	    if(model.isRollover())
-		setBackground(Util.rollOverColor);
-	    if(model.isPressed())
-		setBackground(Util.pressedColor);
-	    if(!model.isRollover() && !model.isPressed())
-		setBackground(Util.normalColor);
-	}
-	
+	paintRules();
 	Graphics2D g2 = (Graphics2D) g;
 	g2.setColor(getBackground());
 	g2.fillRoundRect(-10, 0, getWidth() + 9, getHeight() - 1, 20, 20);
