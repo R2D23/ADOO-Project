@@ -7,7 +7,7 @@ package core;
 
 import javax.swing.*;
 /**
- *
+ 
  * @author LuisArturo
  */
 public class Main {
@@ -16,6 +16,7 @@ public class Main {
      */
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new GUI());
+        
     }
     
 }
