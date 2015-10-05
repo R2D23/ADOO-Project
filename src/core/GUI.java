@@ -46,7 +46,6 @@ public class GUI extends JFrame implements Runnable, ActionListener{
             toolKit.add(new ToolButton(GraphicDrawer.ZOOM));
                 toolKit.get(toolKit.size()-1).addActionListener(this);
                 toolKit.get(toolKit.size()-1).setActionCommand("lupa");
-            
 	}
 	
 	members = new Members();{
