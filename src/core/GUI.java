@@ -18,35 +18,26 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     private JPanel canvas;
     private Members members;
     private ArrayList<JButton> toolKit;
-    private Menu activeMenu;
+    private ArrayList<Menu> menus;
     
     //The UI parameters
     private final static int gap = 50;
     
     public GUI(){
 	canvas = new JPanel();
-	toolKit = new ArrayList<JButton>();{
+	toolKit = new ArrayList<>();{
+	    menus = new ArrayList<>();
+	    
 	    toolKit.add(new ToolButton(GraphicDrawer.FILE));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("file");
+		    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));
 	    toolKit.add(new ToolButton(GraphicDrawer.REDO));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("redo-menu");
 	    toolKit.add(new ToolButton(GraphicDrawer.TEXT));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("text");
-            toolKit.add(new ToolButton(GraphicDrawer.ARROW));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("flecha");
-            toolKit.add(new ToolButton(GraphicDrawer.SELECT));
-                toolKit.get(toolKit.size()-1).addActionListener(this);
-                toolKit.get(toolKit.size()-1).setActionCommand("mano");
-            toolKit.add(new ToolButton(GraphicDrawer.PENCIL));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("lapiz");
-            toolKit.add(new ToolButton(GraphicDrawer.ZOOM));
-                toolKit.get(toolKit.size()-1).addActionListener(this);
-                toolKit.get(toolKit.size()-1).setActionCommand("lupa");
 	}
 	
 	members = new Members();{
@@ -61,6 +52,8 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.setMinimumSize(new Dimension(800, 600));
 	this.getContentPane().setLayout(null);
 	
+	for (core.Menu menu : menus)
+	    getContentPane().add(menu);
 	this.getContentPane().add(members);
 	this.getContentPane().add(canvas);
 	for(int i = 0; i < toolKit.size(); i++)
@@ -84,6 +77,10 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	    toolKit.get(i).setSize(gap, gap);
 	    toolKit.get(i).updateUI();
 	}
+	
+	for(int i = 0; i < menus.size(); i++){
+	    menus.get(i).updateUI();
+	}
     }
     
     private void showGUI(){
@@ -99,10 +96,5 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
 	System.out.println(ae.getActionCommand());
-        if(ae.getActionCommand().compareTo("file") == 0)
-        {
-	    activeMenu = new Menu(toolKit.get(0));
-            activeMenu.setVisible(true);
-        }
     }
 }
