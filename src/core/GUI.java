@@ -18,6 +18,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     private JPanel canvas;
     private Members members;
     private ArrayList<JButton> toolKit;
+    private Menu activeMenu;
     
     //The UI parameters
     private final static int gap = 50;
@@ -46,7 +47,6 @@ public class GUI extends JFrame implements Runnable, ActionListener{
             toolKit.add(new ToolButton(GraphicDrawer.ZOOM));
                 toolKit.get(toolKit.size()-1).addActionListener(this);
                 toolKit.get(toolKit.size()-1).setActionCommand("lupa");
-            
 	}
 	
 	members = new Members();{
@@ -101,9 +101,8 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	System.out.println(ae.getActionCommand());
         if(ae.getActionCommand().compareTo("file") == 0)
         {
-            
-            Menu archivo = new Menu(toolKit.get(0));
-            archivo.setVisible(true);
+	    activeMenu = new Menu(toolKit.get(0));
+            activeMenu.setVisible(true);
         }
     }
 }
