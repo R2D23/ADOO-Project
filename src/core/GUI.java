@@ -34,6 +34,19 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	    toolKit.add(new ToolButton(GraphicDrawer.TEXT));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("text");
+            toolKit.add(new ToolButton(GraphicDrawer.ARROW));
+		toolKit.get(toolKit.size() - 1).addActionListener(this);
+		toolKit.get(toolKit.size() - 1).setActionCommand("flecha");
+            toolKit.add(new ToolButton(GraphicDrawer.SELECT));
+                toolKit.get(toolKit.size()-1).addActionListener(this);
+                toolKit.get(toolKit.size()-1).setActionCommand("mano");
+            toolKit.add(new ToolButton(GraphicDrawer.PENCIL));
+		toolKit.get(toolKit.size() - 1).addActionListener(this);
+		toolKit.get(toolKit.size() - 1).setActionCommand("lapiz");
+            toolKit.add(new ToolButton(GraphicDrawer.ZOOM));
+                toolKit.get(toolKit.size()-1).addActionListener(this);
+                toolKit.get(toolKit.size()-1).setActionCommand("lupa");
+            
 	}
 	
 	members = new Members();{
@@ -86,5 +99,11 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
 	System.out.println(ae.getActionCommand());
+        if(ae.getActionCommand().compareTo("file") == 0)
+        {
+            
+            Menu archivo = new Menu(toolKit.get(0));
+            archivo.setVisible(true);
+        }
     }
 }
