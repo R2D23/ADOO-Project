@@ -34,11 +34,11 @@ public class GraphicDrawer{
 	switch(id){
 	    case FILE:
 	    {
-		String s = "File";
+		String s = "Archivo";
 		g2 = (Graphics2D) g;
 		g2.setColor(color);
-		g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, r.height/3));
-		g2.drawString(s, r.width/5, r.height*2/3);
+		g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, r.height/4));
+		g2.drawString(s, r.width/5, r.height*3/5);
 	    }
 	    break;
 	    case REDO:
