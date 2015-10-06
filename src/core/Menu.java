@@ -108,8 +108,6 @@ public class Menu extends Container implements ActionListener, MouseListener{
             //boton.setVisible(true);
             this.repaint();
             this.setVisible(true);
-            
-
         }
         else
             this.setVisible(false);

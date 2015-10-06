@@ -19,13 +19,14 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     private Members members;
     private ArrayList<JButton> toolKit;
     private ArrayList<Menu> menus;
+    private FigureMenu fm;
     
     //The UI parameters
     private final static int gap = 50;
     
     public GUI(){
 	canvas = new JPanel();
-        
+        fm = new FigureMenu();
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
 	   
@@ -53,10 +54,11 @@ public class GUI extends JFrame implements Runnable, ActionListener{
                 toolKit.get(toolKit.size()-1).setActionCommand("lupa");
 	}
 	
-        this.menus.add(new Menu());
-        this.canvas.add(menus.get(1));
-        this.addMouseListener(menus.get(0));
-        this.addMouseListener(menus.get(1));
+        //this.menus.add(new Menu());
+        //this.canvas.add(menus.get(1));
+        //this.addMouseListener(menus.get(0));
+        //canvas.addMouseListener(menus.get(1));
+	this.addMouseListener(fm);
         
         members = new Members();{
 	members.addActionListener(this);
@@ -70,6 +72,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.setMinimumSize(new Dimension(800, 600));
 	this.getContentPane().setLayout(null);
 	
+	this.getContentPane().add(fm);
 	for (core.Menu menu : menus)
 	    getContentPane().add(menu);
 
@@ -77,6 +80,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.getContentPane().add(canvas);
 	for(int i = 0; i < toolKit.size(); i++)
 	    getContentPane().add(toolKit.get(i));
+	
 	pack();
 	updateGUI();
 	showGUI();
@@ -102,6 +106,8 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	for(int i = 0; i < menus.size(); i++){
 	    menus.get(i).updateUI();
 	}
+	
+	fm.updateUI();
     }
     
     private void showGUI(){
