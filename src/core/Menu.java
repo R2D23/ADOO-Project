@@ -23,6 +23,7 @@ public class Menu extends Container implements ActionListener, MouseListener{
     JButton b;
     Area shape;
     Button boton = new Button();
+    
     public Menu(JButton b)
     {
         this.b = b;
