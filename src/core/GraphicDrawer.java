@@ -34,11 +34,17 @@ public class GraphicDrawer{
 	switch(id){
 	    case FILE:
 	    {
-		String s = "Archivo";
 		g2 = (Graphics2D) g;
-		g2.setColor(color);
-		g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, r.height/4));
-		g2.drawString(s, r.width/5, r.height*3/5);
+		try
+                {
+                    FileInputStream img = new FileInputStream("archivo.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
 	    }
 	    break;
 	    case REDO:
