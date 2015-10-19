@@ -31,7 +31,7 @@ public class ToolButton extends CustomButton{
 	g.setColor(getBackground());
 	g.fillOval(0, 0, getWidth(), getHeight());
 	g.setColor(Color.black);
-	g.drawOval(0, 0, getWidth(), getHeight());
+	//g.drawOval(0, 0, getWidth(), getHeight());
 	gd.paint(id, getSize(), g);
     }
 }

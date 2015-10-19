@@ -5,12 +5,20 @@
  */
 package core;
 import java.awt.*;
+import javax.swing.*;
+import java.io.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 
 public class GraphicDrawer{
     public static final int FILE = 0;
     public static final int REDO = 1;
     public static final int TEXT = 2;
+    public static final int ARROW = 3;
+    public static final int SELECT = 4;
+    public static final int PENCIL = 5;
+    public static final int ZOOM = 6;
     private Color color = Color.black;
     
     /**
@@ -26,11 +34,17 @@ public class GraphicDrawer{
 	switch(id){
 	    case FILE:
 	    {
-		String s = "File";
 		g2 = (Graphics2D) g;
-		g2.setColor(color);
-		g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, r.height/3));
-		g2.drawString(s, r.width/5, r.height*2/3);
+		try
+                {
+                    FileInputStream img = new FileInputStream("archivo.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
 	    }
 	    break;
 	    case REDO:
@@ -55,10 +69,73 @@ public class GraphicDrawer{
 		g2.drawChars("A".toCharArray(), 0, 1, r.width*3/10, r.height*7/10);
 	    }
 	    break;
+            case SELECT:
+            {
+                g2 = (Graphics2D)g;
+                try
+                {
+                    FileInputStream img = new FileInputStream("mano.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, r.width*1/10, r.height*1/10,r.width*2/3,r.height*2/3, null);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            break;
+            case PENCIL:
+            {
+                g2 = (Graphics2D)g;
+                try
+                {
+                    FileInputStream img = new FileInputStream("lapiz.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            break;
+                
+            case ARROW:
+            {
+                g2 = (Graphics2D)g;
+                try
+                {
+                    FileInputStream img = new FileInputStream("arrow.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            break;
+            case ZOOM:
+            {
+                g2 = (Graphics2D)g;
+                try
+                {
+                    FileInputStream img = new FileInputStream("zoom.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            break;
 	}
     }
     
     public void setColor(Color color){
 	this.color = color;
     }
+
+    
 }
