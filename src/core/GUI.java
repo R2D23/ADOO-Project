@@ -40,9 +40,6 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	    toolKit.add(new ToolButton(GraphicDrawer.TEXT));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("text");
-            toolKit.add(new ToolButton(GraphicDrawer.ARROW));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("flecha");
             toolKit.add(new ToolButton(GraphicDrawer.SELECT));
                 toolKit.get(toolKit.size()-1).addActionListener(this);
                 toolKit.get(toolKit.size()-1).setActionCommand("mano");
@@ -57,8 +54,9 @@ public class GUI extends JFrame implements Runnable, ActionListener{
         //this.menus.add(new Menu());
         //this.canvas.add(menus.get(1));
         //this.addMouseListener(menus.get(0));
-        //canvas.addMouseListener(menus.get(1));
-	this.addMouseListener(fm);
+	this.canvas.addMouseListener(fm);
+        toolKit.get(0).addMouseListener(menus.get(0));
+        //this.addMouseListener(fm);
         
         members = new Members();{
 	members.addActionListener(this);
@@ -73,8 +71,9 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.getContentPane().setLayout(null);
 	
 	this.getContentPane().add(fm);
-	for (core.Menu menu : menus)
-	    getContentPane().add(menu);
+	
+        for (core.Menu menu : menus)
+	  getContentPane().add(menu);
 
         this.getContentPane().add(members);
 	this.getContentPane().add(canvas);
@@ -123,6 +122,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
 	System.out.println(ae.getActionCommand());
+        
     }
     
     

@@ -44,7 +44,7 @@ public class FigureMenu extends JComponent implements MouseListener{
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;
-        this.addMouseListener(new Escucha(areas));
+        this.addMouseListener(new Escucha(areas, Escucha.FIGUREMENU));
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
         /*Cada una de las areas corresponde a cada boton,
@@ -190,26 +190,37 @@ public class FigureMenu extends JComponent implements MouseListener{
         /*La clase menuDrawer es la que se encarga de dibujar todas las areas 
         y agregarles lo iconos correspondientes*/
         MenuDrawer md = new MenuDrawer();
-        for(int i = 0; i < areas.size(); i++)
-            md.paint(i, g, areas.get(i));
+        md.paint(MenuDrawer.TRIANGLE, g, areas.get(0));
+        md.paint(MenuDrawer.CIRCLE, g, areas.get(1));
+        md.paint(MenuDrawer.POLIGONE, g, areas.get(2));
+        md.paint(MenuDrawer.RECTANGLE, g, areas.get(3));
+        md.paint(MenuDrawer.LINE, g, areas.get(4));
+        md.paint(MenuDrawer.IRREGULAR, g, areas.get(5));
+        md.paint(MenuDrawer.EXIT, g, areas.get(6));
     }
 
-    /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder sabes cuando se 
+    /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder saber cuando se 
     ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON3)
+        switch(e.getButton())
         {
-            System.out.print("Click");
-	    this.setSize(SIZE, SIZE);
-	    this.setVisible(true);
-	    location.setLocation(e.getX() - SIZE / 2, e.getY() - SIZE / 2);
-	    center.setLocation(e.getPoint());
-	    this.setLocation(location);
-	    this.repaint();
+            case MouseEvent.BUTTON1 :
+                this.setVisible(false);
+            break;
+            case MouseEvent.BUTTON3 :
+                System.out.print("Click");
+                this.setSize(SIZE, SIZE);
+                this.setVisible(true);
+                location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
+                center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
+                this.setLocation(location);
+                this.repaint();
+            break;
+                
         }
-        else
-            this.setVisible(false);
+        
+                
     }
 
     @Override
@@ -226,6 +237,7 @@ public class FigureMenu extends JComponent implements MouseListener{
 
     @Override
     public void mouseExited(MouseEvent e) {
+        areaActual = -1;
     }
     
     public int whichArea(Point p)
