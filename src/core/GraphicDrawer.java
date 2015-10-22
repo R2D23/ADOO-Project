@@ -29,6 +29,7 @@ public class GraphicDrawer{
     * 
     * @author LuisArturo
     */
+    //Esta clase obtiene los iconos que corresponden y los dibuja
     public void paint(int id, Dimension r, Graphics g){
 	Graphics2D g2;
 	switch(id){
@@ -49,6 +50,7 @@ public class GraphicDrawer{
 	    break;
 	    case REDO:
 	    {
+                //en esta se dibuja la flecha con base en lineas
 		g2 = (Graphics2D) g;
 		g2.setColor(color);
 		g2.fillArc(r.width*2/10, r.height*2/10, r.width*6/10, r.height*6/10, 270, 225);
@@ -105,7 +107,7 @@ public class GraphicDrawer{
                 g2 = (Graphics2D)g;
                 try
                 {
-                    FileInputStream img = new FileInputStream("arrow.png");
+                    FileInputStream img = new FileInputStream("cursorBase.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
                 }
