@@ -203,23 +203,24 @@ public class FigureMenu extends JComponent implements MouseListener{
     ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
     @Override
     public void mouseClicked(MouseEvent e) {
-        switch(e.getButton())
+        if(this.getCursor().getName().equals("lapiz"))//se activa solo cuando el cursor es el lapiz
         {
-            case MouseEvent.BUTTON1 :
-                this.setVisible(false);
-            break;
-            case MouseEvent.BUTTON3 :
-                System.out.print("Click");
-                this.setSize(SIZE, SIZE);
-                this.setVisible(true);
-                location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
-                center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
-                this.setLocation(location);
-                this.repaint();
-            break;
-                
+            switch(e.getButton())
+            {
+                case MouseEvent.BUTTON3 :
+                    //this.setVisible(false);
+                break;
+                case MouseEvent.BUTTON1 :
+                    this.setSize(SIZE, SIZE);
+                    this.setVisible(!isVisible());
+                    location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
+                    center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
+                    this.setLocation(location);
+                    this.repaint();
+                break;
+
+            }
         }
-        
                 
     }
 
@@ -240,6 +241,7 @@ public class FigureMenu extends JComponent implements MouseListener{
         areaActual = -1;
     }
     
+    /*Funcion que determina en cual area se encuentra el punto especificado*/
     public int whichArea(Point p)
     {
         for(int i = 0; i < areas.size(); i++)
