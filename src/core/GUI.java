@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package core;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,6 +21,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     private ArrayList<JButton> toolKit;
     private ArrayList<Menu> menus;
     private FigureMenu fm;
+    private SelectionMenu sm;
     
     //The UI parameters
     private final static int gap = 50;
@@ -27,19 +29,27 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     public GUI(){
 	canvas = new JPanel();
         fm = new FigureMenu();
+        sm = new SelectionMenu();
+        
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
-	   
-	    toolKit.add(new ToolButton(GraphicDrawer.FILE));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("file");
-		    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));
+	   //se crean las instancias de los botones de herramientas
+	    toolKit.add(new ToolButton(GraphicDrawer.FILE));//La constante se define en la clase GraphicDrawer y es para saber que icono dibujar
+		toolKit.get(toolKit.size() - 1).addActionListener(this);//se define este JFrame como ActionListener de los botones
+		toolKit.get(toolKit.size() - 1).setActionCommand("file");//se define el actionCommand para saber sobre que botón se realizó la acción
+		    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));//se agrega el menú circular de archivo
+                toolKit.get(toolKit.size()-1).addMouseListener(menus.get(menus.size()-1));//se agrega el menu circualar de archivo como MouseListener
 	    toolKit.add(new ToolButton(GraphicDrawer.REDO));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("redo-menu");
+                    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));
+                toolKit.get(toolKit.size()-1).addMouseListener(menus.get(menus.size()-1));
 	    toolKit.add(new ToolButton(GraphicDrawer.TEXT));
 		toolKit.get(toolKit.size() - 1).addActionListener(this);
 		toolKit.get(toolKit.size() - 1).setActionCommand("text");
+            toolKit.add(new ToolButton(GraphicDrawer.ARROW));
+		toolKit.get(toolKit.size() - 1).addActionListener(this);
+		toolKit.get(toolKit.size() - 1).setActionCommand("arrow");    
             toolKit.add(new ToolButton(GraphicDrawer.SELECT));
                 toolKit.get(toolKit.size()-1).addActionListener(this);
                 toolKit.get(toolKit.size()-1).setActionCommand("mano");
@@ -49,16 +59,15 @@ public class GUI extends JFrame implements Runnable, ActionListener{
             toolKit.add(new ToolButton(GraphicDrawer.ZOOM));
                 toolKit.get(toolKit.size()-1).addActionListener(this);
                 toolKit.get(toolKit.size()-1).setActionCommand("lupa");
+                    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));
+                toolKit.get(toolKit.size()-1).addMouseListener(menus.get(menus.size()-1));
+                    
 	}
 	
-        //this.menus.add(new Menu());
-        //this.canvas.add(menus.get(1));
-        //this.addMouseListener(menus.get(0));
-	this.canvas.addMouseListener(fm);
-        toolKit.get(0).addMouseListener(menus.get(0));
-        //this.addMouseListener(fm);
+        canvas.addMouseListener(fm);//al lienzo se agrega el menu de figuras como MouseListener
+        canvas.addMouseListener(sm);//al lienzo se agrega el menu de seleccion como MouseListener, esto es provisional mientras se agregan las figuras
         
-        members = new Members();{
+        members = new Members();{//se crean la instancia del boton colaboradores
 	members.addActionListener(this);
 	members.setActionCommand("collaborators");
 	}
@@ -69,15 +78,16 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setMinimumSize(new Dimension(800, 600));
 	this.getContentPane().setLayout(null);
+
+        this.getContentPane().add(fm);//se agrega a este JFrame el menu de figura
+        this.getContentPane().add(sm);//se agrega el menu de seleccion
 	
-	this.getContentPane().add(fm);
-	
-        for (core.Menu menu : menus)
+        for (core.Menu menu : menus) //se agregan todos los menus
 	  getContentPane().add(menu);
 
-        this.getContentPane().add(members);
+        this.getContentPane().add(members);//se agrega el boton miembros
 	this.getContentPane().add(canvas);
-	for(int i = 0; i < toolKit.size(); i++)
+	for(int i = 0; i < toolKit.size(); i++)//Se agregan los botones de herramientas
 	    getContentPane().add(toolKit.get(i));
 	
 	pack();
@@ -86,16 +96,15 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     }
     
     public void updateGUI(){
-	//canvas.setVisible(false);
         canvas.setBackground(Color.WHITE);
         
-	canvas.setLocation(gap, gap);
+	canvas.setLocation(gap, gap);//se coloca el lienzo
 	canvas.setSize(
 		new Dimension(	getContentPane().getWidth()  - gap*2,
 				getContentPane().getHeight() - gap*2));
-	canvas.updateUI();
+	canvas.updateUI();//metodo que actualiza los componentes graficos del elemento
 	
-	for(int i = 0; i < toolKit.size(); i++){
+	for(int i = 0; i < toolKit.size(); i++){//se define la pocision de los botones
 	    toolKit.get(i).setLocation
 	(getContentPane().getWidth() - gap, gap * (1 + i));
 	    toolKit.get(i).setSize(gap, gap);
@@ -122,7 +131,22 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
 	System.out.println(ae.getActionCommand());
-        
+        switch (ae.getActionCommand()) {//detecta quien dio clic y cambia el cursor al que sea necesario
+            case "lapiz":
+                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("lapiz.png").getImage(),new Point(0,0),"lapiz"));
+            break;
+            case "arrow":
+                setCursor(Cursor.getDefaultCursor());
+            break;
+            case "mano":
+                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("mano.png").getImage(),new Point(0,0),"mano"));
+            break;    
+            case "text":
+                setCursor(new Cursor(Cursor.TEXT_CURSOR));
+                
+            break;
+                
+        }
     }
     
     
