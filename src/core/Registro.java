@@ -5,6 +5,7 @@
  */
 package core;
 
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +13,17 @@ import javax.swing.JOptionPane;
  * @author Mauricio
  */
 public class Registro extends javax.swing.JFrame {
-
+    	private UsuarioBD data;
+        
     /**
      * Creates new form Registro
      */
     public Registro() {
         initComponents();
+        conexion mysql = new conexion();
+	Connection con = mysql.conectar("jdbc:mysql://localhost:3306/paint", "root", "root");
+	data = new UsuarioBD();
+	data.setCon(con);
     }
 
     /**
@@ -50,7 +56,7 @@ public class Registro extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(233, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel5.setText("Nombre Proyecto");
+        jLabel5.setText("iDraw");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 239));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(206, 212, 167), 3, true));
@@ -59,28 +65,28 @@ public class Registro extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("Nombre");
 
-        jTextField1.setText("Nombre");
+        jTextField1.setText(null);
 
         jLabel2.setText("Apellidos");
 
-        jTextField2.setText("Apellidos");
+        jTextField2.setText(null);
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
             }
         });
 
-        jTextField3.setText("Nombre de Usuario");
+        jTextField3.setText(null);
 
         jLabel3.setText("Usuario");
 
         jLabel4.setText("Contraseña");
 
-        jPasswordField1.setText("jPasswordField1");
+        jPasswordField1.setText(null);
 
         jLabel7.setText("Correo Electronico");
 
-        jTextField5.setText("Correo");
+        jTextField5.setText(null);
 
         jButton1.setBackground(new java.awt.Color(102, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -187,10 +193,30 @@ public class Registro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JOptionPane.showMessageDialog(null, "Registro Exitoso");
-        this.dispose();
         
         
+        if(!(jTextField1.getText().equals(""))&& !(jTextField2.getText().equals(""))&&!(jTextField3.getText().equals(""))
+                &&!(jPasswordField1.getText().equals(""))&&!(jTextField5.getText().equals(""))){
+            if(!(data.buscar(jTextField3.getText()))){
+                if(data.insertar(jTextField3.getText(),jPasswordField1.getText(), jTextField1.getText(), jTextField2.getText(), 
+                    jTextField5.getText())){
+                    JOptionPane.showMessageDialog(null, "Registro Exitoso");
+                    this.dispose();
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Registro Fallido");
+                    this.dispose();
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "El Nombre de Usuario ya Existe.");
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");            
+        }
+        
+       
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
