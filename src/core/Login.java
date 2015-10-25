@@ -5,13 +5,21 @@
  */
 package core;
 
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Mauricio
  */
 public class Login extends javax.swing.JFrame {
+    private UsuarioBD data;
     public Login() {
         initComponents();
+        conexion mysql = new conexion();
+	Connection con = mysql.conectar("jdbc:mysql://localhost:3306/paint", "root", "root");
+	data = new UsuarioBD();
+	data.setCon(con);
     }
 
     
@@ -53,11 +61,7 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setText("Usuario");
 
-        jTextField1.setText("Nombre de Usuario");
-
         jLabel2.setText("Contraseña");
-
-        jPasswordField1.setText("jPasswordField1");
 
         botonIniciar.setBackground(new java.awt.Color(131, 246, 187));
         botonIniciar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -163,8 +167,15 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botonRegistroActionPerformed
 
     private void botonIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarActionPerformed
-        this.setVisible(false);
-        javax.swing.SwingUtilities.invokeLater(new GUI());
+        if(!(jTextField1.getText().equals("")) && !(jPasswordField1.getText().equals(""))){      
+            if(data.buscar(jTextField1.getText(), jPasswordField1.getText())){
+            this.setVisible(false);
+            javax.swing.SwingUtilities.invokeLater(new GUI());
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");          
+        }
     }//GEN-LAST:event_botonIniciarActionPerformed
 
     /**
