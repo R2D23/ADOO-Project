@@ -1,12 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
-import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.JPanel;
 
 /**
  *
@@ -14,7 +13,6 @@ import java.util.ArrayList;
  */
 public class Canvas extends JPanel{
     public ArrayList<Element> elements;
-    
     public Canvas() {
         elements = new ArrayList<>();
     }
@@ -30,12 +28,19 @@ public class Canvas extends JPanel{
             elements.remove(e);
     }
     
-    
-    public void drawAll() {
-        //Vamos a dibujar todos los elementos que se encuentren en la lista del lienzo
-        this.elements.stream().forEach((element) -> {
-            element.draw(this);
-        });
+    @Override
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+        for(int i = 0; i < elements.size(); i++)
+        {
+            elements.get(i).draw(g);
+        }
+        
     }
+    
+    
+    
+
 
 }

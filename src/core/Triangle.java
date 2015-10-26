@@ -8,7 +8,6 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 /**
  *
@@ -19,8 +18,8 @@ public class Triangle extends Figure{
     double base;
     double height;
     int type;
-    private int pointsX[];
-    private int pointsY[];
+    public int pointsX[];
+    public int pointsY[];
     public static final int EQUILATERAL_TRIANGLE = 1;
     public static final int RIGHT_TRIANGLE = 2;
     public static final int ISOSCELES_TRIANGLE = 3;
@@ -41,18 +40,16 @@ public class Triangle extends Figure{
         pointsY = new int[3];
     }
 
-    Triangle() {}
+    public Triangle() {}
     
     @Override
-    public void draw(Canvas canvas) {
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        BufferedImage imag= new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics gBuffer = imag.getGraphics();
-        gBuffer.setColor(bgcolor);
-        gBuffer.fillPolygon(pointsX, pointsY, pointsX.length);
-        gBuffer.setColor(lncolor);
-        gBuffer.drawPolygon(pointsX, pointsY, pointsX.length);
-        g2.drawImage(imag, null, 0, 0); 
+    public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(bgcolor);
+        g2.fillPolygon(pointsX, pointsY, pointsX.length);
+        //gBuffer.setColor(lncolor);
+        g2.drawPolygon(pointsX, pointsY, pointsX.length);
+        //g2.drawImage(imag, null, 0, 0); 
     }
 
     @Override
@@ -73,7 +70,7 @@ public class Triangle extends Figure{
         canvas.addElement(this);
     }
 
-    private int[] getCoordsX() {
+    public int[] getCoordsX() {
         int coordX[] = new int[3];
         switch(type) {
             case EQUILATERAL_TRIANGLE: case ISOSCELES_TRIANGLE:
@@ -90,14 +87,19 @@ public class Triangle extends Figure{
         return coordX;
     }
 
-    private int[] getCoordsY() {
+    public int[] getCoordsY() {
         int coordY[] = new int[3];
         switch(type) {
-            case EQUILATERAL_TRIANGLE: case ISOSCELES_TRIANGLE:
+            case EQUILATERAL_TRIANGLE: 
+                coordY[0] = (int)(posY+base*Math.sin(Math.PI/3));
+                coordY[1] = posY;
+                coordY[2] = (int)(posY+base*Math.sin(Math.PI/3));
+            break;
+            case ISOSCELES_TRIANGLE:
                 coordY[0] = (int)(posY+height);
                 coordY[1] = posY;
                 coordY[2] = (int)(posY+height);
-            break;
+            break;    
             case RIGHT_TRIANGLE:
                 coordY[0] = posY;
                 coordY[1] = (int)(posY+height);

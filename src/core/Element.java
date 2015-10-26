@@ -1,20 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
+
+import core.Canvas;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.geom.Area;
 
 /**
  *
  * @author douxm_000
  */
-public abstract class Element {
+public abstract class Element{
     //Coordenadas
     public int posX; 
     public int posY;
     public float incline;
     public boolean state;
+    public Area area;//area de la figura
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
@@ -33,6 +35,6 @@ public abstract class Element {
         this.posY = posY;
     }
     
-    public abstract void draw(Canvas canvas);
+    public abstract void draw(Graphics g);
     public abstract void configure(Canvas canvas);
 }

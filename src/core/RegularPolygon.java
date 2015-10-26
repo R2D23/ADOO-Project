@@ -5,10 +5,11 @@
  */
 package core;
 
+import core.Figure;
+import core.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 /**
  * 
@@ -30,18 +31,16 @@ public class RegularPolygon extends Figure {
         pointsY = new int[numSides];
     }
     
-    RegularPolygon() {}
+    public RegularPolygon() {}
 
     @Override
-    public void draw(Canvas canvas) {
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        BufferedImage imag= new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics gBuffer = imag.getGraphics();
-        gBuffer.setColor(bgcolor);
-        gBuffer.fillPolygon(pointsX, pointsY, pointsX.length);
-        gBuffer.setColor(lncolor);
-        gBuffer.drawPolygon(pointsX, pointsY, pointsX.length);
-        g2.drawImage(imag, null, 0, 0);
+    public void draw(Graphics g) {
+        
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(bgcolor);
+        g2.fillPolygon(pointsX, pointsY, pointsX.length);
+        g2.setColor(lncolor);
+        g2.drawPolygon(pointsX, pointsY, pointsX.length);
         
     }
 
@@ -59,7 +58,7 @@ public class RegularPolygon extends Figure {
         canvas.addElement(this);
     }
     
-    private int[] getCoordsX() {
+    public int[] getCoordsX() {
         double littleAngle = 2*Math.PI/numSides; //Es el ángulo de uno de los sectores
         double radius = longSide/(2*Math.sin(littleAngle/2)); //Radio del Poligono
         int coordX[] = new int[numSides];
@@ -69,7 +68,7 @@ public class RegularPolygon extends Figure {
         return coordX;
     }
 
-    private int[] getCoordsY() {
+    public int[] getCoordsY() {
         double littleAngle = 2*Math.PI/numSides; //Es el ángulo de uno de los sectores
         double radius = longSide/(2*Math.sin(littleAngle/2)); //Radio del Poligono
         int coordY[] = new int[numSides];

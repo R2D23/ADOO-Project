@@ -1,11 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
+import core.Canvas;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 /**
@@ -20,15 +18,22 @@ public class Circle extends Figure{
         this.radio = radio;
     }
     
-    Circle() {}
+    public Circle() {}
     
-    @Override
-    public void draw(Canvas canvas) {
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.setColor(bgcolor);
+   
+    public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
+        try{
+            g2.setColor(bgcolor);
+            
         g2.fillOval(posX, posY, (int)radio, (int)radio);
         g2.setColor(lncolor);
         g2.drawOval(posX, posY, (int)radio, (int)radio);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -39,7 +44,8 @@ public class Circle extends Figure{
         incline = 0.0f;
         state = true;
         //Las coordenadas se asignan en el lugar que el usuario hizo clic
-        canvas.addElement(this);
+        //canvas.elements.add(this);
+        //canvas.repaint();
     }
     
 }

@@ -5,6 +5,7 @@
  */
 package core;
 
+import core.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,7 +15,7 @@ import java.awt.image.BufferedImage;
  *
  * @author douxm_000
  */
-public class Rectangle extends Figure {
+public class Rectangle extends core.Figure {
 
     double width;
     double height;
@@ -24,22 +25,15 @@ public class Rectangle extends Figure {
         this.height = height;
     }
 
-    Rectangle() {}
+    public Rectangle() {}
 
     @Override
-    public void draw(Canvas canvas) {
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        BufferedImage imag= new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics gBuffer = imag.getGraphics();
-        gBuffer.setColor(bgcolor);
-        gBuffer.fillRect(posX, posY, (int)width, (int)height);
-        gBuffer.setColor(lncolor);
-        gBuffer.drawRect(posX, posY, (int)width, (int)height);
-        g2.drawImage(imag, null, 0, 0);
-        /*g2.setColor(bgcolor);
+    public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(bgcolor);
         g2.fillRect(posX, posY, (int)width, (int)height);
         g2.setColor(lncolor);
-        g2.drawRect(posX, posY, (int)width, (int)height);*/
+        g2.drawRect(posX, posY, (int)width, (int)height);
     }
 
     @Override

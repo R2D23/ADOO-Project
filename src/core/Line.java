@@ -5,20 +5,25 @@
  */
 package core;
 
+import core.Canvas;
+import core.Element;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 
 /**
  *
  * @author douxm_000
  */
-class Line extends Element {
+public class Line extends Element {
 
     double length;
     float angle;
     Color color;
+    float grosor;
     
     public Line(double length, float angle, Color color) {
         this.length = length;
@@ -32,16 +37,17 @@ class Line extends Element {
         this.color = color;
     }
     
-    Line() {}
+    public Line() {}
 
     @Override
-    public void draw(Canvas canvas) {
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        BufferedImage imag= new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics gBuffer = imag.getGraphics();
-        gBuffer.setColor(color);
-        gBuffer.drawLine(posX, posY, posX+(int)(length*Math.cos(angle)), posY-(int)(length*Math.sin(angle)));
-        g2.drawImage(imag, null, 0, 0);
+    public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        Stroke s = new BasicStroke(grosor);
+        
+        g2.setStroke(s);
+        g2.setColor(color);
+        g2.drawLine(posX, posY, posX+(int)(length*Math.cos(angle)), posY-(int)(length*Math.sin(angle)));
+        
         
     }
 
