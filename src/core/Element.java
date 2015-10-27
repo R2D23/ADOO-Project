@@ -6,7 +6,8 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.geom.Area;
 
-/**
+/**La clase Element define en base a todos los elementos trabajables dentro
+ * del lienzo.
  *
  * @author douxm_000
  */

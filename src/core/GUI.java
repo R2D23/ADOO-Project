@@ -16,14 +16,14 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements Runnable, ActionListener{
     //The Components
     public Canvas canvas;
-    private Members members;
-    private ArrayList<JButton> toolKit;
-    private ArrayList<Menu> menus;
-    private FigureMenu fm;
-    private SelectionMenu sm;
+    private final Members members;
+    private final ArrayList<JButton> toolKit;
+    private final ArrayList<Menu> menus;
+    private final FigureMenu fm;
+    private final SelectionMenu sm;
     
     //The UI parameters
-    private final static int gap = 50;
+    private final static int GAP = 50;
     
     public GUI(){
 	canvas = new Canvas();
@@ -32,34 +32,44 @@ public class GUI extends JFrame implements Runnable, ActionListener{
         
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
-	   
-	    toolKit.add(new ToolButton(GraphicDrawer.FILE));//La constante se define en la clase GraphicDrawer y es para saber que icono dibujar
-		toolKit.get(toolKit.size() - 1).addActionListener(this);//se define este JFrame como ActionListener de los botones
-		toolKit.get(toolKit.size() - 1).setActionCommand("file");//se define el actionCommand para saber sobre que botón se realizó la acción
-		    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));//se agrega el menú circular de archivo
-                toolKit.get(toolKit.size()-1).addMouseListener(menus.get(menus.size()-1));//se agrega el menu circualar de archivo como MouseListener
-	    toolKit.add(new ToolButton(GraphicDrawer.REDO));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("redo-menu");
-                    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));
-                toolKit.get(toolKit.size()-1).addMouseListener(menus.get(menus.size()-1));
-	    toolKit.add(new ToolButton(GraphicDrawer.TEXT));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("text");
-            toolKit.add(new ToolButton(GraphicDrawer.ARROW));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("arrow");    
-            toolKit.add(new ToolButton(GraphicDrawer.SELECT));
-                toolKit.get(toolKit.size()-1).addActionListener(this);
-                toolKit.get(toolKit.size()-1).setActionCommand("mano");
-            toolKit.add(new ToolButton(GraphicDrawer.PENCIL));
-		toolKit.get(toolKit.size() - 1).addActionListener(this);
-		toolKit.get(toolKit.size() - 1).setActionCommand("lapiz");
-            toolKit.add(new ToolButton(GraphicDrawer.ZOOM));
-                toolKit.get(toolKit.size()-1).addActionListener(this);
-                toolKit.get(toolKit.size()-1).setActionCommand("lupa");
-                    menus.add(new Menu(toolKit.get(toolKit.size() - 1)));
-                toolKit.get(toolKit.size()-1).addMouseListener(menus.get(menus.size()-1));
+	    
+	    ToolButton file = new ToolButton(GraphicDrawer.FILE);
+	    toolKit.add(file);//La constante se define en la clase GraphicDrawer y es para saber que icono dibujar
+		file.addActionListener(this);//se define este JFrame como ActionListener de los botones
+		file.setActionCommand("file");//se define el actionCommand para saber sobre que botón se realizó la acción
+		    Menu fileM = new Menu(file);
+		    menus.add(fileM);//se agrega el menú circular de archivo
+                file.addMouseListener(fileM);//se agrega el menu circualar de archivo como MouseListener
+	    ToolButton action = new ToolButton(GraphicDrawer.REDO);
+		toolKit.add(action);
+		action.addActionListener(this);
+		action.setActionCommand("redo-menu");
+		    Menu actionM = new Menu(action);
+                    menus.add(actionM);
+                action.addMouseListener(actionM);
+	    ToolButton text = new ToolButton(GraphicDrawer.TEXT);
+		toolKit.add(text);
+		text.addActionListener(this);
+		text.setActionCommand("text");
+	    ToolButton arrow = new ToolButton(GraphicDrawer.ARROW);
+		toolKit.add(arrow);
+		arrow.addActionListener(this);
+		arrow.setActionCommand("arrow");    
+	    ToolButton select = new ToolButton(GraphicDrawer.SELECT);
+		toolKit.add(select);
+                select.addActionListener(this);
+                select.setActionCommand("mano");
+	    ToolButton pencil = new ToolButton(GraphicDrawer.PENCIL);
+		toolKit.add(pencil);
+		pencil.addActionListener(this);
+		pencil.setActionCommand("lapiz");
+	    ToolButton zoom = new ToolButton(GraphicDrawer.ZOOM);
+		toolKit.add(zoom);
+                zoom.addActionListener(this);
+                zoom.setActionCommand("lupa");
+                    Menu zoomM = new Menu(toolKit.get(toolKit.size() - 1));
+		    menus.add(zoomM);
+                zoom.addMouseListener(zoomM);
 	}
 	
         //this.menus.add(new Menu());
@@ -103,16 +113,16 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     
     public void updateGUI(){
 	canvas.setBackground(Color.WHITE);
-        canvas.setLocation(gap, gap);
+        canvas.setLocation(GAP, GAP);
         canvas.setSize(
-            new Dimension(getContentPane().getWidth()  - gap*2,
-			  getContentPane().getHeight() - gap*2));
+            new Dimension(getContentPane().getWidth()  - GAP*2,
+			  getContentPane().getHeight() - GAP*2));
         canvas.updateUI();
 	//canvas.drawAll();
 	for(int i = 0; i < toolKit.size(); i++){
 	    toolKit.get(i).setLocation
-	(getContentPane().getWidth() - gap, gap * (1 + i));
-	    toolKit.get(i).setSize(gap, gap);
+	(getContentPane().getWidth() - GAP, GAP * (1 + i));
+	    toolKit.get(i).setSize(GAP, GAP);
 	    toolKit.get(i).updateUI();
 	}
 	
