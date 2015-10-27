@@ -23,12 +23,14 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
     private ArrayList<Area> areas;
     private Canvas canvas;
     private RegularPolygon p;
+    private int tipoMenu;
 
-    public ConfigurarPoligono(ArrayList<Area> a, Canvas c) {
+    public ConfigurarPoligono(ArrayList<Area> a, Canvas c, int t) {
         initComponents();
         areas = a;
         canvas = c;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        tipoMenu = t;
 
     }
 
@@ -236,14 +238,36 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(whichArea(e.getPoint()) == 2)
+        switch(tipoMenu)
         {
-            e.getComponent().setVisible(false);
-            this.setLocation(e.getLocationOnScreen());
-            this.setVisible(true);
-            p = new RegularPolygon();
-            p.posX = e.getXOnScreen();
-            p.posY = e.getYOnScreen();
+            case Escucha.FIGUREMENU :
+                if(whichArea(e.getPoint()) == 2)
+                {
+                    e.getComponent().setVisible(false);
+                    this.setLocation(e.getLocationOnScreen());
+                    this.setVisible(true);
+                    p = new RegularPolygon();
+                    p.posX = e.getXOnScreen();
+                    p.posY = e.getYOnScreen();
+                }
+            break;
+            case Escucha.SELECTIONMENU :
+                if(whichArea(e.getPoint()) == 0)
+                {
+                    e.getComponent().setVisible(false);
+                    try{
+                        this.p = (RegularPolygon)((SelectionMenu)(e.getComponent())).elemento;
+                        this.lados.setText("" + p.numSides);
+                        this.Lado.setText("" + p.longSide);
+                        relleno = p.bgcolor;
+                        contorno = p.lncolor;
+                        this.EscogerColorRelleno.setBackground(relleno);
+                        this.EscogerColorLinea.setBackground(contorno);
+                        this.setVisible(true);
+                    }
+                    catch(Exception ex){}
+                }
+            break;
         }
     }
 

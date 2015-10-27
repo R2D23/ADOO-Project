@@ -21,8 +21,7 @@ public class FigureMenu extends JComponent implements MouseListener{
     private static final int SIZE = 200;
     public Point location;
     public Point center;
-    //private int noArea;
-    private ArrayList<Area> areas;
+    public ArrayList<Area> areas;
     public int areaActual;
     private Canvas canvas;
     
@@ -124,11 +123,11 @@ public class FigureMenu extends JComponent implements MouseListener{
         });
         
         System.out.println(canvas);
-        this.addMouseListener(new ConfigurarCirculo(areas, canvas));
-        this.addMouseListener(new ConfigurarCuadrado(areas, canvas));
-        this.addMouseListener(new ConfigurarTriangulo(areas, canvas));
-        this.addMouseListener(new ConfigurarPoligono(areas, canvas));
-        this.addMouseListener(new ConfigurarLinea(areas, canvas));
+        this.addMouseListener(new ConfigurarCirculo(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarCuadrado(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarTriangulo(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarPoligono(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarLinea(areas, canvas, Escucha.FIGUREMENU));
     }
 
     /*Esta funcion es un intermedio entre el MouseMotionListener y la clase actual.
@@ -206,23 +205,24 @@ public class FigureMenu extends JComponent implements MouseListener{
     ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
     @Override
     public void mouseClicked(MouseEvent e) {
-        //canvas.drawAll();
-        switch(e.getButton())
+        System.out.println(this.getCursor().getName());
+        if(this.getCursor().getName().equals("lapiz"))
         {
-            case MouseEvent.BUTTON1 :
-                this.setVisible(false);
-            break;
-            case MouseEvent.BUTTON3 :
-                System.out.print("Click");
-                this.setSize(SIZE, SIZE);
-                this.setVisible(true);
-                location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
-                center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
-                this.setLocation(location);
-                this.repaint();
-                //canvas.drawAll();
-            break;
-                
+            switch(e.getButton())
+            {
+                case MouseEvent.BUTTON3 :
+                    this.setVisible(false);
+                break;
+                case MouseEvent.BUTTON1 :
+                    System.out.print("Click");
+                    this.setSize(SIZE, SIZE);
+                    this.setVisible(true);
+                    location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
+                    center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
+                    this.setLocation(location);
+                    this.repaint();
+                break;
+            }
         }
     }
 
@@ -233,7 +233,7 @@ public class FigureMenu extends JComponent implements MouseListener{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //canvas.drawAll();
+        //canvas.drawAll()
     }
 
     @Override

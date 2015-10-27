@@ -29,6 +29,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	canvas = new Canvas();
         fm = new FigureMenu(canvas);
         sm = new SelectionMenu(canvas);
+        
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
 	   

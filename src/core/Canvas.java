@@ -2,6 +2,7 @@
 package core;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import javax.swing.JPanel;
  */
 public class Canvas extends JPanel{
     public ArrayList<Element> elements;
+    FigureMenu fm;
+    SelectionMenu sm;
     public Canvas() {
         elements = new ArrayList<>();
     }
@@ -38,9 +41,4 @@ public class Canvas extends JPanel{
         }
         
     }
-    
-    
-    
-
-
 }

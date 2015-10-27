@@ -28,6 +28,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
     private ArrayList<Area> areas;
     private int areaActual;    
     Canvas canvas;
+    Element elemento;
     
     public SelectionMenu(Canvas c){
         
@@ -105,6 +106,11 @@ public class SelectionMenu extends JComponent implements MouseListener{
         });
 
         this.setVisible(false);
+        this.addMouseListener(new ConfigurarCirculo(areas, canvas, Escucha.SELECTIONMENU));
+        this.addMouseListener(new ConfigurarCuadrado(areas, canvas, Escucha.SELECTIONMENU));
+        this.addMouseListener(new ConfigurarTriangulo(areas, canvas, Escucha.SELECTIONMENU));
+        this.addMouseListener(new ConfigurarPoligono(areas, canvas, Escucha.SELECTIONMENU));
+        this.addMouseListener(new ConfigurarLinea(areas, canvas, Escucha.SELECTIONMENU));
     }
 
     /*Esta funcion es un intermedio entre el MouseMotionListener y la clase actual.
@@ -181,6 +187,8 @@ public class SelectionMenu extends JComponent implements MouseListener{
             int sel = cualFigura(e.getPoint());
             if(sel >= 0)
             {
+                this.elemento = canvas.elements.get(sel);
+                this.center = e.getPoint();
                 location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
                 this.setLocation(location);
                 this.setVisible(true);

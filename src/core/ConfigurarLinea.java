@@ -21,15 +21,16 @@ private Color contorno;
 private ArrayList<Area> areas;
 private Canvas canvas;
 private Line l;
+private int tipoMenu;
     
     
 
-    public ConfigurarLinea(ArrayList<Area> a, Canvas c) {
+    public ConfigurarLinea(ArrayList<Area> a, Canvas c, int t) {
         initComponents();
         areas = a;
         canvas = c;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-
+        tipoMenu = t;
     }
 
 
@@ -236,16 +237,36 @@ private Line l;
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(whichArea(e.getPoint()) == 4)
+        switch(tipoMenu)
         {
-            e.getComponent().setVisible(false);
-            this.setLocation(e.getLocationOnScreen());
-            this.setVisible(true);
-            l = new Line();
-            l.posX = e.getXOnScreen();
-            l.posY = e.getYOnScreen();
+            case Escucha.FIGUREMENU :
+                if(whichArea(e.getPoint()) == 4)
+                {
+                    e.getComponent().setVisible(false);
+                    this.setLocation(e.getLocationOnScreen());
+                    this.setVisible(true);
+                    l = new Line();
+                    l.posX = e.getXOnScreen();
+                    l.posY = e.getYOnScreen();
+                }
+            break;
+            case Escucha.SELECTIONMENU :
+                if(whichArea(e.getPoint()) == 0)
+                {
+                    e.getComponent().setVisible(false);
+                    try{
+                        this.l = (Line)((SelectionMenu)(e.getComponent())).elemento;
+                        this.Largo.setText(l.length + "");
+                        this.Grosor.setText(l.grosor + "");
+                        this.inclinacion.setText(l.area + "");
+                        contorno = l.color;
+                        this.EscogerColorLinea.setBackground(contorno);
+                        this.setVisible(true);
+                    }
+                    catch(Exception ex){}
+                }
+            break;
         }
-        
     }
 
     @Override

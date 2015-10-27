@@ -20,14 +20,14 @@ private Color contorno;
 private ArrayList<Area> areas;
 private Canvas canvas;
 private Circle circulo;
-//private Circle circulo;
+private int tipoMenu;
 
-    public ConfigurarCirculo(ArrayList<Area> a, Canvas c) {
+    public ConfigurarCirculo(ArrayList<Area> a, Canvas c, int tip) {
         initComponents();
         areas = a;
         canvas = c;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-
+        tipoMenu = tip;
         //this.setLocationRelativeTo(null);
     }
 
@@ -184,8 +184,13 @@ private Circle circulo;
                 circulo.lncolor = contorno;
                 circulo.radio = this.radio;
                 circulo.area =  new Area(new Ellipse2D.Double(circulo.posX, circulo.posY, (int)radio,(int)radio));
-                canvas.elements.add(circulo);
+                if(!canvas.elements.contains(circulo))
+                    canvas.elements.add(circulo);
                 canvas.repaint();
+                circulo = null;
+                this.BottonEscogerColorRelleno.setBackground(Util.normalColor);
+                this.ButtonEscogerColorLinea.setBackground(Util.normalColor);
+                this.Radio.setText("");
             }
             else
                 JOptionPane.showMessageDialog(rootPane, "Has ingresado datos erróneos, favor de revisarlos e intentarlo\n" +
@@ -196,9 +201,7 @@ private Circle circulo;
 
     }//GEN-LAST:event_AceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -216,14 +219,39 @@ private Circle circulo;
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(whichArea(e.getPoint()) == 1)
+        switch(this.tipoMenu)
         {
-            e.getComponent().setVisible(false);
-            this.setLocation(e.getLocationOnScreen());
-            this.setVisible(true);
-            circulo = new Circle();
-            circulo.posX = e.getXOnScreen();
-            circulo.posY = e.getYOnScreen();
+            case Escucha.FIGUREMENU:
+                if(whichArea(e.getPoint()) == 1)
+                {
+                    e.getComponent().setVisible(false);
+                    this.setLocation(e.getLocationOnScreen());
+                    this.setVisible(true);
+                    if(circulo == null)
+                    {
+                        circulo = new Circle();
+                        circulo.posX = e.getXOnScreen();
+                        circulo.posY = e.getYOnScreen();
+                    }
+                }
+            break;
+            case Escucha.SELECTIONMENU :
+                if(whichArea(e.getPoint()) == 0)
+                {
+                    e.getComponent().setVisible(false);
+                    try{
+                        this.circulo = (Circle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.Radio.setText(circulo.radio + "");
+                        relleno = circulo.bgcolor;
+                        contorno = circulo.lncolor;
+                        this.BottonEscogerColorRelleno.setBackground(relleno);
+                        this.ButtonEscogerColorLinea.setBackground(contorno);
+                        this.setVisible(true);
+                    }
+                    catch(Exception ex){}
+                    
+                }
+            break;
         }
     }
 
@@ -249,5 +277,13 @@ private Circle circulo;
             if(areas.get(i).contains(p.x, p.y))
                 return i;
         return -1;
+    }
+    
+    public Element cualFigura(Point p)
+    {
+        for(int i = 0; i < canvas.elements.size(); i++)
+            if(canvas.elements.get(i).area.contains(p))
+                return canvas.elements.get(i);
+        return null;
     }
 }

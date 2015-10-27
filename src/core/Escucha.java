@@ -198,10 +198,6 @@ public class Escucha implements MouseListener{
         int areaClic = whichArea(e.getPoint());
         switch(areaClic)
         {
-        
-            case MenuDrawer.CONFIGURE :
-                JOptionPane.showMessageDialog(e.getComponent(),"Configuracion de figura");
-            break;
             case MenuDrawer.MOVE :
                 JOptionPane.showMessageDialog(e.getComponent(),"Mover Figura");
             break;

@@ -23,13 +23,14 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
     private ArrayList<Area> areas;
     private Canvas canvas;
     private Triangle t;
+    private int tipoMenu;
     
-    public ConfigurarTriangulo(ArrayList<Area> a, Canvas c) {
+    public ConfigurarTriangulo(ArrayList<Area> a, Canvas c, int t) {
         initComponents();
         areas = a;
         canvas = c;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-
+        tipoMenu = t;
     }
 
     /**
@@ -373,14 +374,36 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(whichArea(e.getPoint()) == 0)
+        switch(tipoMenu)
         {
-            e.getComponent().setVisible(false);
-            this.setLocation(e.getLocationOnScreen());
-            this.setVisible(true);
-            t = new Triangle();
-            t.posX = e.getXOnScreen();
-            t.posY = e.getYOnScreen();
+            case Escucha.FIGUREMENU :
+                if(whichArea(e.getPoint()) == 0)
+                {
+                    e.getComponent().setVisible(false);
+                    this.setLocation(e.getLocationOnScreen());
+                    this.setVisible(true);
+                    t = new Triangle();
+                    t.posX = e.getXOnScreen();
+                    t.posY = e.getYOnScreen();
+                }
+            break;
+            case Escucha.SELECTIONMENU :
+                if(whichArea(e.getPoint()) == 0)
+                {
+                    e.getComponent().setVisible(false);
+                    try{
+                        this.t = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.AlturaTriangulo.setText("" + t.height);
+                        this.BaseTriangulo.setText("" + t.base);
+                        relleno = t.bgcolor;
+                        contorno = t.lncolor;
+                        this.EscogerColorRelleno.setBackground(relleno);
+                        this.EscogerColorLinea.setBackground(contorno);
+                        this.setVisible(true);
+                    }
+                    catch(Exception ex){}
+                }
+            break;
         }
     }
 

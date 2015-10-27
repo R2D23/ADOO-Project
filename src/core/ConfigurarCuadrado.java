@@ -24,12 +24,14 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
     private ArrayList<Area> areas;
     private Canvas canvas;
     private Rectangle r;
+    private int tipoMenu;
     
-    public ConfigurarCuadrado(ArrayList<Area> a, Canvas c) {
+    public ConfigurarCuadrado(ArrayList<Area> a, Canvas c, int t) {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         areas = a;
         canvas = c;
+        tipoMenu = t;
     }
     
     @SuppressWarnings("unchecked")
@@ -259,14 +261,36 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(whichArea(e.getPoint()) == 3)
+        switch (tipoMenu)
         {
-            e.getComponent().setVisible(false);
-            this.setLocation(e.getLocationOnScreen());
-            this.setVisible(true);
-            r = new Rectangle();
-            r.posX = e.getXOnScreen();
-            r.posY = e.getYOnScreen();
+            case Escucha.FIGUREMENU :
+                if(whichArea(e.getPoint()) == 3)
+                {
+                    e.getComponent().setVisible(false);
+                    this.setLocation(e.getLocationOnScreen());
+                    this.setVisible(true);
+                    r = new Rectangle();
+                    r.posX = e.getXOnScreen();
+                    r.posY = e.getYOnScreen();
+                }
+            break;
+            case Escucha.SELECTIONMENU :
+                if(whichArea(e.getPoint()) == 0)
+                {
+                    e.getComponent().setVisible(false);
+                    try{
+                        this.r = (Rectangle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.altura.setText("" + r.height);
+                        this.Base.setText("" + r.width);
+                        relleno = r.bgcolor;
+                        contorno = r.lncolor;
+                        this.EscogerColorRelleno.setBackground(relleno);
+                        this.EscogerColorLinea.setBackground(contorno);
+                        this.setVisible(true);
+                    }
+                    catch(Exception ex){}
+                }
+            break;
         }
     }
 
