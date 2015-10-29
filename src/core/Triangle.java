@@ -14,7 +14,6 @@ import java.awt.Graphics2D;
  * @author douxm_000
  */
 public class Triangle extends Figure{
-
     double base;
     double height;
     int type;
@@ -25,6 +24,7 @@ public class Triangle extends Figure{
     public static final int ISOSCELES_TRIANGLE = 3;
     
     public Triangle(double base, double height, int type) {
+	super();
         this.base = base;
         this.height = height;
         this.type = type;
@@ -33,6 +33,7 @@ public class Triangle extends Figure{
     }
     
     public Triangle(double base) {
+	super();
         this.base = base;
         this.height = Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2)); //Pitágoras
         type = EQUILATERAL_TRIANGLE;
@@ -40,7 +41,7 @@ public class Triangle extends Figure{
         pointsY = new int[3];
     }
 
-    public Triangle() {}
+    public Triangle() {super();}
     
     @Override
     public void draw(Graphics g) {

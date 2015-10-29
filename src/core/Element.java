@@ -11,13 +11,31 @@ import java.awt.geom.Area;
  *
  * @author douxm_000
  */
-public abstract class Element{
+public abstract class Element implements Cloneable{
     //Coordenadas
     public int posX; 
     public int posY;
     public float incline;
     public boolean state;
     public Area area;//area de la figura
+    private static int count = 0; //El número de instancias de esta clase.
+    private int id; //El identificador de una instancia.
+    
+    //Constructor
+    public Element(){
+	count++;
+	id = count;
+    }
+    
+    //Copy
+    public Element(Element e){
+	this.area = new Area(e.area);
+	this.id = e.id;
+	this.incline = e.incline;
+	this.posX = e.posX;
+	this.posY = e.posY;
+	this.state = e.state;
+    }
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
@@ -35,6 +53,8 @@ public abstract class Element{
         this.posX = posX;
         this.posY = posY;
     }
+    
+    public int getID(){return id;}
     
     public abstract void draw(Graphics g);
     public abstract void configure(Canvas canvas);

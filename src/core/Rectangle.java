@@ -21,11 +21,12 @@ public class Rectangle extends core.Figure {
     double height;
             
     public Rectangle(double width, double height) {
+	super();
         this.width = width;
         this.height = height;
     }
 
-    public Rectangle() {}
+    public Rectangle() {super();}
 
     @Override
     public void draw(Graphics g) {

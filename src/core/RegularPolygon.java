@@ -25,13 +25,14 @@ public class RegularPolygon extends Figure {
     public RegularPolygon(int numSides, double longSide) {
         /*Poligono Regular de numSides lados, donde cada lado mide longSide
           numSides >= 3   */
+	super();
         this.numSides = numSides;
         this.longSide = longSide;
         pointsX = new int[numSides];
         pointsY = new int[numSides];
     }
     
-    public RegularPolygon() {}
+    public RegularPolygon() {super();}
 
     @Override
     public void draw(Graphics g) {

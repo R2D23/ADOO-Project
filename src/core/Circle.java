@@ -18,7 +18,9 @@ public class Circle extends Figure{
         this.radio = radio;
     }
     
-    public Circle() {}
+    public Circle(){
+	super();
+    }
     
    
     public void draw(Graphics g) {
