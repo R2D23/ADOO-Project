@@ -18,6 +18,14 @@ public abstract class Element{
     public float incline;
     public boolean state;
     public Area area;//area de la figura
+    private static int count = 0; //El número de instancias de esta clase.
+    private int id; //El identificador de una instancia.
+    
+    //Constructor
+    public Element(){
+	count++;
+	id = count;
+    }
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
@@ -35,6 +43,8 @@ public abstract class Element{
         this.posX = posX;
         this.posY = posY;
     }
+    
+    public int getID(){return id;}
     
     public abstract void draw(Graphics g);
     public abstract void configure(Canvas canvas);

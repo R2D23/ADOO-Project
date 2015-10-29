@@ -26,18 +26,20 @@ public class Line extends Element {
     float grosor;
     
     public Line(double length, float angle, Color color) {
+	super();
         this.length = length;
         this.angle = angle;
         this.color = color;
     }
     
     public Line(int finX, int finY, Color color) { //Contructor alternativo a traves de coordenadas
-        length = Math.sqrt(Math.pow(finY-posY, 2)+Math.pow(finX-posX, 2)); //Distancia entre dos puntos
+        super();
+	length = Math.sqrt(Math.pow(finY-posY, 2)+Math.pow(finX-posX, 2)); //Distancia entre dos puntos
         angle = (float)Math.atan((finY-posY)/(finX-posX));  //Calcula el angulo a traves de ARCTAN
         this.color = color;
     }
     
-    public Line() {}
+    public Line() {super();}
 
     @Override
     public void draw(Graphics g) {

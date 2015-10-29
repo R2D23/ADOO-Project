@@ -17,4 +17,7 @@ public abstract class Figure extends core.Element {
     public Color bgcolor; //Color del area de la figura
     public Color lncolor; //Color de las lineas de la figura
     
+    public Figure(){
+	super();
+    }
 }
