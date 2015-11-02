@@ -174,7 +174,7 @@ public class Login extends javax.swing.JFrame {
             }
         }
         else{
-            JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");          
+            JOptionPane.showMessageDialog(null, "Has ingresado datos erroneos, favor de revisarlos e intentarlo nuevamente.");          
         }
     }//GEN-LAST:event_botonIniciarActionPerformed
 
