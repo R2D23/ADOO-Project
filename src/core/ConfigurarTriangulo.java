@@ -22,7 +22,7 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
     private double base;
     private ArrayList<Area> areas;
     private Canvas canvas;
-    private Triangle t;
+    private Triangle trian;
     private int tipoMenu;
     
     public ConfigurarTriangulo(ArrayList<Area> a, Canvas c, int t) {
@@ -309,15 +309,16 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
             base = Double.parseDouble(this.BaseTriangulo.getText());
             if((altura!=0) && (base!=0)&&(relleno != null)&&(contorno != null))
             {
-                t.type = comboTipo.getSelectedIndex() + 1;
-                t.base = this.base;
-                t.bgcolor = relleno;
-                t.height = altura;
-                t.lncolor = contorno;
-                t.pointsX = t.getCoordsX();
-                t.pointsY = t.getCoordsY();
-                t.area = new Area(new java.awt.Polygon(t.pointsX, t.pointsY, t.pointsX.length));
-                canvas.elements.add(t);
+                trian.type = comboTipo.getSelectedIndex() + 1;
+                trian.base = this.base;
+                trian.bgcolor = relleno;
+                trian.height = altura;
+                trian.lncolor = contorno;
+                trian.pointsX = trian.getCoordsX();
+                trian.pointsY = trian.getCoordsY();
+                trian.area = new Area(new java.awt.Polygon(trian.pointsX, trian.pointsY, trian.pointsX.length));
+                trian.configure(canvas);
+                canvas.elements.add(trian);
                 canvas.repaint();
                 setVisible(false);
             }    
@@ -382,9 +383,9 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                     e.getComponent().setVisible(false);
                     this.setLocation(e.getLocationOnScreen());
                     this.setVisible(true);
-                    t = new Triangle();
-                    t.posX = e.getXOnScreen();
-                    t.posY = e.getYOnScreen();
+                    trian = new Triangle();
+                    trian.posX = e.getXOnScreen();
+                    trian.posY = e.getYOnScreen();
                 }
             break;
             case Escucha.SELECTIONMENU :
@@ -392,11 +393,11 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                 {
                     e.getComponent().setVisible(false);
                     try{
-                        this.t = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
-                        this.AlturaTriangulo.setText("" + t.height);
-                        this.BaseTriangulo.setText("" + t.base);
-                        relleno = t.bgcolor;
-                        contorno = t.lncolor;
+                        this.trian = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.AlturaTriangulo.setText("" + trian.height);
+                        this.BaseTriangulo.setText("" + trian.base);
+                        relleno = trian.bgcolor;
+                        contorno = trian.lncolor;
                         this.EscogerColorRelleno.setBackground(relleno);
                         this.EscogerColorLinea.setBackground(contorno);
                         this.setVisible(true);

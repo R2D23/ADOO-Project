@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -12,12 +13,13 @@ import javax.swing.JPanel;
  *
  * @author douxm_000
  */
-public class Canvas extends JPanel{
+public class Canvas extends JPanel {
     public ArrayList<Element> elements;
     FigureMenu fm;
     SelectionMenu sm;
     public Canvas() {
         elements = new ArrayList<>();
+        addMouseMotionListener(new Escucha(this));
     }
     
     //Agrega un elemento a la lista de Elementos sobre el Lienzo.

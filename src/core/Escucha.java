@@ -5,17 +5,17 @@ package core;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Angeles
  */
-public class Escucha implements MouseListener{
+public class Escucha implements MouseListener, MouseMotionListener {
 
     private ArrayList<Area> areas;
     private int tipoMenu;
@@ -25,6 +25,10 @@ public class Escucha implements MouseListener{
     public static final int REDOMENU = 3; //menu de hacer/deshacer
     public static final int SELECTIONMENU = 4;//menu de seleccion
     Canvas canvas;
+    
+    public Escucha(Canvas canvas) {
+        this.canvas = canvas;
+    }
     
     public Escucha(ArrayList<Area> as, int t, Canvas canvas)
     {
@@ -57,7 +61,6 @@ public class Escucha implements MouseListener{
             case SELECTIONMENU :
                 clicMenuSeleccion(e);
             break;
-                
         }
         //canvas.repaint();
     }
@@ -108,6 +111,7 @@ public class Escucha implements MouseListener{
                     break;
                     case SELECTIONMENU :
                         r = i + MenuDrawer.CONFIGURE;
+                    break;
                 }
                 return r;
             }
@@ -199,17 +203,53 @@ public class Escucha implements MouseListener{
         switch(areaClic)
         {
             case MenuDrawer.MOVE :
-                JOptionPane.showMessageDialog(e.getComponent(),"Mover Figura");
+                //JOptionPane.showMessageDialog(e.getComponent(),"Mover Figura");
+                //System.out.println("ANTES: "+((SelectionMenu)(e.getComponent())).elemento.state);
+                ((SelectionMenu)(e.getComponent())).elemento.state = Element.MOVING;
+                //System.out.println("DESPUES: "+((SelectionMenu)(e.getComponent())).elemento.state);
+                e.getComponent().setVisible(false);
             break;
             case MenuDrawer.ROTATE :
-                JOptionPane.showMessageDialog(e.getComponent(),"Rotar Figura");
+                //JOptionPane.showMessageDialog(e.getComponent(),"Rotar Figura");
+                ((SelectionMenu)(e.getComponent())).elemento.state = Element.ROTATING;
+                e.getComponent().setVisible(false);
             break;
             case MenuDrawer.DISPOSE :
-                JOptionPane.showMessageDialog(e.getComponent(),"Eliminar Figura");    
+                JOptionPane.showMessageDialog(e.getComponent(),"Eliminar Figura");
             break;
             case MenuDrawer.EXIT2 :
                 e.getComponent().setVisible(false);
             break;   
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        //System.out.println("dragg");
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if(!canvas.elements.isEmpty()) {
+            for(int i=0; i<canvas.elements.size(); i++) {
+                if(canvas.elements.get(i).state==Element.MOVING) {
+                   canvas.elements.get(i).move(e.getX(), e.getY());
+                   canvas.elements.get(i).configure(canvas);
+                } else if(canvas.elements.get(i).state==Element.ROTATING) {
+                    double pendiente, newIncline;
+                    if(e.getX()-canvas.elements.get(i).posX!=0) {
+                        pendiente = (e.getY()-canvas.elements.get(i).posY)/(e.getX()-canvas.elements.get(i).posX);
+                        newIncline = Math.atan(pendiente);
+                    } else {
+                        pendiente = (e.getY()-canvas.elements.get(i).posY)/0.001;
+                        newIncline = Math.atan(pendiente);
+                    }
+                    //System.out.println("Inclinacion: "+Math.toDegrees(newIncline)+" °");
+                    canvas.elements.get(i).rotate(newIncline);
+                    canvas.elements.get(i).configure(canvas);
+                }
+            }
+            canvas.repaint();
         }
     }
 }

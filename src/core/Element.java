@@ -1,8 +1,6 @@
 
 package core;
 
-import core.Canvas;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.geom.Area;
 
@@ -15,18 +13,22 @@ public abstract class Element{
     //Coordenadas
     public int posX; 
     public int posY;
-    public float incline;
-    public boolean state;
+    public double incline;
+    public int state;
     public Area area;//area de la figura
+    public static final int AVAILABLE = 0;
+    public static final int BUSY = 1;
+    public static final int MOVING = 2;
+    public static final int ROTATING = 3;
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
-        if(state) //Si esta disponible (true)
-            state = false; //Entonces lo deja de estar (false)
+        if(state==AVAILABLE) //Si esta disponible (0)
+            state = BUSY; //Entonces lo deja de estar (1)
     }
     
     //Este metodo actualiza el valor de la inclinación
-    public void rotate(float incline) {
+    public void rotate(double incline) {
         this.incline = incline; //Asigna la nueva inclinacion
     }
     

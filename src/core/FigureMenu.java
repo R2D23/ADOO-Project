@@ -223,6 +223,16 @@ public class FigureMenu extends JComponent implements MouseListener{
                     this.repaint();
                 break;
             }
+        } else if(this.getCursor().getName().equals("mano")) {
+            if(!canvas.elements.isEmpty()) {
+                for(int i=0; i<canvas.elements.size(); i++) {
+                    int est = canvas.elements.get(i).state;
+                    if(est==Element.MOVING||est==Element.ROTATING) {
+                       canvas.elements.get(i).state=Element.AVAILABLE;
+                    }
+                }
+                canvas.repaint();
+            }
         }
     }
 

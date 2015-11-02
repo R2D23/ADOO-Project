@@ -8,6 +8,8 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 
 /**
  *
@@ -39,35 +41,44 @@ public class Triangle extends Figure{
         pointsX = new int[3];
         pointsY = new int[3];
     }
+    
+    
 
     public Triangle() {}
     
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(bgcolor);
+        /*g2.setColor(bgcolor);
         g2.fillPolygon(pointsX, pointsY, pointsX.length);
-        //gBuffer.setColor(lncolor);
+        g2.setColor(lncolor);
         g2.drawPolygon(pointsX, pointsY, pointsX.length);
-        //g2.drawImage(imag, null, 0, 0); 
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(bgcolor));
+            g2.fill(area);
+        }*/
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(bgcolor));
+        } else {
+            g2.setColor(bgcolor);
+        }
+        g2.fill(area);
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(lncolor));
+        } else {
+            g2.setColor(lncolor);
+        }
+        g2.draw(area);
     }
 
     @Override
     public void configure(Canvas canvas) {
-        //type=EQUILATERAL_TRIANGLE;
-        type = ISOSCELES_TRIANGLE;
-        //type = RIGHT_TRIANGLE;
-        base=50.0;
-        height=100.0;
-        //height=Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2));
-        bgcolor = Color.YELLOW;
-        lncolor = Color.BLACK;
-        incline = 0.0f;
-        state = true;
-        //Las coordenadas se asignan en el lugar que el usuario hizo clic
         pointsX = getCoordsX();
         pointsY = getCoordsY();
-        canvas.addElement(this);
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        AffineTransform rot = new AffineTransform();
+        rot.setToRotation(incline, posX+base/2, posY+height/2);
+        area.transform(rot);
     }
 
     public int[] getCoordsX() {

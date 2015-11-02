@@ -213,6 +213,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
                 r.height = Altura;
                 r.width = base;
                 r.area = new Area(new java.awt.Rectangle(r.posX, r.posY, (int)base, (int)Altura));
+                r.incline = 0;
                 canvas.elements.add(r);
                 canvas.repaint(); 
                 setVisible(false);
@@ -272,6 +273,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
                     r = new Rectangle();
                     r.posX = e.getXOnScreen();
                     r.posY = e.getYOnScreen();
+                    r.incline = 0;
                 }
             break;
             case Escucha.SELECTIONMENU :
