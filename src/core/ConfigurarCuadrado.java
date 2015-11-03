@@ -208,13 +208,13 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
             Altura = Double.parseDouble(this.altura.getText());
             if((base!=0)&&(Altura != 0) && (relleno != null) && (contorno != null))
             {
-                r.bgcolor = relleno;
-                r.lncolor = contorno;
+                r.bgColor = relleno;
+                r.lnColor = contorno;
                 r.height = Altura;
                 r.width = base;
                 r.area = new Area(new java.awt.Rectangle(r.posX, r.posY, (int)base, (int)Altura));
                 r.incline = 0;
-                canvas.elements.add(r);
+                canvas.addElement(r);
                 canvas.repaint(); 
                 setVisible(false);
             }
@@ -284,8 +284,8 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
                         this.r = (Rectangle)((SelectionMenu)(e.getComponent())).elemento;
                         this.altura.setText("" + r.height);
                         this.Base.setText("" + r.width);
-                        relleno = r.bgcolor;
-                        contorno = r.lncolor;
+                        relleno = r.bgColor;
+                        contorno = r.lnColor;
                         this.EscogerColorRelleno.setBackground(relleno);
                         this.EscogerColorLinea.setBackground(contorno);
                         this.setVisible(true);

@@ -18,12 +18,20 @@ public class Circle extends Figure{
 
     double radio;
     
-    public Circle(double radio) {
+    public Circle(){
+	super();
+	radio = 0;
+    }
+    
+    public Circle(double radio){
+	super();
         this.radio = radio;
     }
     
-    public Circle() {}
-    
+    public Circle(Circle c){
+	super(c);
+	radio = c.radio;
+    }
    
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
@@ -37,16 +45,16 @@ public class Circle extends Figure{
                 g2.fill(area);
             }*/
             if(state!=AVAILABLE) {
-                g2.setColor(Util.negative(bgcolor));
+                g2.setColor(Util.negative(bgColor));
             } else {
-                g2.setColor(bgcolor);
+                g2.setColor(bgColor);
             }
-            //area = new Area(new Ellipse2D.Double(posX, posY, (int)radio,(int)radio));
+            area = new Area(new Ellipse2D.Double(posX, posY, (int)radio,(int)radio));
             g2.fill(area);
             if(state!=AVAILABLE) {
-                g2.setColor(Util.negative(lncolor));
+                g2.setColor(Util.negative(lnColor));
             } else {
-                g2.setColor(lncolor);
+                g2.setColor(lnColor);
             }
             g2.draw(area);
         }

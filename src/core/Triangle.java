@@ -16,7 +16,6 @@ import java.awt.geom.Area;
  * @author douxm_000
  */
 public class Triangle extends Figure{
-
     double base;
     double height;
     int type;
@@ -27,14 +26,13 @@ public class Triangle extends Figure{
     public static final int ISOSCELES_TRIANGLE = 3;
     
     public Triangle(double base, double height, int type) {
-        this.base = base;
-        this.height = height;
-        this.type = type;
-        pointsX = new int[3];
-        pointsY = new int[3];
+	super();
+        this.base = base;   this.height = height;   this.type = type;
+        pointsX = new int[3];	pointsY = new int[3];
     }
     
     public Triangle(double base) {
+	super();
         this.base = base;
         this.height = Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2)); //Pitágoras
         type = EQUILATERAL_TRIANGLE;
@@ -42,9 +40,14 @@ public class Triangle extends Figure{
         pointsY = new int[3];
     }
     
+    public Triangle(Triangle t){
+	super(t);
+	base = t.base;	height = t.height;  type = t.type;
+	pointsX = t.pointsX.clone();	pointsY = t.pointsY.clone();
+    }
     
 
-    public Triangle() {}
+    public Triangle() {super();}
     
     @Override
     public void draw(Graphics g) {
@@ -58,16 +61,16 @@ public class Triangle extends Figure{
             g2.fill(area);
         }*/
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
+            g2.setColor(Util.negative(bgColor));
         } else {
-            g2.setColor(bgcolor);
+            g2.setColor(bgColor);
         }
-        //area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
         g2.fill(area);
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(lncolor));
+            g2.setColor(Util.negative(lnColor));
         } else {
-            g2.setColor(lncolor);
+            g2.setColor(lnColor);
         }
         g2.draw(area);
     }

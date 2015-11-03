@@ -20,11 +20,16 @@ public class Rectangle extends core.Figure {
     double height;
             
     public Rectangle(double width, double height) {
-        this.width = width;
-        this.height = height;
+	super();
+        width = width;	    height = height;
+    }
+    
+    public Rectangle(Rectangle r){
+	super(r);
+	width = r.width;    height = r.height;
     }
 
-    public Rectangle() {}
+    public Rectangle() {super();}
 
     @Override
     public void draw(Graphics g) {
@@ -33,16 +38,16 @@ public class Rectangle extends core.Figure {
         //g2.setColor(lncolor);
         //g2.drawRect(posX, posY, (int)width, (int)height);
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
+            g2.setColor(Util.negative(bgColor));
         } else {
-            g2.setColor(bgcolor);
+            g2.setColor(bgColor);
         }
-        //area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
+        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         g2.fill(area);
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(lncolor));
+            g2.setColor(Util.negative(lnColor));
         } else {
-            g2.setColor(lncolor);
+            g2.setColor(lnColor);
         }
         g2.draw(area);
     }

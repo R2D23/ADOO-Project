@@ -1,14 +1,10 @@
 
 package core;
 
+import static core.Action.*;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -16,9 +12,9 @@ import javax.swing.JPanel;
  * @author douxm_000
  */
 public class Canvas extends JPanel implements Serializable {
-    public ArrayList<Element> elements;
-    FigureMenu fm;
-    SelectionMenu sm;
+    public static ArrayList<Element> elements;
+    private static FigureMenu fm;
+    private static SelectionMenu sm;
     public ArrayList<Element> pastelements;
     public ArrayList<Element> futureelements;
     public Canvas() {
@@ -31,26 +27,6 @@ public class Canvas extends JPanel implements Serializable {
      public void actElements(){
         pastelements=cloneList(elements);
     }
-     
-      public void returnPast(){
-        if(pastelements!=null){
-            futureelements=cloneList(elements);
-            elements=cloneList(pastelements);
-            pastelements=null;
-        }else{
-            JOptionPane.showMessageDialog(null,"No hay pasos atras");
-        }
-    }
-    
-    public void toFuture(){
-        if(futureelements!=null){
-            pastelements=cloneList(elements);
-            elements=cloneList(futureelements);
-            futureelements=null;
-        }else{
-             JOptionPane.showMessageDialog(null,"No hay pasos hacia adelante");
-        }
-    }
     
     ArrayList<Element> cloneList(ArrayList<Element> origen){
         ArrayList<Element> copia=new ArrayList<Element>();
@@ -62,13 +38,19 @@ public class Canvas extends JPanel implements Serializable {
     
     //Agrega un elemento a la lista de Elementos sobre el Lienzo.
     public void addElement(Element e) {
+	new Action(Action.CREATE, elements.size(), e);
         elements.add(e);
     }
     
     //Elimina un elemento siempre y cuando lo contenga
     public void deleteElement(Element e) {
         if(elements.contains(e))
-            elements.remove(e);
+            deleteElement(elements.indexOf(e));
+    }
+    
+    public void deleteElement(int i){
+	new Action(Action.DELETE, elements.size(), null);
+	elements.remove(i);
     }
     
     @Override
@@ -79,6 +61,5 @@ public class Canvas extends JPanel implements Serializable {
         {
             elements.get(i).draw(g);
         }
-        
     }
 }

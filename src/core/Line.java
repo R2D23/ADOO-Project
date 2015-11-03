@@ -26,6 +26,7 @@ public class Line extends Element {
     float grosor;
     
     public Line(double length, float angle, Color color) {
+	super();
         this.length = length;
         this.color = color;
     }
@@ -36,7 +37,14 @@ public class Line extends Element {
         this.color = color;
     }
     
-    public Line() {}
+    public Line(Line l){
+	super(l);
+	length = l.length;  incline = l.incline;
+	color = new Color(l.color.getRGB());
+	grosor = l.grosor;
+    }
+    
+    public Line() {super();}
 
     @Override
     public void draw(Graphics g) {
@@ -49,10 +57,10 @@ public class Line extends Element {
         } else {
             g2.setColor(color);
         }
-        /*java.awt.Rectangle r2d = new java.awt.Rectangle(posX-(int)(grosor/2), posY-(int)(grosor/2), (int)(length + grosor), (int)grosor);
+        java.awt.Rectangle r2d = new java.awt.Rectangle(posX-(int)(grosor/2), posY-(int)(grosor/2), (int)(length + grosor), (int)grosor);
         AffineTransform atr = new AffineTransform();
         area = new Area(r2d);
-        area.transform(atr);*/
+        area.transform(atr);
         g2.fill(area);
         //g2.drawLine(posX, posY, posX+(int)(length*Math.cos(incline)), posY-(int)(length*Math.sin(incline)));
         

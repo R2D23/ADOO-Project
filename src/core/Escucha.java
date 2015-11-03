@@ -10,6 +10,7 @@ import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import static core.Action.*;
 
 /**
  *
@@ -202,12 +203,18 @@ public class Escucha implements MouseListener, MouseMotionListener {
             break;
             case MenuDrawer.UNDO :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Deshacer ultima accion");
-                canvas.returnPast();
+		if(undoStack.isEmpty())
+		    System.out.println("There are no action to be Undone");
+		else
+		    undo();
                 canvas.repaint();
             break;
             case MenuDrawer.REDO :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Rehacer ultima accion");
-                canvas.toFuture();
+                if(redoStack.isEmpty())
+		    System.out.println("There are no action to be Redone");
+		else
+		    redo();
                 canvas.repaint();
             break;
         }    

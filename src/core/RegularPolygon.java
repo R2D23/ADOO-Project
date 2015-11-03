@@ -24,13 +24,20 @@ public class RegularPolygon extends Figure {
     public RegularPolygon(int numSides, double longSide) {
         /*Poligono Regular de numSides lados, donde cada lado mide longSide
           numSides >= 3   */
+	super();
         this.numSides = numSides;
         this.longSide = longSide;
         pointsX = new int[numSides];
         pointsY = new int[numSides];
     }
     
-    public RegularPolygon() {}
+    public RegularPolygon(RegularPolygon rp){
+	super(rp);
+	numSides = rp.numSides;		longSide = rp.longSide;
+	pointsX = rp.pointsX.clone();	pointsY = rp.pointsY.clone();
+    }
+    
+    public RegularPolygon() {super();}
 
     @Override
     public void draw(Graphics g) {
@@ -38,7 +45,7 @@ public class RegularPolygon extends Figure {
         Graphics2D g2 = (Graphics2D) g;
         /*g2.setColor(bgcolor);
         g2.fillPolygon(pointsX, pointsY, pointsX.length);
-        g2.setColor(lncolor);
+        g2.setColor(lnColor);
         g2.drawPolygon(pointsX, pointsY, pointsX.length);
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(bgcolor));
@@ -46,16 +53,16 @@ public class RegularPolygon extends Figure {
         }
         */
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
+            g2.setColor(Util.negative(bgColor));
         } else {
-            g2.setColor(bgcolor);
+            g2.setColor(bgColor);
         }
-        //area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
         g2.fill(area);
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(lncolor));
+            g2.setColor(Util.negative(lnColor));
         } else {
-            g2.setColor(lncolor);
+            g2.setColor(lnColor);
         }
         g2.draw(area);
     }

@@ -171,7 +171,7 @@ private int tipoMenu;
                 atr.setToRotation(l.incline);
                 l.area = new Area(r2d);
                 //l.area.transform(atr);
-                canvas.elements.add(l);
+                canvas.addElement(l);
                 canvas.repaint();
                 setVisible(false);
             }    

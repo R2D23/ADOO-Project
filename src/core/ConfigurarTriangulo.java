@@ -311,14 +311,14 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
             {
                 trian.type = comboTipo.getSelectedIndex() + 1;
                 trian.base = this.base;
-                trian.bgcolor = relleno;
+                trian.bgColor = relleno;
                 trian.height = altura;
-                trian.lncolor = contorno;
+                trian.lnColor = contorno;
                 trian.pointsX = trian.getCoordsX();
                 trian.pointsY = trian.getCoordsY();
                 trian.area = new Area(new java.awt.Polygon(trian.pointsX, trian.pointsY, trian.pointsX.length));
                 trian.configure(canvas);
-                canvas.elements.add(trian);
+                canvas.addElement(trian);
                 canvas.repaint();
                 setVisible(false);
             }    
@@ -396,8 +396,8 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                         this.trian = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
                         this.AlturaTriangulo.setText("" + trian.height);
                         this.BaseTriangulo.setText("" + trian.base);
-                        relleno = trian.bgcolor;
-                        contorno = trian.lncolor;
+                        relleno = trian.bgColor;
+                        contorno = trian.lnColor;
                         this.EscogerColorRelleno.setBackground(relleno);
                         this.EscogerColorLinea.setBackground(contorno);
                         this.setVisible(true);
