@@ -13,9 +13,10 @@ import javax.swing.JPanel;
  * @author douxm_000
  */
 public class Canvas extends JPanel{
-    public ArrayList<Element> elements;
-    FigureMenu fm;
-    SelectionMenu sm;
+    public static ArrayList<Element> elements;
+    private static FigureMenu fm;
+    private static SelectionMenu sm;
+    
     public Canvas() {
         elements = new ArrayList<>();
     }
@@ -39,6 +40,5 @@ public class Canvas extends JPanel{
         {
             elements.get(i).draw(g);
         }
-        
     }
 }

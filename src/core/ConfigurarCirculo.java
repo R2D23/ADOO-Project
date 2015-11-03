@@ -180,8 +180,8 @@ private int tipoMenu;
             if((radio!=0) && (relleno != null) && (contorno != null))
             {
                 setVisible(false);
-                circulo.bgcolor = relleno;
-                circulo.lncolor = contorno;
+                circulo.bgColor = relleno;
+                circulo.lnColor = contorno;
                 circulo.radio = this.radio;
                 circulo.area =  new Area(new Ellipse2D.Double(circulo.posX, circulo.posY, (int)radio,(int)radio));
                 if(!canvas.elements.contains(circulo))
@@ -242,8 +242,8 @@ private int tipoMenu;
                     try{
                         this.circulo = (Circle)((SelectionMenu)(e.getComponent())).elemento;
                         this.Radio.setText(circulo.radio + "");
-                        relleno = circulo.bgcolor;
-                        contorno = circulo.lncolor;
+                        relleno = circulo.bgColor;
+                        contorno = circulo.lnColor;
                         this.BottonEscogerColorRelleno.setBackground(relleno);
                         this.ButtonEscogerColorLinea.setBackground(contorno);
                         this.setVisible(true);

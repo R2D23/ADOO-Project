@@ -25,11 +25,8 @@ public class Triangle extends Figure{
     
     public Triangle(double base, double height, int type) {
 	super();
-        this.base = base;
-        this.height = height;
-        this.type = type;
-        pointsX = new int[3];
-        pointsY = new int[3];
+        this.base = base;   this.height = height;   this.type = type;
+        pointsX = new int[3];	pointsY = new int[3];
     }
     
     public Triangle(double base) {
@@ -40,15 +37,21 @@ public class Triangle extends Figure{
         pointsX = new int[3];
         pointsY = new int[3];
     }
+    
+    public Triangle(Triangle t){
+	super(t);
+	base = t.base;	height = t.height;  type = t.type;
+	pointsX = t.pointsX.clone();	pointsY = t.pointsY.clone();
+    }
 
     public Triangle() {super();}
     
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(bgcolor);
+        g2.setColor(bgColor);
         g2.fillPolygon(pointsX, pointsY, pointsX.length);
-        //gBuffer.setColor(lncolor);
+        //gBuffer.setColor(lnColor);
         g2.drawPolygon(pointsX, pointsY, pointsX.length);
         //g2.drawImage(imag, null, 0, 0); 
     }
@@ -61,8 +64,8 @@ public class Triangle extends Figure{
         base=50.0;
         height=100.0;
         //height=Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2));
-        bgcolor = Color.YELLOW;
-        lncolor = Color.BLACK;
+        bgColor = Color.YELLOW;
+        lnColor = Color.BLACK;
         incline = 0.0f;
         state = true;
         //Las coordenadas se asignan en el lugar que el usuario hizo clic

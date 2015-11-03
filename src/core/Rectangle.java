@@ -22,8 +22,12 @@ public class Rectangle extends core.Figure {
             
     public Rectangle(double width, double height) {
 	super();
-        this.width = width;
-        this.height = height;
+        width = width;	    height = height;
+    }
+    
+    public Rectangle(Rectangle r){
+	super(r);
+	width = r.width;    height = r.height;
     }
 
     public Rectangle() {super();}
@@ -31,9 +35,9 @@ public class Rectangle extends core.Figure {
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(bgcolor);
+        g2.setColor(bgColor);
         g2.fillRect(posX, posY, (int)width, (int)height);
-        g2.setColor(lncolor);
+        g2.setColor(lnColor);
         g2.drawRect(posX, posY, (int)width, (int)height);
     }
 
@@ -43,8 +47,8 @@ public class Rectangle extends core.Figure {
         //Por ejemplo despues de una configuracion puede quedar asi:
         width = 100.5;
         height = 250.5;
-        bgcolor = Color.CYAN;
-        lncolor = Color.MAGENTA;
+        bgColor = Color.CYAN;
+        lnColor = Color.MAGENTA;
         incline = 0.0f;
         state = true;
         //Las coordenadas se asignan en el lugar que el usuario hizo clic

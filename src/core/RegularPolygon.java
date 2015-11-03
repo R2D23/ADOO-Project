@@ -32,15 +32,21 @@ public class RegularPolygon extends Figure {
         pointsY = new int[numSides];
     }
     
+    public RegularPolygon(RegularPolygon rp){
+	super(rp);
+	numSides = rp.numSides;		longSide = rp.longSide;
+	pointsX = rp.pointsX.clone();	pointsY = rp.pointsY.clone();
+    }
+    
     public RegularPolygon() {super();}
 
     @Override
     public void draw(Graphics g) {
         
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(bgcolor);
+        g2.setColor(bgColor);
         g2.fillPolygon(pointsX, pointsY, pointsX.length);
-        g2.setColor(lncolor);
+        g2.setColor(lnColor);
         g2.drawPolygon(pointsX, pointsY, pointsX.length);
         
     }
@@ -49,8 +55,8 @@ public class RegularPolygon extends Figure {
     public void configure(Canvas canvas) {
         numSides = 12;
         longSide = 30.5;
-        bgcolor = Color.GRAY;
-        lncolor = Color.GREEN;
+        bgColor = Color.GRAY;
+        lnColor = Color.GREEN;
         incline = 0.0f;
         state = true;
         //Las coordenadas se asignan en el lugar que el usuario hizo clic

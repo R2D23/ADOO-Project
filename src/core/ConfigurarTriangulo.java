@@ -311,9 +311,9 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
             {
                 t.type = comboTipo.getSelectedIndex() + 1;
                 t.base = this.base;
-                t.bgcolor = relleno;
+                t.bgColor = relleno;
                 t.height = altura;
-                t.lncolor = contorno;
+                t.lnColor = contorno;
                 t.pointsX = t.getCoordsX();
                 t.pointsY = t.getCoordsY();
                 t.area = new Area(new java.awt.Polygon(t.pointsX, t.pointsY, t.pointsX.length));
@@ -395,8 +395,8 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                         this.t = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
                         this.AlturaTriangulo.setText("" + t.height);
                         this.BaseTriangulo.setText("" + t.base);
-                        relleno = t.bgcolor;
-                        contorno = t.lncolor;
+                        relleno = t.bgColor;
+                        contorno = t.lnColor;
                         this.EscogerColorRelleno.setBackground(relleno);
                         this.EscogerColorLinea.setBackground(contorno);
                         this.setVisible(true);

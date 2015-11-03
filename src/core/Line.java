@@ -39,6 +39,13 @@ public class Line extends Element {
         this.color = color;
     }
     
+    public Line(Line l){
+	super(l);
+	length = l.length;  angle = l.angle;
+	color = new Color(l.color.getRGB());
+	grosor = l.grosor;
+    }
+    
     public Line() {super();}
 
     @Override

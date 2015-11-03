@@ -178,8 +178,8 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
             noLados = Integer.parseInt(this.lados.getText());
             if((lado!=0) && (noLados!=0) && (relleno != null) && (contorno != null))
             {
-                p.bgcolor = relleno;
-                p.lncolor = contorno;
+                p.bgColor = relleno;
+                p.lnColor = contorno;
                 p.longSide = lado;
                 p.numSides = noLados;
                 p.pointsX = p.getCoordsX();
@@ -259,8 +259,8 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
                         this.p = (RegularPolygon)((SelectionMenu)(e.getComponent())).elemento;
                         this.lados.setText("" + p.numSides);
                         this.Lado.setText("" + p.longSide);
-                        relleno = p.bgcolor;
-                        contorno = p.lncolor;
+                        relleno = p.bgColor;
+                        contorno = p.lnColor;
                         this.EscogerColorRelleno.setBackground(relleno);
                         this.EscogerColorLinea.setBackground(contorno);
                         this.setVisible(true);
