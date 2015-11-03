@@ -54,6 +54,8 @@ public class Action {
 		prev = ((Figure) elements.get(id)).getLgColor();
 		break;
 	}
+	
+	undoStack.push(this);
     }
     
     public void make(){
@@ -84,7 +86,7 @@ public class Action {
 		elements.remove(id);
 		break;
 	    case DELETE: 
-		elements.add(id, (Element)prev);
+		elements.add(id, (Element) prev);
 		break;
 	    case ELEMENT_MOVE:
 		elements.get(id).move((Point) prev);

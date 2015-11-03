@@ -186,7 +186,7 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
                 p.pointsX = p.getCoordsX();
                 p.pointsY = p.getCoordsY();
                 p.area = new Area(new java.awt.Polygon(p.pointsX, p.pointsY, p.pointsX.length));
-                canvas.elements.add(p);
+                canvas.addElement(p);
                 canvas.repaint();
                 setVisible(false);
             } 

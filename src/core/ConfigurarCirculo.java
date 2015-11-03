@@ -185,7 +185,7 @@ private int tipoMenu;
                 circulo.radio = this.radio;
                 circulo.area =  new Area(new Ellipse2D.Double(circulo.posX, circulo.posY, (int)radio,(int)radio));
                 if(!canvas.elements.contains(circulo))
-                    canvas.elements.add(circulo);
+                    canvas.addElement(circulo);
                 canvas.repaint();
                 circulo = null;
                 this.BottonEscogerColorRelleno.setBackground(Util.normalColor);

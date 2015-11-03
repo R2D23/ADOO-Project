@@ -189,8 +189,6 @@ public class SelectionMenu extends JComponent implements MouseListener{
             if(sel >= 0)
             {
                 this.elemento = canvas.elements.get(sel);
-                canvas.elements.remove(this.elemento);
-                canvas.elements.add(this.elemento);
                 this.center = e.getPoint();
                 location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
                 this.setLocation(location);

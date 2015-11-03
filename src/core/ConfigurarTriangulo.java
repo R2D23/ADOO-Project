@@ -318,7 +318,7 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                 trian.pointsY = trian.getCoordsY();
                 trian.area = new Area(new java.awt.Polygon(trian.pointsX, trian.pointsY, trian.pointsX.length));
                 trian.configure(canvas);
-                canvas.elements.add(trian);
+                canvas.addElement(trian);
                 canvas.repaint();
                 setVisible(false);
             }    

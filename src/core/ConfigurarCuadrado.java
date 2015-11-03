@@ -214,7 +214,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
                 r.width = base;
                 r.area = new Area(new java.awt.Rectangle(r.posX, r.posY, (int)base, (int)Altura));
                 r.incline = 0;
-                canvas.elements.add(r);
+                canvas.addElement(r);
                 canvas.repaint(); 
                 setVisible(false);
             }
