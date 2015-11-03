@@ -5,11 +5,10 @@
  */
 package core;
 
-import core.Figure;
-import core.Canvas;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 
 /**
  * 
@@ -44,25 +43,38 @@ public class RegularPolygon extends Figure {
     public void draw(Graphics g) {
         
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(bgColor);
+        /*g2.setColor(bgcolor);
         g2.fillPolygon(pointsX, pointsY, pointsX.length);
         g2.setColor(lnColor);
         g2.drawPolygon(pointsX, pointsY, pointsX.length);
-        
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(bgcolor));
+            g2.fill(area);
+        }
+        */
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(bgcolor));
+        } else {
+            g2.setColor(bgcolor);
+        }
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        g2.fill(area);
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(lncolor));
+        } else {
+            g2.setColor(lncolor);
+        }
+        g2.draw(area);
     }
 
     @Override
     public void configure(Canvas canvas) {
-        numSides = 12;
-        longSide = 30.5;
-        bgColor = Color.GRAY;
-        lnColor = Color.GREEN;
-        incline = 0.0f;
-        state = true;
-        //Las coordenadas se asignan en el lugar que el usuario hizo clic
         pointsX = getCoordsX();
         pointsY = getCoordsY();
-        canvas.addElement(this);
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        AffineTransform rot = new AffineTransform();
+        rot.setToRotation(incline, posX, posY);
+        area.transform(rot);
     }
     
     public int[] getCoordsX() {

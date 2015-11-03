@@ -10,6 +10,7 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Area;
@@ -44,7 +45,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;
-        this.addMouseListener(new Escucha(areas, Escucha.SELECTIONMENU));
+        this.addMouseListener(new Escucha(areas, Escucha.SELECTIONMENU,canvas));
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
         
@@ -188,6 +189,8 @@ public class SelectionMenu extends JComponent implements MouseListener{
             if(sel >= 0)
             {
                 this.elemento = canvas.elements.get(sel);
+                canvas.elements.remove(this.elemento);
+                canvas.elements.add(this.elemento);
                 this.center = e.getPoint();
                 location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
                 this.setLocation(location);
@@ -224,7 +227,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
     
     public int cualFigura(Point p)
     {
-        for(int i = 0; i < canvas.elements.size(); i++)
+        for(int i = canvas.elements.size()-1; i >= 0; i--)
             if(canvas.elements.get(i).area.contains(p))
                 return i;
         return -1;

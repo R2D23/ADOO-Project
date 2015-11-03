@@ -5,11 +5,10 @@
  */
 package core;
 
-import core.Canvas;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 
 /**
  *
@@ -35,24 +34,30 @@ public class Rectangle extends core.Figure {
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(bgColor);
-        g2.fillRect(posX, posY, (int)width, (int)height);
-        g2.setColor(lnColor);
-        g2.drawRect(posX, posY, (int)width, (int)height);
+        //g2.fillRect(posX, posY, (int)width, (int)height);
+        //g2.setColor(lncolor);
+        //g2.drawRect(posX, posY, (int)width, (int)height);
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(bgcolor));
+        } else {
+            g2.setColor(bgcolor);
+        }
+        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
+        g2.fill(area);
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(lncolor));
+        } else {
+            g2.setColor(lncolor);
+        }
+        g2.draw(area);
     }
 
     @Override
     public void configure(Canvas canvas) {
-        //Aqui debemos desplegar la emergente para configurar Rectángulo
-        //Por ejemplo despues de una configuracion puede quedar asi:
-        width = 100.5;
-        height = 250.5;
-        bgColor = Color.CYAN;
-        lnColor = Color.MAGENTA;
-        incline = 0.0f;
-        state = true;
-        //Las coordenadas se asignan en el lugar que el usuario hizo clic
-        canvas.addElement(this);
+        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
+        AffineTransform rot = new AffineTransform();
+        rot.setToRotation(incline, posX+width/2, posY+height/2);
+        area.transform(rot);
     }
     
 }

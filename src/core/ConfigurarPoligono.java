@@ -173,6 +173,7 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
     }//GEN-LAST:event_LadoActionPerformed
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+        canvas.actElements();
         try{
             lado=Double.parseDouble(this.Lado.getText());
             noLados = Integer.parseInt(this.lados.getText());

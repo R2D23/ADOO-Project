@@ -37,14 +37,14 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	    toolKit.add(file);//La constante se define en la clase GraphicDrawer y es para saber que icono dibujar
 		file.addActionListener(this);//se define este JFrame como ActionListener de los botones
 		file.setActionCommand("file");//se define el actionCommand para saber sobre que botón se realizó la acción
-		    Menu fileM = new Menu(file);
+		    Menu fileM = new Menu(file,canvas);
 		    menus.add(fileM);//se agrega el menú circular de archivo
                 file.addMouseListener(fileM);//se agrega el menu circualar de archivo como MouseListener
 	    ToolButton action = new ToolButton(GraphicDrawer.REDO);
 		toolKit.add(action);
 		action.addActionListener(this);
 		action.setActionCommand("redo-menu");
-		    Menu actionM = new Menu(action);
+		    Menu actionM = new Menu(action,canvas);
                     menus.add(actionM);
                 action.addMouseListener(actionM);
 	    ToolButton text = new ToolButton(GraphicDrawer.TEXT);
@@ -67,7 +67,7 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 		toolKit.add(zoom);
                 zoom.addActionListener(this);
                 zoom.setActionCommand("lupa");
-                    Menu zoomM = new Menu(toolKit.get(toolKit.size() - 1));
+                    Menu zoomM = new Menu(toolKit.get(toolKit.size() - 1),canvas);
 		    menus.add(zoomM);
                 zoom.addMouseListener(zoomM);
 	}

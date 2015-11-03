@@ -1,51 +1,49 @@
 
 package core;
 
-import core.Canvas;
-import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.geom.Area;
+import java.io.Serializable;
 
 /**La clase Element define en base a todos los elementos trabajables dentro
  * del lienzo.
  *
  * @author douxm_000
  */
-public abstract class Element{
+public abstract class Element implements Cloneable,Serializable{
     //Coordenadas
+    private static long serialVersionUID = 1113799434508676095L;
     public int posX; 
     public int posY;
-    public float incline;
-    public boolean state;
-    public Area area;//area de la figura
-    private static int count = 0; //El número de instancias de esta clase.
-    private int id; //El identificador de una instancia.
+    public double incline;
+    public int state;
+    transient public Area area;//area de la figura
+    public static final int AVAILABLE = 0;
+    public static final int BUSY = 1;
+    public static final int MOVING = 2;
+    public static final int ROTATING = 3;
     
-    //Constructor
-    public Element(){
-	id = getNewID();
+     public Object clone(){
+        Object obj=null;
+        try{
+            obj=super.clone();
+        }catch(CloneNotSupportedException ex){
+            System.out.println(" no se puede duplicar");
+        }
+        return obj;
     }
     
-    //Copy
-    public Element(Element e){
-	this.area = new Area(e.area);	this.id = getNewID();
-	this.incline = e.incline;	this.posX = e.posX;
-	this.posY = e.posY;		this.state = e.state;
-    }
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
-        if(state) //Si esta disponible (true)
-            state = false; //Entonces lo deja de estar (false)
+        if(state==AVAILABLE) //Si esta disponible (0)
+            state = BUSY; //Entonces lo deja de estar (1)
     }
     
     //Este metodo actualiza el valor de la inclinación
-    public void rotate(float incline) {
+    public void rotate(double incline) {
         this.incline = incline; //Asigna la nueva inclinacion
     }
-    
-    public float getRotation(){return incline;}
     
     //Este método cambia las coordenadas del Elemento
     public void move(int posX, int posY) {
@@ -53,19 +51,6 @@ public abstract class Element{
         this.posY = posY;
     }
     
-    public Point getPos(){return new Point(posX, posY);}
-    
-    //Alternativa de movimiento.
-    void move(Point point) {
-	posX = point.x;
-	posY = point.y;
-    }
-    
-    public int getID(){return id;}
-    
     public abstract void draw(Graphics g);
     public abstract void configure(Canvas canvas);
-    
-    //Proporciona un nuevo valor de identificación para un elemento.
-    public static int getNewID(){count++; return count;}
 }
