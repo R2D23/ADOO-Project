@@ -3,23 +3,36 @@ package core;
 
 import java.awt.Graphics;
 import java.awt.geom.Area;
+import java.io.Serializable;
 
 /**La clase Element define en base a todos los elementos trabajables dentro
  * del lienzo.
  *
  * @author douxm_000
  */
-public abstract class Element{
+public abstract class Element implements Cloneable,Serializable{
     //Coordenadas
+    private static long serialVersionUID = 1113799434508676095L;
     public int posX; 
     public int posY;
     public double incline;
     public int state;
-    public Area area;//area de la figura
+    transient public Area area;//area de la figura
     public static final int AVAILABLE = 0;
     public static final int BUSY = 1;
     public static final int MOVING = 2;
     public static final int ROTATING = 3;
+    
+     public Object clone(){
+        Object obj=null;
+        try{
+            obj=super.clone();
+        }catch(CloneNotSupportedException ex){
+            System.out.println(" no se puede duplicar");
+        }
+        return obj;
+    }
+    
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {

@@ -170,7 +170,7 @@ private int tipoMenu;
     }//GEN-LAST:event_ButtonEscogerColorLineaActionPerformed
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
-        
+        canvas.actElements();
         if(Radio.getText().isEmpty())
             JOptionPane.showMessageDialog(rootPane, "Has ingresado datos erróneos, favor de revisarlos e intentarlo\n" +
 "nuevamente.");

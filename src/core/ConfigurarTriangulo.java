@@ -301,7 +301,7 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
     }//GEN-LAST:event_ButtonCancelarActionPerformed
 
     private void ButtonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAceptarActionPerformed
-        
+        canvas.actElements();
         
         try
         {

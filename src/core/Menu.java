@@ -30,9 +30,9 @@ public class Menu extends JComponent implements MouseListener{
     private JButton b;//Boton al que está asociado
     private ArrayList<Area> areas;//Botones que tiene el menu
     private int areaActual;    //Area/Boton sobre la cual esta el cursor
-    
-    public Menu(JButton b){
-        
+    public Canvas canvas;
+    public Menu(JButton b,Canvas c){
+        this.canvas = c;
 	setSize(SIZE, SIZE);
 	location = new Point();
 	center = new Point();
@@ -46,15 +46,15 @@ public class Menu extends JComponent implements MouseListener{
         switch (b.getActionCommand()) {
             case "file":
                 obtenerAreasFileMenu();
-                addMouseListener(new Escucha(areas, Escucha.FILEMENU));
+                addMouseListener(new Escucha(areas, Escucha.FILEMENU,canvas));
                 break;
             case "lupa":
                 obtenerAreasZoomMenu();
-                addMouseListener(new Escucha(areas, Escucha.ZOOMMENU));
+                addMouseListener(new Escucha(areas, Escucha.ZOOMMENU,canvas));
                 break;
             case "redo-menu":
                 obtenerAreasZoomMenu();
-                addMouseListener(new Escucha(areas, Escucha.REDOMENU));
+                addMouseListener(new Escucha(areas, Escucha.REDOMENU,canvas));
                 break;
         }
         

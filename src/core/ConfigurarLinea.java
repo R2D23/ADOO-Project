@@ -153,6 +153,7 @@ private int tipoMenu;
     }// </editor-fold>//GEN-END:initComponents
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
+        canvas.actElements();
         try
         {
             largo=Double.parseDouble(this.Largo.getText());

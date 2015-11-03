@@ -201,7 +201,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
     }//GEN-LAST:event_EscogerColorLineaActionPerformed
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
-        
+        canvas.actElements();
         try
         {
             base=Double.parseDouble(this.Base.getText());

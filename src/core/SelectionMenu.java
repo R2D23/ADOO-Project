@@ -45,7 +45,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;
-        this.addMouseListener(new Escucha(areas, Escucha.SELECTIONMENU));
+        this.addMouseListener(new Escucha(areas, Escucha.SELECTIONMENU,canvas));
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
         

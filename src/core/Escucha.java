@@ -37,10 +37,10 @@ public class Escucha implements MouseListener, MouseMotionListener {
        this.canvas = canvas;
     }
 
-    Escucha(ArrayList<Area> as, int t) {
+    /*Escucha(ArrayList<Area> as, int t) {
         areas = as;
         tipoMenu = t;
-    }
+    }*/
     
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -137,6 +137,7 @@ public class Escucha implements MouseListener, MouseMotionListener {
     {
         int areaClic = whichArea(e.getPoint());
         System.out.println("AREA CLIC : " + areaClic);
+        int opc=0;
         switch(areaClic)
         {
             case 6 : //esta es el area central que se usa para salir
@@ -151,12 +152,23 @@ public class Escucha implements MouseListener, MouseMotionListener {
             case MenuDrawer.SAVE :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Guardar Archivo");
                 JFileChooser fcs = new JFileChooser();
-                fcs.showSaveDialog(null);
+                opc=fcs.showSaveDialog(null);
+                if(opc == JFileChooser.APPROVE_OPTION){
+                    SaveCanvas file = new SaveCanvas(canvas.elements);
+                    file.saveFile(fcs.getSelectedFile().getPath());
+                }
+                
             break;
             case MenuDrawer.OPEN :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Abrir Archivo");
                 JFileChooser fco = new JFileChooser();
-                fco.showOpenDialog(null);
+                opc=fco.showOpenDialog(null);
+                if(opc == JFileChooser.APPROVE_OPTION){
+                    SaveCanvas file = new SaveCanvas(canvas.elements);
+                    canvas.elements=file.readFile(fco.getSelectedFile().getPath());
+                    canvas.repaint();
+                }
+                fco.getName();
             break;
         }
     }
@@ -189,10 +201,14 @@ public class Escucha implements MouseListener, MouseMotionListener {
                 e.getComponent().setVisible(false);
             break;
             case MenuDrawer.UNDO :
-                JOptionPane.showMessageDialog(e.getComponent(),"Deshacer ultima accion");
+                //JOptionPane.showMessageDialog(e.getComponent(),"Deshacer ultima accion");
+                canvas.returnPast();
+                canvas.repaint();
             break;
             case MenuDrawer.REDO :
-                JOptionPane.showMessageDialog(e.getComponent(),"Rehacer ultima accion");
+                //JOptionPane.showMessageDialog(e.getComponent(),"Rehacer ultima accion");
+                canvas.toFuture();
+                canvas.repaint();
             break;
         }    
     }
@@ -205,16 +221,19 @@ public class Escucha implements MouseListener, MouseMotionListener {
             case MenuDrawer.MOVE :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Mover Figura");
                 //System.out.println("ANTES: "+((SelectionMenu)(e.getComponent())).elemento.state);
+                canvas.actElements();
                 ((SelectionMenu)(e.getComponent())).elemento.state = Element.MOVING;
                 //System.out.println("DESPUES: "+((SelectionMenu)(e.getComponent())).elemento.state);
                 e.getComponent().setVisible(false);
             break;
             case MenuDrawer.ROTATE :
+                canvas.actElements();
                 //JOptionPane.showMessageDialog(e.getComponent(),"Rotar Figura");
                 ((SelectionMenu)(e.getComponent())).elemento.state = Element.ROTATING;
                 e.getComponent().setVisible(false);
             break;
             case MenuDrawer.DISPOSE :
+                canvas.actElements();
                 JOptionPane.showMessageDialog(e.getComponent(),"Eliminar Figura");
             break;
             case MenuDrawer.EXIT2 :
