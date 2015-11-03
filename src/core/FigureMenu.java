@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.event.*;
 /**
  *
  * @author LuisArturo
@@ -25,13 +19,13 @@ import javax.swing.event.*;
 public class FigureMenu extends JComponent implements MouseListener{
     
     private static final int SIZE = 200;
-    private Point location;
-    private Point center;
-    //private int noArea;
-    private ArrayList<Area> areas;
-    private int areaActual;    
+    public Point location;
+    public Point center;
+    public ArrayList<Area> areas;
+    public int areaActual;
+    private Canvas canvas;
     
-    public FigureMenu(){
+    public FigureMenu(Canvas canvas){
         
         /*Basicamente en este método se define un JComponent y 
         dentro de este se dibuja la figura de dona. El ArrayList
@@ -40,11 +34,15 @@ public class FigureMenu extends JComponent implements MouseListener{
         de poder detectar el momento en que se da clic sobre alguno
         de ellos.*/
 	setSize(SIZE, SIZE);
-	location = new Point();
+	setOpaque(false);
+        location = new Point();
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;
-        this.addMouseListener(new Escucha(areas));
+        this.canvas = canvas;
+        this.setName("FigureMenu");
+        this.setVisible(false);
+        this.addMouseListener(new Escucha(areas, Escucha.FIGUREMENU, canvas));
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
         /*Cada una de las areas corresponde a cada boton,
@@ -116,14 +114,20 @@ public class FigureMenu extends JComponent implements MouseListener{
             /*Este MouseMotionListener es el que detecta sobre qué botón está 
             el cursor del mouse y así poder resaltarlo*/
         this.addMouseMotionListener(new MouseAdapter(){
+            @Override
             public void mouseMoved(MouseEvent me)
             {
                 int area = whichArea(me.getPoint());
                 updateMenu(area);
             }
         });
-
-        this.setVisible(false);
+        
+        System.out.println(canvas);
+        this.addMouseListener(new ConfigurarCirculo(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarCuadrado(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarTriangulo(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarPoligono(areas, canvas, Escucha.FIGUREMENU));
+        this.addMouseListener(new ConfigurarLinea(areas, canvas, Escucha.FIGUREMENU));
     }
 
     /*Esta funcion es un intermedio entre el MouseMotionListener y la clase actual.
@@ -142,20 +146,30 @@ public class FigureMenu extends JComponent implements MouseListener{
     @Override
     public void paint(Graphics g){
 	Graphics2D g2 = (Graphics2D) g;
-	Area s = new Area(new Ellipse2D.Double(0, 0, 200, 200));
+        Area s = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	s.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
 	g2.translate(0, 0);
 	g2.setColor(Util.normalColor);
 	g2.fill(s);
-	
+        
         /*Es este if es donde se resalta el área seleccionada*/
 	if(areaActual >= 0){
-	    g2.setColor(Color.CYAN);
+            g2.setColor(Color.CYAN);
 	    g2.fill(areas.get(areaActual));
 	}
+                       
+        /*La clase menuDrawer es la que se encarga de dibujar todas las areas 
+        y agregarles lo iconos correspondientes*/
+        MenuDrawer md = new MenuDrawer();
+        md.paint(MenuDrawer.TRIANGLE, g, areas.get(0));
+        md.paint(MenuDrawer.CIRCLE, g, areas.get(1));
+        md.paint(MenuDrawer.POLIGONE, g, areas.get(2));
+        md.paint(MenuDrawer.RECTANGLE, g, areas.get(3));
+        md.paint(MenuDrawer.LINE, g, areas.get(4));
+        md.paint(MenuDrawer.IRREGULAR, g, areas.get(5));
+        md.paint(MenuDrawer.EXIT, g, areas.get(6));
+                
         g2.setColor(Color.BLACK);
-        
-        
         /*Esta parte del codigo es para dibujar las lineas que separan cada uno 
         de los botones*/
         int cX=getWidth()/2;
@@ -185,47 +199,61 @@ public class FigureMenu extends JComponent implements MouseListener{
         g2.setColor(Color.black);
 	g2.drawOval(SIZE/3, SIZE/3, SIZE/3, SIZE/3);
 	g2.drawOval(0, 0, SIZE, SIZE);
-        
-        
-        /*La clase menuDrawer es la que se encarga de dibujar todas las areas 
-        y agregarles lo iconos correspondientes*/
-        MenuDrawer md = new MenuDrawer();
-        for(int i = 0; i < areas.size(); i++)
-            md.paint(i, g, areas.get(i));
     }
 
-    /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder sabes cuando se 
+    /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder saber cuando se 
     ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON3)
+        System.out.println(this.getCursor().getName());
+        if(this.getCursor().getName().equals("lapiz"))
         {
-            System.out.print("Click");
-	    this.setSize(SIZE, SIZE);
-	    this.setVisible(true);
-	    location.setLocation(e.getX() - SIZE / 2, e.getY() - SIZE / 2);
-	    center.setLocation(e.getPoint());
-	    this.setLocation(location);
-	    this.repaint();
+            switch(e.getButton())
+            {
+                case MouseEvent.BUTTON3 :
+                    this.setVisible(false);
+                break;
+                case MouseEvent.BUTTON1 :
+                    System.out.print("Click");
+                    this.setSize(SIZE, SIZE);
+                    this.setVisible(true);
+                    location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
+                    center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
+                    this.setLocation(location);
+                    this.repaint();
+                break;
+            }
+        } else if(this.getCursor().getName().equals("mano")) {
+            if(!canvas.elements.isEmpty()) {
+                for(int i=0; i<canvas.elements.size(); i++) {
+                    int est = canvas.elements.get(i).state;
+                    if(est==Element.MOVING||est==Element.ROTATING) {
+                       canvas.elements.get(i).state=Element.AVAILABLE;
+                    }
+                }
+                canvas.repaint();
+            }
         }
-        else
-            this.setVisible(false);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        //canvas.drawAll();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        //canvas.drawAll()
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        //canvas.drawAll();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        //areaActual = -1;
     }
     
     public int whichArea(Point p)
@@ -235,5 +263,7 @@ public class FigureMenu extends JComponent implements MouseListener{
                 return i;
         return -1;
     }
+    
+
 }
 

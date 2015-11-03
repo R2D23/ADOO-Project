@@ -24,4 +24,8 @@ public class Util {
 		return true;
 	return false;
     }
+    public static Color negative(Color c) {
+        Color neg = new Color(255-c.getRed(), 255-c.getGreen(), 255-c.getBlue());
+        return neg;
+    }
 }

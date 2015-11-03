@@ -105,7 +105,7 @@ public class GraphicDrawer{
                 g2 = (Graphics2D)g;
                 try
                 {
-                    FileInputStream img = new FileInputStream("arrow.png");
+                    FileInputStream img = new FileInputStream("cursorBase.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
                 }
