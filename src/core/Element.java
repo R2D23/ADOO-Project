@@ -25,9 +25,7 @@ public abstract class Element implements Cloneable,Serializable{
     public static final int ROTATING = 3;
     
     public Element(){
-	posX = 0;
-	posY = 0;
-	incline = 0;
+	posX = 0;   posY = 0;	incline = 0;
 	state = AVAILABLE;
 	area = null;
     }
@@ -80,6 +78,6 @@ public abstract class Element implements Cloneable,Serializable{
     }
 
     void move(Point point) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	posX = point.x; posY = point.y;
     }
 }

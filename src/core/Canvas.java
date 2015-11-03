@@ -38,7 +38,7 @@ public class Canvas extends JPanel implements Serializable {
     
     //Agrega un elemento a la lista de Elementos sobre el Lienzo.
     public void addElement(Element e) {
-	new Action(Action.CREATE, elements.size(), e);
+	createAction(Action.CREATE, 0, e);
         elements.add(e);
     }
     
@@ -49,7 +49,7 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public void deleteElement(int i){
-	new Action(Action.DELETE, elements.size(), null);
+	createAction(Action.DELETE, i, null);
 	elements.remove(i);
     }
     

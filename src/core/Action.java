@@ -30,17 +30,30 @@ public class Action {
     public static final int FIGURE_BCOLOR = 5;
     public static final int FIGURE_LCOLOR = 6;
     
-    public Action(int t, int id, Object o){
+//    La clase Action está diseñada para grabar las acciones del usuario
+//    para volver a realizarlas 'make()' o para deshacerlas 'rollback'
+//    requiere que le sea indicado que tipo de acción será, el identificador del
+//    objeto modificado y un objeto que tenga los valores necesarios para repetir
+//    una operación. Por ejemplo, digamos que queresmo volver un objeto a su 
+//    lugar original, entonces, 'o' debe tener almacenado un objeto Point
+    
+    private Action(int t, int id, Object o){
 	this.next = o;
 	type = t;
 	prev = new ArrayList();
 	
 	switch (type){
+//	    Crear no requiere un identificador, pero si que se le pase la
+//	    dirección del objeto creado por medio de 'o'
 	    case CREATE:
 		break;
+//	    Borrar requiere que se le pase el identificador del arreglo del
+//	    objeto que será eliminado.
 	    case DELETE:
-		prev = o;
+		prev = elements.get(id);
 		break;
+//	    Mover un elemento requiere el identificador de este, más un
+//	    objeto Point que servirá de referencia a las nuevas coordenadas.
 	    case ELEMENT_MOVE:
 		prev = ((Element) elements.get(id)).getPos();
 		break;
@@ -54,17 +67,20 @@ public class Action {
 		prev = ((Figure) elements.get(id)).getLgColor();
 		break;
 	}
-	
-	undoStack.push(this);
+    }
+    
+    public static void createAction(int t, int id, Object o){
+	undoStack.add(new Action(t, id, o));
+	redoStack.clear();
     }
     
     public void make(){
 	switch (type){
 	    case CREATE: 
-		elements.add(id, (Element) next);
+		elements.add((Element) next);
 		break;
 	    case DELETE: 
-		elements.remove(id);
+		elements.remove(prev);
 		break;
 	    case ELEMENT_MOVE:
 		elements.get(id).move((Point) next);
@@ -83,7 +99,7 @@ public class Action {
     public void rollback(){
 	switch (type){
 	    case CREATE: 
-		elements.remove(id);
+		elements.remove(next);
 		break;
 	    case DELETE: 
 		elements.add(id, (Element) prev);
@@ -106,13 +122,13 @@ public class Action {
 	Action act;
 	act = undoStack.pop();
 	act.rollback();
-	redoStack.push(act);
+	redoStack.add(act);
     }
     
     public static void redo(){
 	Action act;
 	act = redoStack.pop();
 	act.make();
-	undoStack.push(act);
+	undoStack.add(act);
     }
 }

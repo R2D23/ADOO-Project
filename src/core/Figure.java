@@ -19,8 +19,9 @@ public abstract class Figure extends core.Element {
     
     public Figure(){
 	super();
-	bgColor = null;
-	lnColor = null;
+	//Colores por Defecto
+	bgColor = new Color(255, 255, 255, 0); //Transparente
+	lnColor = Color.BLACK;
     }
     
     public Figure(Figure f){
