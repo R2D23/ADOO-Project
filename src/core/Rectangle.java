@@ -42,7 +42,7 @@ public class Rectangle extends core.Figure {
         } else {
             g2.setColor(bgColor);
         }
-        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
+        //area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         g2.fill(area);
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(lnColor));
