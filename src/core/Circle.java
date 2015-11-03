@@ -49,7 +49,7 @@ public class Circle extends Figure{
             } else {
                 g2.setColor(bgColor);
             }
-            area = new Area(new Ellipse2D.Double(posX, posY, (int)radio,(int)radio));
+            //area = new Area(new Ellipse2D.Double(posX, posY, (int)radio,(int)radio));
             g2.fill(area);
             if(state!=AVAILABLE) {
                 g2.setColor(Util.negative(lnColor));
