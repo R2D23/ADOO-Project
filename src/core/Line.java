@@ -39,7 +39,7 @@ public class Line extends Element {
     
     public Line(Line l){
 	super(l);
-	length = l.length;  angle = l.angle;
+	length = l.length;  incline = l.incline;
 	color = new Color(l.color.getRGB());
 	grosor = l.grosor;
     }

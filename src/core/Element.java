@@ -2,6 +2,7 @@
 package core;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Area;
 import java.io.Serializable;
 
@@ -23,7 +24,23 @@ public abstract class Element implements Cloneable,Serializable{
     public static final int MOVING = 2;
     public static final int ROTATING = 3;
     
-     public Object clone(){
+    public Element(){
+	posX = 0;
+	posY = 0;
+	incline = 0;
+	state = AVAILABLE;
+	area = null;
+    }
+    
+    public Element(Element e){
+	posX = e.posX;
+	posY = e.posY;
+	incline = e.incline;
+	state = e.state;
+	area = new Area(e.area);
+    }
+    
+    public Object clone(){
         Object obj=null;
         try{
             obj=super.clone();
@@ -53,4 +70,16 @@ public abstract class Element implements Cloneable,Serializable{
     
     public abstract void draw(Graphics g);
     public abstract void configure(Canvas canvas);
+
+    public Point getPos() {
+	return new Point(posX, posY);
+    }
+    
+    public double getInclination() {
+	return incline;
+    }
+
+    void move(Point point) {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -61,16 +61,16 @@ public class Triangle extends Figure{
             g2.fill(area);
         }*/
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
+            g2.setColor(Util.negative(bgColor));
         } else {
-            g2.setColor(bgcolor);
+            g2.setColor(bgColor);
         }
         area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
         g2.fill(area);
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(lncolor));
+            g2.setColor(Util.negative(lnColor));
         } else {
-            g2.setColor(lncolor);
+            g2.setColor(lnColor);
         }
         g2.draw(area);
     }

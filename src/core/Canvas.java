@@ -16,9 +16,9 @@ import javax.swing.JPanel;
  * @author douxm_000
  */
 public class Canvas extends JPanel implements Serializable {
-    public ArrayList<Element> elements;
-    FigureMenu fm;
-    SelectionMenu sm;
+    public static ArrayList<Element> elements;
+    private static FigureMenu fm;
+    private static SelectionMenu sm;
     public ArrayList<Element> pastelements;
     public ArrayList<Element> futureelements;
     public Canvas() {

@@ -19,6 +19,8 @@ public abstract class Figure extends core.Element {
     
     public Figure(){
 	super();
+	bgColor = null;
+	lnColor = null;
     }
     
     public Figure(Figure f){

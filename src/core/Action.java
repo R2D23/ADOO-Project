@@ -45,7 +45,7 @@ public class Action {
 		prev = ((Element) elements.get(id)).getPos();
 		break;
 	    case ELEMENT_ROTATE:
-		prev = ((Element) elements.get(id)).getRotation();
+		prev = ((Element) elements.get(id)).getInclination();
 		break;
 	    case FIGURE_BCOLOR:
 		prev = ((Figure) elements.get(id)).getBgColor();
