@@ -281,6 +281,7 @@ public class Menu extends JComponent implements MouseListener{
         
     }
     
-    
+    public JButton getBoton()
+    {return this.b;}
 }
 

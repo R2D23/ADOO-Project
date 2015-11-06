@@ -1,4 +1,3 @@
-
 package core;
 
 /**
@@ -29,7 +28,6 @@ public class SelectionMenu extends JComponent implements MouseListener{
     private ArrayList<Area> areas;
     private int areaActual;    
     Canvas canvas;
-    Element elemento;
     
     public SelectionMenu(Canvas c){
         
@@ -58,6 +56,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
             Area s = ((Area)gen.clone());
             s.intersect(new Area(p));
             areas.add(s);
+
         //AREA MOVER
             p = new Polygon();
             p.addPoint(SIZE/2, SIZE/2);
@@ -186,17 +185,22 @@ public class SelectionMenu extends JComponent implements MouseListener{
         if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
         {
             int sel = cualFigura(e.getPoint());
+            System.out.println("p : " + sel);
             if(sel >= 0)
-            {
-                this.elemento = canvas.elements.get(sel);
-                canvas.elements.remove(this.elemento);
-                canvas.elements.add(this.elemento);
+            {   
+                
+                canvas.seleccionado = canvas.elements.get(sel);
+                canvas.seleccionado.state = Element.BUSY;
+                canvas.elements.remove(canvas.seleccionado);//Esto es para que lo traiga al frente
+                canvas.elements.add(canvas.seleccionado);
                 this.center = e.getPoint();
-                location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
+                location.setLocation(e.getX() - SIZE/2, e.getY() - SIZE/2);
                 this.setLocation(location);
                 this.setVisible(true);
             }
         }
+        else
+            this.setVisible(false);
     }
 
     @Override
@@ -231,6 +235,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
             if(canvas.elements.get(i).area.contains(p))
                 return i;
         return -1;
+        
     }
 }
 

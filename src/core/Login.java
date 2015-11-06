@@ -5,6 +5,8 @@
  */
 package core;
 
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author Mauricio
@@ -13,6 +15,8 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.setTitle("iDraw - Iniciar Sesion");
+        this.setIconImage(new ImageIcon("iconoGeneral.png").getImage());
     }
 
     

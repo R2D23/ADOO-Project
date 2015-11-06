@@ -21,12 +21,14 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     private final ArrayList<Menu> menus;
     private final FigureMenu fm;
     private final SelectionMenu sm;
+    File archivo;
     
     //The UI parameters
     private final static int GAP = 50;
     
     public GUI(){
 	canvas = new Canvas();
+        archivo = new File(canvas);
         fm = new FigureMenu(canvas);
         sm = new SelectionMenu(canvas);
         
@@ -86,6 +88,8 @@ public class GUI extends JFrame implements Runnable, ActionListener{
         members = new Members();{
 	members.addActionListener(this);
 	members.setActionCommand("collaborators");
+        setTitle("Lienzo en blanco - iDraw");
+
 	}
     }
     
@@ -97,6 +101,8 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 	
         this.getContentPane().add(fm);
         this.getContentPane().add(sm);
+        this.setIconImage(new ImageIcon("iconoGeneral.png").getImage());
+        this.setTitle("iDraw");
         
         for (core.Menu menu : menus)
 	  getContentPane().add(menu);
@@ -159,11 +165,13 @@ public class GUI extends JFrame implements Runnable, ActionListener{
             break;    
             case "text":
                 setCursor(new Cursor(Cursor.TEXT_CURSOR));
-                
+                canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
+                canvas.repaint();
             break;
                 
         }
     }
     
-    
+    public File getFile()
+    {return archivo;}
 }

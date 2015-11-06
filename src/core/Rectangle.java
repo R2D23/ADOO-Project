@@ -37,7 +37,7 @@ public class Rectangle extends core.Figure {
         } else {
             g2.setColor(bgcolor);
         }
-        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
+        //area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         g2.fill(area);
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(lncolor));
@@ -47,12 +47,44 @@ public class Rectangle extends core.Figure {
         g2.draw(area);
     }
 
-    @Override
     public void configure(Canvas canvas) {
         area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, posX+width/2, posY+height/2);
         area.transform(rot);
+        
+    }
+    public Area getArea()
+    {
+        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
+        AffineTransform rot = new AffineTransform();
+        rot.setToRotation(incline, posX+width/2, posY+height/2);
+        area.transform(rot);
+        return area;
+    }
+    
+    public void doZoom(float escala)
+    {
+        this.height *= (1+escala);  
+        this.width *= (1+escala);
+        area = getArea();
+    }
+    
+    public void rotate(java.awt.Point e) {
+        double Y = (posY + height/2) - e.getY();
+        double X = (posX + width/2) - e.getX();
+        double pendiente = Y/X;
+        this.incline = Math.atan(pendiente) + Math.PI/2;
+        if(X < 0)
+            this.incline += Math.PI;
+        area = getArea();
+    }
+    
+    public void move(int x, int y)
+    {
+        posX = (int)(x - width/2);
+        posY = (int)(y - height/2);
+        area = getArea();
     }
     
 }

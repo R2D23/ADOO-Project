@@ -234,7 +234,7 @@ private int tipoMenu;
                 {
                     e.getComponent().setVisible(false);
                     try{
-                        this.l = (Line)((SelectionMenu)(e.getComponent())).elemento;
+                        this.l = (Line)canvas.seleccionado;
                         this.Largo.setText(l.length + "");
                         this.Grosor.setText(l.grosor + "");
                         //this.inclinacion.setValue((int)l.angle);

@@ -257,7 +257,7 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
                 {
                     e.getComponent().setVisible(false);
                     try{
-                        this.p = (RegularPolygon)((SelectionMenu)(e.getComponent())).elemento;
+                        this.p = (RegularPolygon)canvas.seleccionado;
                         this.lados.setText("" + p.numSides);
                         this.Lado.setText("" + p.longSide);
                         relleno = p.bgcolor;

@@ -40,7 +40,7 @@ public class Line extends Element {
 
     @Override
     public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g.create();
         Stroke s = new BasicStroke(grosor);
         
         g2.setStroke(s);
@@ -49,16 +49,15 @@ public class Line extends Element {
         } else {
             g2.setColor(color);
         }
-        java.awt.Rectangle r2d = new java.awt.Rectangle(posX-(int)(grosor/2), posY-(int)(grosor/2), (int)(length + grosor), (int)grosor);
-        AffineTransform atr = new AffineTransform();
-        area = new Area(r2d);
-        area.transform(atr);
+        //java.awt.Rectangle r2d = new java.awt.Rectangle(posX-(int)(grosor/2), posY-(int)(grosor/2), (int)(length + grosor), (int)grosor);
+        //AffineTransform atr = new AffineTransform();
+        //area = new Area(r2d);
+        //area.transform(atr);
         g2.fill(area);
         //g2.drawLine(posX, posY, posX+(int)(length*Math.cos(incline)), posY-(int)(length*Math.sin(incline)));
         
     }
 
-    @Override
     public void configure(Canvas canvas) {
         /*length = 100.2;
         angle = (float)(4*Math.PI/6);
@@ -75,5 +74,39 @@ public class Line extends Element {
         //System.out.println(incline+"°");
         //area.transform(atr);
                 
+    }
+    
+    public Area getArea()
+    {
+        //java.awt.Rectangle r2d = new java.awt.Rectangle(posX-(int)(grosor/2), posY-(int)(grosor/2), (int)(length + grosor), (int)grosor);
+        java.awt.Rectangle r2d = new java.awt.Rectangle(posX, posY, (int)(length), (int)grosor);
+        AffineTransform atr = new AffineTransform();
+        atr.setToRotation(incline, posX+r2d.width/2, posY+r2d.height/2);
+        area = new Area(r2d);
+        area.transform(atr);
+        return area;
+
+    }
+   public void doZoom(float escala)
+    {
+        this.length *= (1+escala);  
+        area = getArea();
+    }
+    
+    public void rotate(java.awt.Point e) {
+        double Y = posY - e.getY();
+        double X = (posX + length/2) - e.getX();
+        double pendiente = Y/X;
+        this.incline = Math.atan(pendiente) + Math.PI/2;
+        if(X < 0)
+            this.incline += Math.PI;
+        area = getArea();
+    }
+    
+    public void move(int x, int y)
+    {
+        posX = (int)(x - length/2);
+        posY = (int)(y - area.getBounds().height/2);
+        area = getArea();
     }
 }

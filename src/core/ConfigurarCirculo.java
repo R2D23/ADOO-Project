@@ -240,7 +240,7 @@ private int tipoMenu;
                 {
                     e.getComponent().setVisible(false);
                     try{
-                        this.circulo = (Circle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.circulo = (Circle)canvas.seleccionado;
                         this.Radio.setText(circulo.radio + "");
                         relleno = circulo.bgcolor;
                         contorno = circulo.lncolor;

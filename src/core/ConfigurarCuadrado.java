@@ -281,7 +281,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
                 {
                     e.getComponent().setVisible(false);
                     try{
-                        this.r = (Rectangle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.r = (Rectangle)canvas.seleccionado;
                         this.altura.setText("" + r.height);
                         this.Base.setText("" + r.width);
                         relleno = r.bgcolor;

@@ -21,11 +21,13 @@ public class Canvas extends JPanel implements Serializable {
     SelectionMenu sm;
     public ArrayList<Element> pastelements;
     public ArrayList<Element> futureelements;
+    Element seleccionado;
     public Canvas() {
         elements = new ArrayList<>();
         addMouseMotionListener(new Escucha(this));
         pastelements=null;
         futureelements=null;
+        seleccionado = null;
     }
     
      public void actElements(){
@@ -80,5 +82,15 @@ public class Canvas extends JPanel implements Serializable {
             elements.get(i).draw(g);
         }
         
+    }
+    
+      public void doZoom(float escala)
+    {
+        //int nW = (int)(this.getWidth()*(1 + escala));
+        //int nH = (int)(this.getHeight()*(1 + escala));
+        //this.setSize(nW,nH);
+        for(Element e : elements)
+           e.doZoom(escala);
+        this.repaint();
     }
 }

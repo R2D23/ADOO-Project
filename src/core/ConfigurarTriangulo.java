@@ -393,7 +393,7 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                 {
                     e.getComponent().setVisible(false);
                     try{
-                        this.trian = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
+                        this.trian = (Triangle)canvas.seleccionado;
                         this.AlturaTriangulo.setText("" + trian.height);
                         this.BaseTriangulo.setText("" + trian.base);
                         relleno = trian.bgcolor;

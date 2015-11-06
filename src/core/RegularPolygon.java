@@ -50,7 +50,7 @@ public class RegularPolygon extends Figure {
         } else {
             g2.setColor(bgcolor);
         }
-        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        //area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
         g2.fill(area);
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(lncolor));
@@ -60,7 +60,6 @@ public class RegularPolygon extends Figure {
         g2.draw(area);
     }
 
-    @Override
     public void configure(Canvas canvas) {
         pointsX = getCoordsX();
         pointsY = getCoordsY();
@@ -89,5 +88,40 @@ public class RegularPolygon extends Figure {
         }
         return coordY;
     }
+    public Area getArea()
+    {
+        pointsX = getCoordsX();
+        pointsY = getCoordsY();
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        AffineTransform rot = new AffineTransform();
+        rot.setToRotation(incline, posX, posY);
+        area.transform(rot);
+        return area;
+        
+    }
     
+    public void doZoom(float escala)
+    {
+        super.doZoom(escala);
+        this.longSide *=(1+escala);
+        pointsX = getCoordsX();
+        pointsY = getCoordsY();
+        area = getArea();
+    }
+    
+    public void move(int x, int y)
+    {   posX = (int)(x);
+        posY = (int)(y);
+        area = getArea();
+    }
+    
+    public void rotate(java.awt.Point e) {
+        double Y = posY - e.getY();
+        double X = posX - e.getX();
+        double pendiente = Y/X;
+        this.incline = Math.atan(pendiente) + Math.PI/2;
+        if(X < 0)
+            this.incline += Math.PI;
+        area = getArea();
+    }
 }

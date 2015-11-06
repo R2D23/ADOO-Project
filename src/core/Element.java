@@ -2,6 +2,7 @@
 package core;
 
 import java.awt.Graphics;
+import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.io.Serializable;
 
@@ -36,21 +37,31 @@ public abstract class Element implements Cloneable,Serializable{
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
-        if(state==AVAILABLE) //Si esta disponible (0)
-            state = BUSY; //Entonces lo deja de estar (1)
+        state = BUSY; //Entonces lo deja de estar (1)
+        //color = Util.negative(color);
     }
     
     //Este metodo actualiza el valor de la inclinación
-    public void rotate(double incline) {
+    public void rotate(java.awt.Point p) {
         this.incline = incline; //Asigna la nueva inclinacion
     }
     
     //Este método cambia las coordenadas del Elemento
     public void move(int posX, int posY) {
-        this.posX = posX;
-        this.posY = posY;
+        //this.posX = posX;
+        //this.posY = posY;
     }
     
     public abstract void draw(Graphics g);
-    public abstract void configure(Canvas canvas);
+    //public abstract void configure(Canvas canvas);
+    
+    public abstract Area getArea();
+    public void doZoom(float escala)
+    {
+        posX *= (1 + escala);
+        posY *= (1 + escala);
+    }
+     public double getInclination() {
+	return incline;
+    }
 }

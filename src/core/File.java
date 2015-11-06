@@ -18,35 +18,43 @@ import java.util.logging.Logger;
  *
  * @author LuisAguilar
  */
-public class SaveCanvas {
-    ArrayList<Element> lista;
-    SaveCanvas(ArrayList<Element> lista){
-        this.lista = lista;
+public class File {
+    String name;
+    Canvas canvas;
+    File(Canvas c){
+        name = null;
+        this.canvas = c;
     }
     
     public void saveFile(String name){
         try {
             ObjectOutputStream salida=new ObjectOutputStream(new FileOutputStream(name+".lz"));
-            salida.writeObject(lista);
+            salida.writeObject(canvas.elements);
             salida.close();
         } catch (IOException ex) {
-            Logger.getLogger(SaveCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public ArrayList<Element> readFile(String dir){
-        ArrayList<Element> file=null;
+        //ArrayList<Element> file=null;
         try {
             ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(dir));
-            file=(ArrayList<Element>)entrada.readObject();
+            canvas.elements = (ArrayList<Element>)entrada.readObject();
         } catch (Exception ex) {
-            Logger.getLogger(SaveCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        return file;
+        
+        for(int i = 0; i < canvas.elements.size(); i++)
+            canvas.elements.get(i).area = canvas.elements.get(i).getArea();
+        return canvas.elements;
     }
     
+    public void setName(String s)
+    {name = s;}
     
-    
+    public String getName()
+    {return name;}
     
     
     
