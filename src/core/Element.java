@@ -23,6 +23,7 @@ public abstract class Element implements Cloneable,Serializable{
     public static final int BUSY = 1;
     public static final int MOVING = 2;
     public static final int ROTATING = 3;
+    public static final int GETTINGPOINTS = 4;
     
     public Element(){
 	posX = 0;

@@ -208,20 +208,47 @@ public class FigureMenu extends JComponent implements MouseListener{
         System.out.println(this.getCursor().getName());
         if(this.getCursor().getName().equals("lapiz"))
         {
-            switch(e.getButton())
-            {
-                case MouseEvent.BUTTON3 :
-                    this.setVisible(false);
-                break;
-                case MouseEvent.BUTTON1 :
-                    System.out.print("Click");
-                    this.setSize(SIZE, SIZE);
-                    this.setVisible(true);
-                    location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
-                    center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
-                    this.setLocation(location);
-                    this.repaint();
-                break;
+            boolean drawIrreg = false;
+            if(!canvas.elements.isEmpty()) {
+                for(int i=0; i<canvas.elements.size(); i++) {
+                    if(canvas.elements.get(i).state==Element.GETTINGPOINTS) {
+                        Point nuevoPunto = new Point(e.getPoint().x, e.getPoint().y + 30);
+                        System.out.println("Punto nuevo: "+nuevoPunto+" Primero: "+((Irregular)(canvas.elements.get(i))).first);
+                        int myX, myY;
+                        myX = ((Irregular)(canvas.elements.get(i))).first.x-5;
+                        myY = ((Irregular)(canvas.elements.get(i))).first.y-5;
+                        if(nuevoPunto.x>myX&&nuevoPunto.x<myX+10&&nuevoPunto.y>myY&&nuevoPunto.y<myY+10) {
+                            //Finaliza Edicion
+                            canvas.elements.get(i).state = Element.AVAILABLE;
+                            canvas.elements.get(i).configure(canvas);
+                            //Si se desea hacer un cambio en los colores aqui se realiza
+                            ((Irregular)(canvas.elements.get(i))).bgColor = Color.CYAN;
+                            ((Irregular)(canvas.elements.get(i))).lnColor = Color.BLUE;
+                        } else {
+                            //Agrega un vertice más
+                            ((Irregular)(canvas.elements.get(i))).newPoint(nuevoPunto);
+                        }
+                        canvas.repaint();
+                        drawIrreg = true;
+                    }
+                }
+            }
+            if(!drawIrreg) {
+                switch(e.getButton())
+                {
+                    case MouseEvent.BUTTON3 :
+                        this.setVisible(false);
+                    break;
+                    case MouseEvent.BUTTON1 :
+                        System.out.println("Click");
+                        this.setSize(SIZE, SIZE);
+                        this.setVisible(true);
+                        location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
+                        center.setLocation(e.getPoint().x/2,e.getPoint().y/2);
+                        this.setLocation(location);
+                        this.repaint();
+                    break;
+                }
             }
         } else if(this.getCursor().getName().equals("mano")) {
             if(!canvas.elements.isEmpty()) {

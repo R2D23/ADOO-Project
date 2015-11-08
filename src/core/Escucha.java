@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static core.Action.*;
+import java.awt.Graphics;
 
 /**
  *
@@ -129,7 +130,12 @@ public class Escucha implements MouseListener, MouseMotionListener {
                 //canvas.repaint();
             break;
             case MenuDrawer.IRREGULAR :
-                JOptionPane.showMessageDialog(e.getComponent(),"Configuracion de figura irregular");
+                //JOptionPane.showMessageDialog(e.getComponent(),"Configuracion de figura irregular");
+                Irregular fig = new Irregular();
+                e.getComponent().setVisible(false);
+                fig.state = Element.GETTINGPOINTS;
+                fig.newPoint(e.getLocationOnScreen());
+                canvas.addElement(fig);
             break;
         }
     }
@@ -273,6 +279,13 @@ public class Escucha implements MouseListener, MouseMotionListener {
                     //System.out.println("Inclinacion: "+Math.toDegrees(newIncline)+" °");
                     canvas.elements.get(i).rotate(newIncline);
                     canvas.elements.get(i).configure(canvas);
+                } else if(canvas.elements.get(i).state==Element.GETTINGPOINTS) {
+                    if(!((Irregular)(canvas.elements.get(i))).vertices.isEmpty()) {
+                        ArrayList<Point> ps = ((Irregular)(canvas.elements.get(i))).vertices;
+                        Point lastPoint = ps.get(ps.size()-1);
+                        Graphics g = canvas.getGraphics();
+                        g.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY()+30);
+                    }
                 }
             }
             canvas.repaint();
