@@ -7,6 +7,7 @@ package core;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
@@ -28,46 +29,35 @@ public class Rectangle extends core.Figure {
 
     @Override
     public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        //g2.fillRect(posX, posY, (int)width, (int)height);
-        //g2.setColor(lncolor);
-        //g2.drawRect(posX, posY, (int)width, (int)height);
+        Graphics2D g2 = (Graphics2D) (g.create());
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
-        } else {
-            g2.setColor(bgcolor);
-        }
-        //area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
-        g2.fill(area);
-        if(state!=AVAILABLE) {
+            g2.setBackground(Util.negative(bgcolor));
             g2.setColor(Util.negative(lncolor));
         } else {
+            g2.setBackground(bgcolor);
             g2.setColor(lncolor);
         }
         g2.draw(area);
+        g2.fill(area);
     }
 
     public void configure(Canvas canvas) {
-        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+width/2, posY+height/2);
-        area.transform(rot);
+        new ConfigurarCuadrado(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
         
     }
-    public Area getArea()
+    public void getArea()
     {
         area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, posX+width/2, posY+height/2);
         area.transform(rot);
-        return area;
     }
     
     public void doZoom(float escala)
     {
         this.height *= (1+escala);  
         this.width *= (1+escala);
-        area = getArea();
+        getArea();
     }
     
     public void rotate(java.awt.Point e) {
@@ -77,14 +67,14 @@ public class Rectangle extends core.Figure {
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
-        area = getArea();
+        getArea();
     }
     
     public void move(int x, int y)
     {
         posX = (int)(x - width/2);
         posY = (int)(y - height/2);
-        area = getArea();
+        getArea();
     }
     
 }
