@@ -1,4 +1,3 @@
-
 package core;
 
 /**
@@ -21,17 +20,22 @@ import javax.swing.*;
 
 
 /*Esta es la clase que implementa el menú circular de seleccion*/
-public class SelectionMenu extends JComponent implements MouseListener{
+public class SelectionMenu extends JComponent{
     
-    private static final int SIZE = 200;
+    public static final int SIZE = 200;
     private Point location;
     private Point center;
     private ArrayList<Area> areas;
     private int areaActual;    
     Canvas canvas;
-    Element elemento;
     
-    public SelectionMenu(Canvas c){
+    public static final int CONFIGURE = 0;
+    public static final int MOVE = 1;
+    public static final int ROTATE = 2;
+    public static final int DELETE = 3;
+    public static final int EXIT = 4;
+    
+    public SelectionMenu(){
         
         /*Basicamente en este método se define un JComponent y 
         dentro de este se dibuja la figura de dona. El ArrayList
@@ -39,13 +43,13 @@ public class SelectionMenu extends JComponent implements MouseListener{
         al momento de pasar el cursor del Mouse sobre ellos, además
         de poder detectar el momento en que se da clic sobre alguno
         de ellos.*/
-        canvas = c;
+        //canvas = this.canvas = ((GUI)getParent()).getCanvas();
 	setSize(SIZE, SIZE);
 	location = new Point();
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;
-        this.addMouseListener(new Escucha(areas, Escucha.SELECTIONMENU,canvas));
+        //this.addMouseListener(new Escucha(areas, Escucha.SELECTIONMENU,canvas));
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
         
@@ -58,6 +62,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
             Area s = ((Area)gen.clone());
             s.intersect(new Area(p));
             areas.add(s);
+
         //AREA MOVER
             p = new Polygon();
             p.addPoint(SIZE/2, SIZE/2);
@@ -105,20 +110,17 @@ public class SelectionMenu extends JComponent implements MouseListener{
                 updateMenu(area);
             }
         });
+        
+        this.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent me)
+            {
+                realizarAccion(me.getPoint());
+            }
+        
+        });
+        
 
         this.setVisible(false);
-	this.addMouseListener(new MouseAdapter(){
-	    @Override
-	    public void mouseClicked(MouseEvent me){
-		if(whichArea(me.getPoint()) == 0){
-		    ConfFrame.showFrame(elemento);
-		}
-	    }
-	});
-        this.addMouseListener(new ConfigurarCuadrado(areas, canvas, Escucha.SELECTIONMENU));
-        this.addMouseListener(new ConfigurarTriangulo(areas, canvas, Escucha.SELECTIONMENU));
-        this.addMouseListener(new ConfigurarPoligono(areas, canvas, Escucha.SELECTIONMENU));
-        this.addMouseListener(new ConfigurarLinea(areas, canvas, Escucha.SELECTIONMENU));
     }
 
     /*Esta funcion es un intermedio entre el MouseMotionListener y la clase actual.
@@ -160,7 +162,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
         int aX=getWidth();
         int aY=getHeight();
         double si = Math.sin(Math.PI/4);
-        int c[] = new int[4];
+        int c[] = new int[2];
         c[0]=(int) (SIZE/6*si) + SIZE/2;
         c[1]= (int) (SIZE/2*si) + SIZE/2;
         
@@ -168,7 +170,7 @@ public class SelectionMenu extends JComponent implements MouseListener{
         g2.drawLine(aX-bX, cY, aX, cY);//segundo segmento de linea horizontal
         g2.drawLine(cX, 0, cX, bY);//primer segmento de linea vertical
         g2.drawLine(cX, aY-bY, cX, aY);//segundo segmento de linea vertical
-        g2.drawLine(c[0], c[0],c[1], c[1]);//segundo segmento de linea vertical
+        g2.drawLine(c[0], c[0],c[1], c[1]);// linea inclinada
         
         
         g2.setColor(Color.black);
@@ -188,40 +190,35 @@ public class SelectionMenu extends JComponent implements MouseListener{
 
     /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder saber cuando se 
     ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
+   
+    
+    public void realizarAccion(Point p)
+    {
+        switch(areaActual)
         {
-            int sel = cualFigura(e.getPoint());
-            if(sel >= 0)
-            {
-                this.elemento = canvas.elements.get(sel);
-                this.center = e.getPoint();
-                location.setLocation(e.getXOnScreen() - SIZE/2, e.getYOnScreen() - SIZE/2);
-                this.setLocation(location);
-                this.setVisible(true);
-            }
+            case CONFIGURE:
+                canvas.seleccionado.configure(canvas);
+            break;
+            case MOVE:
+                canvas.seleccionado.state = Element.MOVING;
+            break;
+            case ROTATE:
+                canvas.seleccionado.state = Element.ROTATING;
+            break;
+            case DELETE:
+                canvas.deleteElement(canvas.seleccionado);
+                canvas.seleccionado = null;
+                canvas.repaint();
+            break;
+            case EXIT :
+                canvas.seleccionado.state = Element.AVAILABLE;
+                canvas.seleccionado = null;
+                canvas.repaint();
+            break;
         }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        areaActual = -1;
+        this.setVisible(false);
     }
     
-    /*Funcion que determina en cual area se encuentra el punto especificado*/
     public int whichArea(Point p)
     {
         for(int i = 0; i < areas.size(); i++)
@@ -235,7 +232,21 @@ public class SelectionMenu extends JComponent implements MouseListener{
         for(int i = 0; i < Canvas.elements.size(); i++)
             if(Canvas.elements.get(i).area.contains(p))
                 return i;
-        return -1;
+        return -1;    
+    }
+    public void setCenter(Point p)
+    {this.center = p;}
+    
+    public Point obtLocation()
+    {return this.location;}
+    
+    public final void setCanvas(Canvas c)
+    {canvas = c;}
+    
+    public void setVisible(boolean v)
+    {
+        areaActual = -1;
+        super.setVisible(v);
     }
 }
 

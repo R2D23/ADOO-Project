@@ -7,6 +7,7 @@ package core;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
@@ -20,44 +21,60 @@ public class Rectangle extends core.Figure {
     double height;
             
     public Rectangle(double width, double height) {
-	super();
-        width = width;	    height = height;
-    }
-    
-    public Rectangle(Rectangle r){
-	super(r);
-	width = r.width;    height = r.height;
+        this.width = width;
+        this.height = height;
     }
 
-    public Rectangle() {super();}
+    public Rectangle() {}
 
     @Override
     public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        //g2.fillRect(posX, posY, (int)width, (int)height);
-        //g2.setColor(lncolor);
-        //g2.drawRect(posX, posY, (int)width, (int)height);
+        Graphics2D g2 = (Graphics2D) (g.create());
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgColor));
-        } else {
-            g2.setColor(bgColor);
-        }
-        //area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
-        g2.fill(area);
-        if(state!=AVAILABLE) {
+            g2.setBackground(Util.negative(bgColor));
             g2.setColor(Util.negative(lnColor));
         } else {
+            g2.setBackground(bgColor);
             g2.setColor(lnColor);
         }
         g2.draw(area);
+        g2.fill(area);
     }
 
-    @Override
     public void configure(Canvas canvas) {
+        new ConfigurarCuadrado(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
+        
+    }
+    public void getArea()
+    {
         area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, posX+width/2, posY+height/2);
         area.transform(rot);
+    }
+    
+    public void doZoom(float escala)
+    {
+        this.height *= (1+escala);  
+        this.width *= (1+escala);
+        getArea();
+    }
+    
+    public void rotate(java.awt.Point e) {
+        double Y = (posY + height/2) - e.getY();
+        double X = (posX + width/2) - e.getX();
+        double pendiente = Y/X;
+        this.incline = Math.atan(pendiente) + Math.PI/2;
+        if(X < 0)
+            this.incline += Math.PI;
+        getArea();
+    }
+    
+    public void move(int x, int y)
+    {
+        posX = (int)(x - width/2);
+        posY = (int)(y - height/2);
+        getArea();
     }
     
 }

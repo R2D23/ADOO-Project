@@ -1,11 +1,8 @@
 
 package core;
 
-import core.Barradecolores;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JColorChooser;
@@ -15,22 +12,31 @@ import javax.swing.JOptionPane;
  *
  * @author MARCO
  */
-public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListener{
+public class ConfigurarPoligono extends javax.swing.JFrame{
     private double lado;
     private int noLados;
     private Color relleno;
     private Color contorno;
-    private ArrayList<Area> areas;
     private Canvas canvas;
     private RegularPolygon p;
-    private int tipoMenu;
 
-    public ConfigurarPoligono(ArrayList<Area> a, Canvas c, int t) {
+    public ConfigurarPoligono(Canvas c, RegularPolygon rp, Point po) {
         initComponents();
-        areas = a;
-        canvas = c;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        tipoMenu = t;
+        this.setLocation(po);
+        canvas = c;
+        if(rp != null)
+        {
+            p = rp;
+            cargarValores();
+        }
+        else
+        {
+            p = new RegularPolygon();
+            p.posX = po.x;
+            p.posY = po.y;
+        }
+
 
     }
 
@@ -186,7 +192,8 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
                 p.pointsX = p.getCoordsX();
                 p.pointsY = p.getCoordsY();
                 p.area = new Area(new java.awt.Polygon(p.pointsX, p.pointsY, p.pointsX.length));
-                canvas.addElement(p);
+                canvas.elements.add(p);
+                p.state = Element.AVAILABLE;
                 canvas.repaint();
                 setVisible(false);
             } 
@@ -205,14 +212,15 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
     }//GEN-LAST:event_AceptarActionPerformed
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-       setVisible(false); // TODO add your handling code here:
+        p.state = Element.AVAILABLE;
+        dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void ladosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ladosActionPerformed
     }//GEN-LAST:event_ladosActionPerformed
 
     private void EscogerColorLineaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EscogerColorLineaActionPerformed
-        contorno = JColorChooser.showDialog(rootPane, null, contorno);
+       contorno = JColorChooser.showDialog(rootPane, null, contorno);
        this.EscogerColorLinea.setBackground(contorno);
     }//GEN-LAST:event_EscogerColorLineaActionPerformed
 
@@ -221,6 +229,15 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
        this.EscogerColorRelleno.setBackground(relleno);
     }//GEN-LAST:event_EscogerColorRellenoActionPerformed
 
+    public final void cargarValores()
+    {
+        this.lados.setText("" + p.numSides);
+        this.Lado.setText("" + p.longSide);
+        relleno = p.bgColor;
+        contorno = p.lnColor;
+        this.EscogerColorRelleno.setBackground(relleno);
+        this.EscogerColorLinea.setBackground(contorno);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Aceptar;
@@ -237,61 +254,4 @@ public class ConfigurarPoligono extends javax.swing.JFrame implements MouseListe
     private javax.swing.JTextField lados;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        switch(tipoMenu)
-        {
-            case Escucha.FIGUREMENU :
-                if(whichArea(e.getPoint()) == 2)
-                {
-                    e.getComponent().setVisible(false);
-                    this.setLocation(e.getLocationOnScreen());
-                    this.setVisible(true);
-                    p = new RegularPolygon();
-                    p.posX = e.getXOnScreen();
-                    p.posY = e.getYOnScreen();
-                }
-            break;
-            case Escucha.SELECTIONMENU :
-                if(whichArea(e.getPoint()) == 0)
-                {
-                    e.getComponent().setVisible(false);
-                    try{
-                        this.p = (RegularPolygon)((SelectionMenu)(e.getComponent())).elemento;
-                        this.lados.setText("" + p.numSides);
-                        this.Lado.setText("" + p.longSide);
-                        relleno = p.bgColor;
-                        contorno = p.lnColor;
-                        this.EscogerColorRelleno.setBackground(relleno);
-                        this.EscogerColorLinea.setBackground(contorno);
-                        this.setVisible(true);
-                    }
-                    catch(Exception ex){}
-                }
-            break;
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    public int whichArea(Point p)
-    {
-        for(int i = 0; i < areas.size(); i++)
-            if(areas.get(i).contains(p.x, p.y))
-                return i;
-        return -1;
-    }
 }

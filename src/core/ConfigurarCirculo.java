@@ -4,31 +4,34 @@ package core;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
 import javax.swing.JColorChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class ConfigurarCirculo extends javax.swing.JFrame implements MouseListener{
+public class ConfigurarCirculo extends javax.swing.JFrame{
 private double radio;
 private Color relleno;
 private Color contorno;
-private ArrayList<Area> areas;
 private Canvas canvas;
 private Circle circulo;
-private int tipoMenu;
 
-    public ConfigurarCirculo(ArrayList<Area> a, Canvas c, int tip) {
+    public ConfigurarCirculo(Canvas ca, Circle c, Point p) {
         initComponents();
-        areas = a;
-        canvas = c;
-        this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        tipoMenu = tip;
-        //this.setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        this.setLocation(p);
+        canvas = ca;
+        if(c != null)
+        {
+            circulo = c;
+            cargarValores();
+        }
+        else
+        {
+            circulo = new Circle();
+            circulo.posX = p.x;
+            circulo.posY = p.y;
+        }
     }
 
 
@@ -152,7 +155,8 @@ private int tipoMenu;
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-                setVisible(false);// TODO add your handling code here:
+        circulo.state = Element.AVAILABLE;
+        this.dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void RadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioActionPerformed
@@ -179,18 +183,16 @@ private int tipoMenu;
             radio=Double.parseDouble(this.Radio.getText());
             if((radio!=0) && (relleno != null) && (contorno != null))
             {
-                setVisible(false);
+                
                 circulo.bgColor = relleno;
                 circulo.lnColor = contorno;
-                circulo.setRadius(this.radio);
+                circulo.radio = this.radio;
                 circulo.area =  new Area(new Ellipse2D.Double(circulo.posX, circulo.posY, (int)radio,(int)radio));
                 if(!canvas.elements.contains(circulo))
-                    canvas.addElement(circulo);
+                    canvas.elements.add(circulo);
+                circulo.state = Element.AVAILABLE;
                 canvas.repaint();
-                circulo = null;
-                this.BottonEscogerColorRelleno.setBackground(Util.normalColor);
-                this.ButtonEscogerColorLinea.setBackground(Util.normalColor);
-                this.Radio.setText("");
+                dispose();
             }
             else
                 JOptionPane.showMessageDialog(rootPane, "Has ingresado datos erróneos, favor de revisarlos e intentarlo\n" +
@@ -200,7 +202,15 @@ private int tipoMenu;
 
 
     }//GEN-LAST:event_AceptarActionPerformed
-
+    
+    public final void cargarValores()
+    {
+        this.Radio.setText(circulo.radio + "");
+        relleno = circulo.bgColor;
+        contorno = circulo.lnColor;
+        this.BottonEscogerColorRelleno.setBackground(relleno);
+        this.ButtonEscogerColorLinea.setBackground(contorno);
+    }
     
     
 
@@ -217,73 +227,4 @@ private int tipoMenu;
     private javax.swing.JLabel textoRelleno;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        switch(this.tipoMenu)
-        {
-            case Escucha.FIGUREMENU:
-                if(whichArea(e.getPoint()) == 1)
-                {
-                    e.getComponent().setVisible(false);
-                    this.setLocation(e.getLocationOnScreen());
-                    this.setVisible(true);
-                    if(circulo == null)
-                    {
-                        circulo = new Circle();
-                        circulo.posX = e.getXOnScreen();
-                        circulo.posY = e.getYOnScreen();
-                    }
-                }
-            break;
-            case Escucha.SELECTIONMENU :
-                if(whichArea(e.getPoint()) == 0)
-                {
-                    e.getComponent().setVisible(false);
-                    try{
-                        this.circulo = (Circle)((SelectionMenu)(e.getComponent())).elemento;
-                        this.Radio.setText(circulo.getRadius() + "");
-                        relleno = circulo.bgColor;
-                        contorno = circulo.lnColor;
-                        this.BottonEscogerColorRelleno.setBackground(relleno);
-                        this.ButtonEscogerColorLinea.setBackground(contorno);
-                        this.setVisible(true);
-                    }
-                    catch(Exception ex){}
-                    
-                }
-            break;
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    public int whichArea(Point p)
-    {
-        for(int i = 0; i < areas.size(); i++)
-            if(areas.get(i).contains(p.x, p.y))
-                return i;
-        return -1;
-    }
-    
-    public Element cualFigura(Point p)
-    {
-        for(int i = 0; i < canvas.elements.size(); i++)
-            if(canvas.elements.get(i).area.contains(p))
-                return canvas.elements.get(i);
-        return null;
-    }
 }

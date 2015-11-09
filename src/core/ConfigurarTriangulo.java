@@ -1,13 +1,9 @@
 
 package core;
 
-import core.Barradecolores;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Area;
-import java.util.ArrayList;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 
@@ -15,22 +11,31 @@ import javax.swing.JOptionPane;
  *
  * @author MARCO
  */
-public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseListener{
+public class ConfigurarTriangulo extends javax.swing.JFrame{
     private Color contorno;
     private Color relleno;
     private double altura;
     private double base;
-    private ArrayList<Area> areas;
     private Canvas canvas;
     private Triangle trian;
-    private int tipoMenu;
     
-    public ConfigurarTriangulo(ArrayList<Area> a, Canvas c, int t) {
-        initComponents();
-        areas = a;
-        canvas = c;
-        this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        tipoMenu = t;
+    public ConfigurarTriangulo(Canvas c, Triangle t, Point p) {
+       initComponents();
+       this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+       this.setLocation(p);
+       canvas = c;
+       
+       if(t != null)
+        {
+            trian = t;
+            cargarValores();
+        }
+        else
+        {
+            trian = new Triangle();
+            trian.posX = p.x;
+            trian.posY = p.y;
+        }
     }
 
     /**
@@ -297,7 +302,8 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
     }//GEN-LAST:event_AlturaTrianguloActionPerformed
 
     private void ButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCancelarActionPerformed
-        setVisible(false);        // TODO add your handling code here:
+        trian.state = Element.AVAILABLE;
+        this.dispose();//setVisible(false);        // TODO add your handling code here:
     }//GEN-LAST:event_ButtonCancelarActionPerformed
 
     private void ButtonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAceptarActionPerformed
@@ -317,8 +323,9 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
                 trian.pointsX = trian.getCoordsX();
                 trian.pointsY = trian.getCoordsY();
                 trian.area = new Area(new java.awt.Polygon(trian.pointsX, trian.pointsY, trian.pointsX.length));
-                trian.configure(canvas);
+                //trian.configure(canvas);
                 canvas.addElement(trian);
+                trian.state = Element.AVAILABLE;
                 canvas.repaint();
                 setVisible(false);
             }    
@@ -344,7 +351,16 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
     private void BaseTrianguloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BaseTrianguloActionPerformed
 
     }//GEN-LAST:event_BaseTrianguloActionPerformed
-
+    
+    public final void cargarValores()
+    {
+        this.AlturaTriangulo.setText("" + trian.height);
+        this.BaseTriangulo.setText("" + trian.base);
+        relleno = trian.bgColor;
+        contorno = trian.lnColor;
+        this.EscogerColorRelleno.setBackground(relleno);
+        this.EscogerColorLinea.setBackground(contorno);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AlturaTriangulo;
@@ -373,62 +389,5 @@ public class ConfigurarTriangulo extends javax.swing.JFrame implements MouseList
     private javax.swing.JLabel textpx;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        switch(tipoMenu)
-        {
-            case Escucha.FIGUREMENU :
-                if(whichArea(e.getPoint()) == 0)
-                {
-                    e.getComponent().setVisible(false);
-                    this.setLocation(e.getLocationOnScreen());
-                    this.setVisible(true);
-                    trian = new Triangle();
-                    trian.posX = e.getXOnScreen();
-                    trian.posY = e.getYOnScreen();
-                }
-            break;
-            case Escucha.SELECTIONMENU :
-                if(whichArea(e.getPoint()) == 0)
-                {
-                    e.getComponent().setVisible(false);
-                    try{
-                        this.trian = (Triangle)((SelectionMenu)(e.getComponent())).elemento;
-                        this.AlturaTriangulo.setText("" + trian.height);
-                        this.BaseTriangulo.setText("" + trian.base);
-                        relleno = trian.bgColor;
-                        contorno = trian.lnColor;
-                        this.EscogerColorRelleno.setBackground(relleno);
-                        this.EscogerColorLinea.setBackground(contorno);
-                        this.setVisible(true);
-                    }
-                    catch(Exception ex){}
-                }
-            break;
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
     
-    public int whichArea(Point p)
-    {
-        for(int i = 0; i < areas.size(); i++)
-            if(areas.get(i).contains(p.x, p.y))
-                return i;
-        return -1;
-    }
 }

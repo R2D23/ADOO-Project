@@ -5,6 +5,7 @@
  */
 package core;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +19,7 @@ public class Registro extends javax.swing.JFrame {
      */
     public Registro() {
         initComponents();
+        this.setIconImage(new ImageIcon("iconoGeneral.png").getImage());
     }
 
     /**
@@ -45,12 +47,12 @@ public class Registro extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Registro de Usuario");
+        setTitle("iDraw - Registro de Usuario");
 
         jPanel1.setBackground(new java.awt.Color(233, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel5.setText("Nombre Proyecto");
+        jLabel5.setText("iDraw");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 239));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(206, 212, 167), 3, true));

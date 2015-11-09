@@ -2,6 +2,7 @@
 package core;
 
 import java.awt.Graphics;
+import java.awt.event.MouseListener;
 import java.awt.Point;
 import java.awt.geom.Area;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.io.Serializable;
  */
 public abstract class Element implements Cloneable,Serializable{
     //Coordenadas
-    private static long serialVersionUID = 1113799434508676095L;
+    private static final long serialVersionUID = 1113799434508676095L;
     public int posX; 
     public int posY;
     public double incline;
@@ -23,6 +24,7 @@ public abstract class Element implements Cloneable,Serializable{
     public static final int BUSY = 1;
     public static final int MOVING = 2;
     public static final int ROTATING = 3;
+    public static final int GETTINGPOINTS = 4;
     
     public Element(){
 	posX = 0;   posY = 0;	incline = 0;
@@ -51,30 +53,40 @@ public abstract class Element implements Cloneable,Serializable{
     
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
-        if(state==AVAILABLE) //Si esta disponible (0)
-            state = BUSY; //Entonces lo deja de estar (1)
+        state = BUSY; //Entonces lo deja de estar (1)
     }
     
     //Este metodo actualiza el valor de la inclinación
-    public void rotate(double incline) {
-        this.incline = incline; //Asigna la nueva inclinacion
+    public void rotate(Point p) {
     }
+    
+    public void setIncline(double i){incline = i;}
     
     //Este método cambia las coordenadas del Elemento
     public void move(int posX, int posY) {
-        this.posX = posX;
-        this.posY = posY;
     }
     
     public abstract void draw(Graphics g);
     public abstract void configure(Canvas canvas);
+    
+    /*public void configure()
+    {
+    
+    }
+    public void configure(Canvas c)
+    {
+    }*/
+    public abstract void getArea();
+    public void doZoom(float escala)
+    {
+        posX *= (1 + escala);
+        posY *= (1 + escala);
+    }
+    public double getInclination() 
+    {return incline;}
 
     public Point getPos() {
 	return new Point(posX, posY);
-    }
-    
-    public double getInclination() {
-	return incline;
     }
 
     void move(Point point) {

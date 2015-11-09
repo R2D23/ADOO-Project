@@ -90,7 +90,7 @@ public class Action {
 		elements.get(id).move((Point) next);
 		break;
 	    case ELEMENT_ROTATE:
-		elements.get(id).rotate((Float) next);
+		elements.get(id).setIncline((Double) next);
 		break;
 	    case FIGURE_BCOLOR:
 		((Figure) elements.get(id)).setBgColor((Color) next);
@@ -117,7 +117,7 @@ public class Action {
 		elements.get(id).move((Point) prev);
 		break;
 	    case ELEMENT_ROTATE:
-		elements.get(id).rotate((Double) prev);
+		elements.get(id).setIncline((Double) prev);
 		break;
 	    case FIGURE_BCOLOR:
 		((Figure) elements.get(id)).setBgColor((Color) prev);

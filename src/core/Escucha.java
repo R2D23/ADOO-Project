@@ -4,19 +4,20 @@ package core;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
+import javax.swing.event.MouseInputListener;
 import static core.Action.*;
 
 /**
  *
  * @author Angeles
  */
-public class Escucha implements MouseListener, MouseMotionListener {
+public class Escucha implements MouseInputListener {
 
     private ArrayList<Area> areas;
     private int tipoMenu;
@@ -26,6 +27,7 @@ public class Escucha implements MouseListener, MouseMotionListener {
     public static final int REDOMENU = 3; //menu de hacer/deshacer
     public static final int SELECTIONMENU = 4;//menu de seleccion
     Canvas canvas;
+    
     
     public Escucha(Canvas canvas) {
         this.canvas = canvas;
@@ -45,11 +47,9 @@ public class Escucha implements MouseListener, MouseMotionListener {
     
     @Override
     public void mouseClicked(MouseEvent e) {
+        //seleccionado = null;
         switch(tipoMenu)
         {
-            case FIGUREMENU :
-                clicMenuFigura(e);
-            break;
             case FILEMENU :
                 clicMenuArchivo(e);
             break;
@@ -58,9 +58,6 @@ public class Escucha implements MouseListener, MouseMotionListener {
             break;
             case REDOMENU :
                 clicMenuRedo(e);
-            break;
-            case SELECTIONMENU :
-                clicMenuSeleccion(e);
             break;
         }
         //canvas.repaint();
@@ -78,7 +75,7 @@ public class Escucha implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //canvas.drawAll();
+
     }
 
     @Override
@@ -119,25 +116,9 @@ public class Escucha implements MouseListener, MouseMotionListener {
         return -1;
     }
     
-    public void clicMenuFigura(MouseEvent e)
-    {
-        int areaClic = whichArea(e.getPoint());
-        switch(areaClic)
-        {
-            case MenuDrawer.EXIT :
-                e.getComponent().setVisible(false);
-                //canvas.repaint();
-            break;
-            case MenuDrawer.IRREGULAR :
-                JOptionPane.showMessageDialog(e.getComponent(),"Configuracion de figura irregular");
-            break;
-        }
-    }
-    
     public void clicMenuArchivo(MouseEvent e)
     {
         int areaClic = whichArea(e.getPoint());
-        System.out.println("AREA CLIC : " + areaClic);
         int opc=0;
         switch(areaClic)
         {
@@ -145,31 +126,56 @@ public class Escucha implements MouseListener, MouseMotionListener {
                 e.getComponent().setVisible(false);
             break;
             case MenuDrawer.IMAGE :
-                JOptionPane.showMessageDialog(e.getComponent(),"Importar imagen");
+                try{
+                    JFileChooser fci = new JFileChooser();
+                    opc=fci.showOpenDialog(null);
+                    Imagen im = new Imagen(fci.getSelectedFile().getPath());
+                    canvas.addElement(im);
+                    canvas.repaint();
+                    e.getComponent().setVisible(false);
+                }
+                catch(Exception ex){}
             break;
             case MenuDrawer.NEW :
-                JOptionPane.showMessageDialog(e.getComponent(),"Nuevo Archivo");
+                if(((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).getFile().getName() == null)
+                {
+                    int op = JOptionPane.showConfirmDialog(null, "Estas a punto de cerrar un lienzo sin guardar ¿Continuar?", "Cerrar",YES_NO_OPTION);
+                    if(op == YES_OPTION)
+                    {
+                        ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).setTitle( "Lienzo en blanco - iDraw");
+                        canvas.elements.clear();
+                        canvas.repaint();
+                    }
+                e.getComponent().setVisible(false);    
+                }
+                            
             break;
             case MenuDrawer.SAVE :
-                //JOptionPane.showMessageDialog(e.getComponent(),"Guardar Archivo");
+                //System.out.println((((Menu)e.getComponent()).getBoton().getTopLevelAncestor()).getName());
+                File archivo = ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).getFile();
                 JFileChooser fcs = new JFileChooser();
                 opc=fcs.showSaveDialog(null);
                 if(opc == JFileChooser.APPROVE_OPTION){
-                    SaveCanvas file = new SaveCanvas(canvas.elements);
-                    file.saveFile(fcs.getSelectedFile().getPath());
+//                    archivo.saveFile(fcs.getSelectedFile().getPath());
+
+                e.getComponent().setVisible(false);    
                 }
                 
             break;
             case MenuDrawer.OPEN :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Abrir Archivo");
+                archivo = ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).getFile();
                 JFileChooser fco = new JFileChooser();
                 opc=fco.showOpenDialog(null);
                 if(opc == JFileChooser.APPROVE_OPTION){
-                    SaveCanvas file = new SaveCanvas(canvas.elements);
-                    canvas.elements=file.readFile(fco.getSelectedFile().getPath());
-                    canvas.repaint();
+                    //File file = new File(canvas.elements, canvas);
+                   //canvas.elements=archivo.readFile(fco.getSelectedFile().getPath());
+                   canvas.repaint();
+                   archivo.setName(fco.getSelectedFile().getName());
+                   ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).setTitle(fco.getSelectedFile().getName() + " - iDraw");
+                   ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).repaint();
+                   e.getComponent().setVisible(false);
                 }
-                fco.getName();
             break;
         }
     }
@@ -184,10 +190,10 @@ public class Escucha implements MouseListener, MouseMotionListener {
                 e.getComponent().setVisible(false);
             break;
             case MenuDrawer.MAS :
-                JOptionPane.showMessageDialog(e.getComponent(),"Hacer zoom +");
+//               canvas.doZoom(0.1f);
             break;
             case MenuDrawer.MENOS :
-                JOptionPane.showMessageDialog(e.getComponent(),"Hacer zoom -");
+  //              canvas.doZoom(-0.1f);
             break;
         }
     }
@@ -220,62 +226,16 @@ public class Escucha implements MouseListener, MouseMotionListener {
         }    
     }
 
-    public void clicMenuSeleccion(MouseEvent e)
-    {
-        int areaClic = whichArea(e.getPoint());
-        switch(areaClic)
-        {
-            case MenuDrawer.MOVE :
-                //JOptionPane.showMessageDialog(e.getComponent(),"Mover Figura");
-                //System.out.println("ANTES: "+((SelectionMenu)(e.getComponent())).elemento.state);
-                canvas.actElements();
-                ((SelectionMenu)(e.getComponent())).elemento.state = Element.MOVING;
-                //System.out.println("DESPUES: "+((SelectionMenu)(e.getComponent())).elemento.state);
-                e.getComponent().setVisible(false);
-            break;
-            case MenuDrawer.ROTATE :
-                canvas.actElements();
-                //JOptionPane.showMessageDialog(e.getComponent(),"Rotar Figura");
-                ((SelectionMenu)(e.getComponent())).elemento.state = Element.ROTATING;
-                e.getComponent().setVisible(false);
-            break;
-            case MenuDrawer.DISPOSE :
-                canvas.actElements();
-                JOptionPane.showMessageDialog(e.getComponent(),"Eliminar Figura");
-            break;
-            case MenuDrawer.EXIT2 :
-                e.getComponent().setVisible(false);
-            break;   
-        }
-    }
-
+    
     @Override
     public void mouseDragged(MouseEvent e) {
-        //System.out.println("dragg");
+        //System.out.println("Elemento drag : " + seleccionado);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if(!canvas.elements.isEmpty()) {
-            for(int i=0; i<canvas.elements.size(); i++) {
-                if(canvas.elements.get(i).state==Element.MOVING) {
-                   canvas.elements.get(i).move(e.getX(), e.getY());
-                   canvas.elements.get(i).configure(canvas);
-                } else if(canvas.elements.get(i).state==Element.ROTATING) {
-                    double pendiente, newIncline;
-                    if(e.getX()-canvas.elements.get(i).posX!=0) {
-                        pendiente = (e.getY()-canvas.elements.get(i).posY)/(e.getX()-canvas.elements.get(i).posX);
-                        newIncline = Math.atan(pendiente);
-                    } else {
-                        pendiente = (e.getY()-canvas.elements.get(i).posY)/0.001;
-                        newIncline = Math.atan(pendiente);
-                    }
-                    //System.out.println("Inclinacion: "+Math.toDegrees(newIncline)+" °");
-                    canvas.elements.get(i).rotate(newIncline);
-                    canvas.elements.get(i).configure(canvas);
-                }
-            }
-            canvas.repaint();
-        }
+    
     }
+    
+
 }

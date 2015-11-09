@@ -8,6 +8,7 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
@@ -16,6 +17,7 @@ import java.awt.geom.Area;
  * @author douxm_000
  */
 public class Triangle extends Figure{
+
     double base;
     double height;
     int type;
@@ -26,13 +28,14 @@ public class Triangle extends Figure{
     public static final int ISOSCELES_TRIANGLE = 3;
     
     public Triangle(double base, double height, int type) {
-	super();
-        this.base = base;   this.height = height;   this.type = type;
-        pointsX = new int[3];	pointsY = new int[3];
+        this.base = base;
+        this.height = height;
+        this.type = type;
+        pointsX = new int[3];
+        pointsY = new int[3];
     }
     
     public Triangle(double base) {
-	super();
         this.base = base;
         this.height = Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2)); //Pitágoras
         type = EQUILATERAL_TRIANGLE;
@@ -40,32 +43,18 @@ public class Triangle extends Figure{
         pointsY = new int[3];
     }
     
-    public Triangle(Triangle t){
-	super(t);
-	base = t.base;	height = t.height;  type = t.type;
-	pointsX = t.pointsX.clone();	pointsY = t.pointsY.clone();
-    }
     
 
-    public Triangle() {super();}
+    public Triangle() {}
     
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        /*g2.setColor(bgcolor);
-        g2.fillPolygon(pointsX, pointsY, pointsX.length);
-        g2.setColor(lncolor);
-        g2.drawPolygon(pointsX, pointsY, pointsX.length);
-        if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
-            g2.fill(area);
-        }*/
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(bgColor));
         } else {
             g2.setColor(bgColor);
         }
-        //area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
         g2.fill(area);
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(lnColor));
@@ -77,12 +66,7 @@ public class Triangle extends Figure{
 
     @Override
     public void configure(Canvas canvas) {
-        pointsX = getCoordsX();
-        pointsY = getCoordsY();
-        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+base/2, posY+height/2);
-        area.transform(rot);
+        new ConfigurarTriangulo(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
     }
 
     public int[] getCoordsX() {
@@ -124,4 +108,43 @@ public class Triangle extends Figure{
         return coordY;
     }
     
+    public void getArea()
+    {
+        pointsX = getCoordsX();
+        pointsY = getCoordsY();
+        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
+        AffineTransform rot = new AffineTransform();
+        rot.setToRotation(incline, posX+base/2, posY+height/2);
+        area.transform(rot);
+    }
+    
+    @Override
+    public void move(int x, int y)
+    {
+        posX = (int)(x - base/2);
+        posY = (int)(y - height/2);
+        getArea();
+    }
+    
+    @Override
+    public void doZoom(float escala)
+    {
+        super.doZoom(escala);
+        this.base *= (1+escala);     
+        this.height *= (1+escala);
+        pointsX = getCoordsX();
+        pointsY = getCoordsY();
+        getArea();
+    }
+    
+    @Override
+    public void rotate(Point e) {
+        double Y = (posY + height/2) - e.getY();
+        double X = (posX + base/2) - e.getX();
+        double pendiente = Y/X;
+        this.incline = Math.atan(pendiente) + Math.PI/2;
+        if(X < 0)
+            this.incline += Math.PI;
+        getArea();
+    }
 }

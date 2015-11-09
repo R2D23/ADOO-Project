@@ -250,7 +250,7 @@ public class ConfFrame extends JFrame{
     
     public static void setAngle(double f){
 	Action.createAction(Action.ELEMENT_ROTATE, Canvas.elements.indexOf(e), f);
-	e.rotate(f);
+	e.setIncline(f);
     }
     
     public static void setBGColor(Color c){
