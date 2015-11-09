@@ -1,37 +1,41 @@
 
 package core;
 
-import core.Barradecolores;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Area;
-import java.util.ArrayList;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
 
 /**
  *
  * @author MARCO
  */
-public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListener {
+public class ConfigurarCuadrado extends javax.swing.JFrame {
     private Color contorno;
     private Color relleno;
     private double base;
     private double Altura;
-    private ArrayList<Area> areas;
     private Canvas canvas;
     private Rectangle r;
-    private int tipoMenu;
     
-    public ConfigurarCuadrado(ArrayList<Area> a, Canvas c, int t) {
+    public ConfigurarCuadrado(Canvas c, Rectangle re, Point p) {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        areas = a;
+        this.setLocation(p);
         canvas = c;
-        tipoMenu = t;
+        if(re != null)
+        {
+            r = re;
+            cargarValores();
+        }
+        else
+        {
+            r = new Rectangle();
+            r.posX = p.x;
+            r.posY = p.y;
+        }
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -187,7 +191,8 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-        setVisible(false);// TODO add your handling code here:
+        r.state = Element.AVAILABLE;
+        dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void EscogerColorRellenoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EscogerColorRellenoActionPerformed
@@ -215,8 +220,9 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
                 r.area = new Area(new java.awt.Rectangle(r.posX, r.posY, (int)base, (int)Altura));
                 r.incline = 0;
                 canvas.elements.add(r);
+                r.state = Element.AVAILABLE;
                 canvas.repaint(); 
-                setVisible(false);
+                dispose();
             }
             else
                 JOptionPane.showMessageDialog(rootPane, "Has ingresado datos erróneos, favor de revisarlos e intentarlo\n" +
@@ -238,10 +244,16 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
         // TODO add your handling code here:
     }//GEN-LAST:event_BaseActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    
+    public final void cargarValores()
+    {
+        this.altura.setText("" + r.height);
+        this.Base.setText("" + r.width);
+        relleno = r.bgcolor;
+        contorno = r.lncolor;
+        this.EscogerColorRelleno.setBackground(relleno);
+        this.EscogerColorLinea.setBackground(contorno);
+    }
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Aceptar;
@@ -260,64 +272,4 @@ public class ConfigurarCuadrado extends javax.swing.JFrame implements MouseListe
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        switch (tipoMenu)
-        {
-            case Escucha.FIGUREMENU :
-                if(whichArea(e.getPoint()) == 3)
-                {
-                    e.getComponent().setVisible(false);
-                    this.setLocation(e.getLocationOnScreen());
-                    this.setVisible(true);
-                    r = new Rectangle();
-                    r.posX = e.getXOnScreen();
-                    r.posY = e.getYOnScreen();
-                    r.incline = 0;
-                }
-            break;
-            case Escucha.SELECTIONMENU :
-                if(whichArea(e.getPoint()) == 0)
-                {
-                    e.getComponent().setVisible(false);
-                    try{
-                        this.r = (Rectangle)canvas.seleccionado;
-                        this.altura.setText("" + r.height);
-                        this.Base.setText("" + r.width);
-                        relleno = r.bgcolor;
-                        contorno = r.lncolor;
-                        this.EscogerColorRelleno.setBackground(relleno);
-                        this.EscogerColorLinea.setBackground(contorno);
-                        this.setVisible(true);
-                    }
-                    catch(Exception ex){}
-                }
-            break;
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    
-    public int whichArea(Point p)
-    {
-        for(int i = 0; i < areas.size(); i++)
-            if(areas.get(i).contains(p.x, p.y))
-                return i;
-        return -1;
-    }
 }

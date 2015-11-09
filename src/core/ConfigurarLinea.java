@@ -1,39 +1,40 @@
 
 package core;
 
-import core.Barradecolores;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import javax.swing.JColorChooser;
 
 
-public class ConfigurarLinea extends javax.swing.JFrame implements MouseListener{
+public class ConfigurarLinea extends javax.swing.JFrame{
 
 private double largo;
-//private float angulo;
 private float grueso;
 private Color contorno;
-private ArrayList<Area> areas;
 private Canvas canvas;
 private Line l;
-private int tipoMenu;
     
     
 
-    public ConfigurarLinea(ArrayList<Area> a, Canvas c, int t) {
-        initComponents();
-        areas = a;
-        canvas = c;
-        this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        tipoMenu = t;
+public ConfigurarLinea(Canvas c, Line li, Point p) {
+    initComponents();
+    this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+    this.setLocation(p);
+    canvas = c;
+    if( li != null )
+    {
+        l = li;
+        cargarValores();
     }
+    else
+    {
+        l = new Line();
+        l.posX = p.x;
+        l.posY = p.y;
+    }
+}
 
 
     @SuppressWarnings("unchecked")
@@ -161,19 +162,18 @@ private int tipoMenu;
             grueso = Float.parseFloat(this.Grosor.getText());
             if((largo!=0) && (contorno != null))
             {
-                //l.angle = angulo;
                 l.color = contorno;
                 l.length = largo;
                 l.grosor = grueso;
-                //java.awt.Rectangle r2d = new java.awt.Rectangle(l.posX, l.posY, (int)(l.length*Math.cos(l.angle)),(int)(l.length*Math.sin(l.angle)));
                 java.awt.Rectangle r2d = new java.awt.Rectangle(l.posX-(int)(l.grosor/2), l.posY-(int)(l.grosor/2), (int)(l.length + l.grosor), (int)l.grosor);
                 AffineTransform atr = new AffineTransform();
                 atr.setToRotation(l.incline);
                 l.area = new Area(r2d);
                 //l.area.transform(atr);
                 canvas.elements.add(l);
+                l.state = Element.AVAILABLE;
                 canvas.repaint();
-                setVisible(false);
+                dispose();
             }    
         }
         catch(Exception e)
@@ -193,12 +193,20 @@ private int tipoMenu;
     }//GEN-LAST:event_GrosorActionPerformed
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-        setVisible(false);// TODO add your handling code here:
+        l.state = Element.AVAILABLE;
+        dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void Largo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Largo
     }//GEN-LAST:event_Largo
 
+    public final void cargarValores()
+    {
+        this.Largo.setText(l.length + "");
+        this.Grosor.setText(l.grosor + "");
+        contorno = l.color;
+        this.EscogerColorLinea.setBackground(contorno);    
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -214,61 +222,5 @@ private int tipoMenu;
     private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        switch(tipoMenu)
-        {
-            case Escucha.FIGUREMENU :
-                if(whichArea(e.getPoint()) == 4)
-                {
-                    e.getComponent().setVisible(false);
-                    this.setLocation(e.getLocationOnScreen());
-                    this.setVisible(true);
-                    l = new Line();
-                    l.posX = e.getXOnScreen();
-                    l.posY = e.getYOnScreen();
-                }
-            break;
-            case Escucha.SELECTIONMENU :
-                if(whichArea(e.getPoint()) == 0)
-                {
-                    e.getComponent().setVisible(false);
-                    try{
-                        this.l = (Line)canvas.seleccionado;
-                        this.Largo.setText(l.length + "");
-                        this.Grosor.setText(l.grosor + "");
-                        //this.inclinacion.setValue((int)l.angle);
-                        contorno = l.color;
-                        this.EscogerColorLinea.setBackground(contorno);
-                        this.setVisible(true);
-                    }
-                    catch(Exception ex){}
-                }
-            break;
-        }
-    }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    
-    public int whichArea(Point p)
-    {
-        for(int i = 0; i < areas.size(); i++)
-            if(areas.get(i).contains(p.x, p.y))
-                return i;
-        return -1;
-    }
 }
