@@ -7,6 +7,7 @@ package core;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
@@ -35,38 +36,21 @@ public class RegularPolygon extends Figure {
     @Override
     public void draw(Graphics g) {
         
-        Graphics2D g2 = (Graphics2D) g;
-        /*g2.setColor(bgcolor);
-        g2.fillPolygon(pointsX, pointsY, pointsX.length);
-        g2.setColor(lncolor);
-        g2.drawPolygon(pointsX, pointsY, pointsX.length);
+        Graphics2D g2 = (Graphics2D)g.create();        
         if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
-            g2.fill(area);
-        }
-        */
-        if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgcolor));
-        } else {
-            g2.setColor(bgcolor);
-        }
-        //area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
-        g2.fill(area);
-        if(state!=AVAILABLE) {
+            g2.setBackground(Util.negative(bgcolor));
             g2.setColor(Util.negative(lncolor));
         } else {
+            g2.setBackground(bgcolor);
             g2.setColor(lncolor);
         }
+        g2.fill(area);
         g2.draw(area);
     }
 
+    @Override
     public void configure(Canvas canvas) {
-        pointsX = getCoordsX();
-        pointsY = getCoordsY();
-        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX, posY);
-        area.transform(rot);
+        new ConfigurarPoligono(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
     }
     
     public int[] getCoordsX() {
@@ -88,7 +72,7 @@ public class RegularPolygon extends Figure {
         }
         return coordY;
     }
-    public Area getArea()
+    public void getArea()
     {
         pointsX = getCoordsX();
         pointsY = getCoordsY();
@@ -96,8 +80,6 @@ public class RegularPolygon extends Figure {
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, posX, posY);
         area.transform(rot);
-        return area;
-        
     }
     
     public void doZoom(float escala)
@@ -106,13 +88,13 @@ public class RegularPolygon extends Figure {
         this.longSide *=(1+escala);
         pointsX = getCoordsX();
         pointsY = getCoordsY();
-        area = getArea();
+        getArea();
     }
     
     public void move(int x, int y)
     {   posX = (int)(x);
         posY = (int)(y);
-        area = getArea();
+        getArea();
     }
     
     public void rotate(java.awt.Point e) {
@@ -122,6 +104,6 @@ public class RegularPolygon extends Figure {
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
-        area = getArea();
+        getArea();
     }
 }
