@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,34 +29,31 @@ public class Imagen extends Element implements Serializable{
         img = new ImageIcon(src);
         width = img.getIconWidth();
         height = img.getIconHeight();
-        area = getArea();
+        getArea();
         this.posX = 0;
         this.posY = 0;
         this.incline = 0;
     }
     
+    @Override
     public void draw(Graphics g)
     {
         Graphics2D g2 = (Graphics2D)(g.create()); 
         g2.rotate(incline, posX + width/2,posY + height/2);
         g2.drawImage(img.getImage(), posX, posY, width, height,null);
-        //g2.rotate(0,0,0);
-    }
-
-    public void configure(Canvas canvas) {
-        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+width/2, posY+height/2);
-        area.transform(rot);
     }
 
     @Override
-    public Area getArea() {
+    public void configure(Canvas canvas) {
+        JOptionPane.showMessageDialog(null, "No disponible aun");
+    }
+
+    @Override
+    public void getArea() {
         area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, posX+width/2, posY+height/2);
         area.transform(rot);
-        return area;
     }
     
     @Override
@@ -63,9 +61,10 @@ public class Imagen extends Element implements Serializable{
     {
         this.height *= (1+escala);  
         this.width *= (1+escala);
-        area = getArea();
+        getArea();
     }
 
+    @Override
     public void rotate(java.awt.Point e) {
         double Y = (posY + height/2) - e.getY();
         double X = (posX + width/2) - e.getX();
@@ -73,13 +72,14 @@ public class Imagen extends Element implements Serializable{
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
-        area = getArea();
+        getArea();
     }
     
+    @Override
     public void move(int x, int y)
     {
         posX = x - width/2;
         posY = y - height/2;
-        area = getArea();
+        getArea();
     }
 }
