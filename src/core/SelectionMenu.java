@@ -107,7 +107,14 @@ public class SelectionMenu extends JComponent implements MouseListener{
         });
 
         this.setVisible(false);
-        this.addMouseListener(new ConfigurarCirculo(areas, canvas, Escucha.SELECTIONMENU));
+	this.addMouseListener(new MouseAdapter(){
+	    @Override
+	    public void mouseClicked(MouseEvent me){
+		if(whichArea(me.getPoint()) == 0){
+		    ConfFrame.showFrame(elemento);
+		}
+	    }
+	});
         this.addMouseListener(new ConfigurarCuadrado(areas, canvas, Escucha.SELECTIONMENU));
         this.addMouseListener(new ConfigurarTriangulo(areas, canvas, Escucha.SELECTIONMENU));
         this.addMouseListener(new ConfigurarPoligono(areas, canvas, Escucha.SELECTIONMENU));
@@ -225,8 +232,8 @@ public class SelectionMenu extends JComponent implements MouseListener{
     
     public int cualFigura(Point p)
     {
-        for(int i = canvas.elements.size()-1; i >= 0; i--)
-            if(canvas.elements.get(i).area.contains(p))
+        for(int i = 0; i < Canvas.elements.size(); i++)
+            if(Canvas.elements.get(i).area.contains(p))
                 return i;
         return -1;
     }

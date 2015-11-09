@@ -16,7 +16,7 @@ import java.awt.geom.Ellipse2D;
  */
 public class Circle extends Figure{
 
-    double radio;
+    private double radio;
     
     public Circle(){
 	super();
@@ -32,6 +32,9 @@ public class Circle extends Figure{
 	super(c);
 	radio = c.radio;
     }
+    
+    public void setRadius(double r){radio = r;}
+    public double getRadius(){return radio;}
    
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;

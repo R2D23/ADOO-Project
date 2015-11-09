@@ -15,9 +15,11 @@ public class Canvas extends JPanel implements Serializable {
     public static ArrayList<Element> elements;
     private static FigureMenu fm;
     private static SelectionMenu sm;
+    public static Canvas canvas;
     public ArrayList<Element> pastelements;
     public ArrayList<Element> futureelements;
     public Canvas() {
+	canvas = this;
         elements = new ArrayList<>();
         addMouseMotionListener(new Escucha(this));
         pastelements=null;

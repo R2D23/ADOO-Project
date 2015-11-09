@@ -39,5 +39,5 @@ public abstract class Figure extends core.Element {
     }
     
     public Color getBgColor(){return bgColor;}
-    public Color getLgColor(){return lnColor;}
+    public Color getLnColor(){return lnColor;}
 }

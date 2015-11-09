@@ -29,6 +29,7 @@ public class Action {
     public static final int ELEMENT_ROTATE = 4;
     public static final int FIGURE_BCOLOR = 5;
     public static final int FIGURE_LCOLOR = 6;
+    public static final int CIRCLE_RADIUS = 7;
     
 //    La clase Action está diseñada para grabar las acciones del usuario
 //    para volver a realizarlas 'make()' o para deshacerlas 'rollback'
@@ -64,7 +65,10 @@ public class Action {
 		prev = ((Figure) elements.get(id)).getBgColor();
 		break;
 	    case FIGURE_LCOLOR:
-		prev = ((Figure) elements.get(id)).getLgColor();
+		prev = ((Figure) elements.get(id)).getLnColor();
+		break;
+	    case CIRCLE_RADIUS:
+		prev = ((Circle) elements.get(id)).getRadius();
 		break;
 	}
     }
@@ -93,6 +97,11 @@ public class Action {
 		break;
 	    case FIGURE_LCOLOR:
 		((Figure) elements.get(id)).setLnColor((Color) next);
+		break;
+	    case CIRCLE_RADIUS:
+		((Circle) elements.get(id)).setRadius((Double) next);
+		break;
+		
 	}
     }
     
@@ -108,13 +117,17 @@ public class Action {
 		elements.get(id).move((Point) prev);
 		break;
 	    case ELEMENT_ROTATE:
-		elements.get(id).rotate((Float) prev);
+		elements.get(id).rotate((Double) prev);
 		break;
 	    case FIGURE_BCOLOR:
 		((Figure) elements.get(id)).setBgColor((Color) prev);
 		break;
 	    case FIGURE_LCOLOR:
 		((Figure) elements.get(id)).setLnColor((Color) prev);
+		break;
+	    case CIRCLE_RADIUS:
+		((Circle) elements.get(id)).setRadius((Double) prev);
+		break;
 	}
     }
     
