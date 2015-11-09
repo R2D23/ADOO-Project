@@ -49,9 +49,6 @@ public class Escucha implements MouseInputListener {
         //seleccionado = null;
         switch(tipoMenu)
         {
-            case FIGUREMENU :
-                clicMenuFigura(e);
-            break;
             case FILEMENU :
                 clicMenuArchivo(e);
             break;
@@ -60,9 +57,6 @@ public class Escucha implements MouseInputListener {
             break;
             case REDOMENU :
                 clicMenuRedo(e);
-            break;
-            case SELECTIONMENU :
-                clicMenuSeleccion(e);
             break;
         }
         //canvas.repaint();
@@ -121,21 +115,6 @@ public class Escucha implements MouseInputListener {
         return -1;
     }
     
-    public void clicMenuFigura(MouseEvent e)
-    {
-        int areaClic = whichArea(e.getPoint());
-        switch(areaClic)
-        {
-            case MenuDrawer.EXIT :
-                e.getComponent().setVisible(false);
-                //canvas.repaint();
-            break;
-            case MenuDrawer.IRREGULAR :
-                JOptionPane.showMessageDialog(e.getComponent(),"Configuracion de figura irregular");
-            break;
-        }
-    }
-    
     public void clicMenuArchivo(MouseEvent e)
     {
         int areaClic = whichArea(e.getPoint());
@@ -176,7 +155,7 @@ public class Escucha implements MouseInputListener {
                 JFileChooser fcs = new JFileChooser();
                 opc=fcs.showSaveDialog(null);
                 if(opc == JFileChooser.APPROVE_OPTION){
-                    archivo.saveFile(fcs.getSelectedFile().getPath());
+//                    archivo.saveFile(fcs.getSelectedFile().getPath());
 
                 e.getComponent().setVisible(false);    
                 }
@@ -189,7 +168,7 @@ public class Escucha implements MouseInputListener {
                 opc=fco.showOpenDialog(null);
                 if(opc == JFileChooser.APPROVE_OPTION){
                     //File file = new File(canvas.elements, canvas);
-                   canvas.elements=archivo.readFile(fco.getSelectedFile().getPath());
+                   //canvas.elements=archivo.readFile(fco.getSelectedFile().getPath());
                    canvas.repaint();
                    archivo.setName(fco.getSelectedFile().getName());
                    ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).setTitle(fco.getSelectedFile().getName() + " - iDraw");
@@ -240,38 +219,7 @@ public class Escucha implements MouseInputListener {
         }    
     }
 
-    public void clicMenuSeleccion(MouseEvent e)
-    {
-        int areaClic = whichArea(e.getPoint());
-        switch(areaClic)
-        {
-            case MenuDrawer.MOVE :
-                canvas.actElements();
-                canvas.seleccionado.state = Element.MOVING;
-                e.getComponent().setVisible(false);
-            break;
-            case MenuDrawer.ROTATE :
-                canvas.actElements();
-                canvas.seleccionado.state = Element.ROTATING;
-                for(Element el : canvas.elements)
-                    System.out.println(el);
-                System.out.println();
-                e.getComponent().setVisible(false);
-            break;
-            case MenuDrawer.DISPOSE :
-                canvas.actElements();
-                canvas.deleteElement(canvas.seleccionado);
-                //JOptionPane.showMessageDialog(e.getComponent(),"Eliminar Figura");
-                e.getComponent().setVisible(false);
-                canvas.repaint();
-            break;
-            case MenuDrawer.EXIT2 :
-                canvas.seleccionado.state = Element.AVAILABLE;
-                e.getComponent().setVisible(false);
-            break;                   
-        }
-    }
-
+    
     @Override
     public void mouseDragged(MouseEvent e) {
         //System.out.println("Elemento drag : " + seleccionado);
@@ -279,60 +227,7 @@ public class Escucha implements MouseInputListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-    //System.out.println("se mueve" + this.seleccionado);
-
-        if(canvas.seleccionado != null)
-        {
-            switch(canvas.seleccionado.state)
-            {
-                case Element.MOVING:
-                    canvas.seleccionado.move(e.getX(), e.getY());                    
-                break;
-                case Element.ROTATING:
-                    canvas.seleccionado.rotate(e.getPoint());
-                break;
-            }
-            
-            canvas.repaint();
-        }
-        
-        
-        
-        /*if(!canvas.elements.isEmpty()) {
-            for(int i=0; i<canvas.elements.size(); i++) {
-                if(canvas.elements.get(i).state==Element.MOVING) {
-                   canvas.elements.get(i).move(e.getX(), e.getY());
-                   canvas.elements.get(i).configure(canvas);
-                } else if(canvas.elements.get(i).state==Element.ROTATING) {
-                    canvas.elements.get(i).rotate(0.0, e.getPoint());
-                    System.out.println("rotando");
-                    /*double pendiente, newIncline;
-                    if(e.getX()-canvas.elements.get(i).posX!=0) {
-                        //Element el = canvas.elements.get(i);
-                        //Point centro = new Point(el.posX + el.)
-                        int Y = e.getY()-canvas.elements.get(i).posY;
-                        int X = e.getX()-canvas.elements.get(i).posX;
-                        pendiente = Y/X;
-                        //System.out.println("" + (e.getY()-canvas.elements.get(i).posY));
-                        //System.out.println("" + (e.getX()-canvas.elements.get(i).posX));
-                        System.out.println("xM : " + e.getX() + "\tyM : " + e.getY());
-                        System.out.println("xE : " + canvas.elements.get(i).posX + "\tyE : " + canvas.elements.get(i).posY);
-                        System.out.println("X = " + X + "  Y = "+ Y);
-                        System.out.println("" + pendiente);
-                        newIncline = Math.atan(pendiente);
-                    } else {
-                        pendiente = (e.getY()-canvas.elements.get(i).posY)/0.001;
-                        newIncline = Math.atan(pendiente);
-                    }
-                    //System.out.println("Inclinacion: "+Math.toDegrees(newIncline)+" °");
-                    canvas.elements.get(i).rotate(newIncline,e.getPoint());
-                    canvas.elements.get(i).configure(canvas);
-                }
-                
-            }
-            
-            //canvas.repaint();
-        }*/
+    
     }
     
 
