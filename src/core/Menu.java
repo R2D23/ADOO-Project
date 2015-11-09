@@ -1,5 +1,6 @@
 package core;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -10,6 +11,8 @@ import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import javax.swing.*;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.event.*;
 /**
  *
@@ -22,10 +25,19 @@ import javax.swing.event.*;
     - Menu de lupa
     - Menu de deshacer/rehacer
     - */
-public class Menu extends JComponent implements MouseListener{
-    
-    private static final int SIZE = 200;//Tamaño del menu
-    private Point location;
+public class Menu extends JComponent{
+    public static final short IMAGE = 1;
+    public static final short NEW = 2;
+    public static final short OPEN = 3;
+    public static final short SAVE = 4;
+    public static final short MAS = 1;
+    public static final short MENOS = 3;
+    public static final short UNDO = 1;
+    public static final short REDO = 2;
+    public static final short EXIT = 0;
+       
+    public static final int SIZE = 200;//Tamaño del menu
+    //private Point location;
     private Point center;
     private JButton b;//Boton al que está asociado
     private ArrayList<Area> areas;//Botones que tiene el menu
@@ -34,7 +46,7 @@ public class Menu extends JComponent implements MouseListener{
     public Menu(JButton b,Canvas c){
         this.canvas = c;
 	setSize(SIZE, SIZE);
-	location = new Point();
+//	location = new Point();
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;//al momento de que se crea el menu, no hay ninguna area seleccionada
@@ -46,15 +58,12 @@ public class Menu extends JComponent implements MouseListener{
         switch (b.getActionCommand()) {
             case "file":
                 obtenerAreasFileMenu();
-                addMouseListener(new Escucha(areas, Escucha.FILEMENU,canvas));
                 break;
             case "lupa":
                 obtenerAreasZoomMenu();
-                addMouseListener(new Escucha(areas, Escucha.ZOOMMENU,canvas));
                 break;
             case "redo-menu":
-                obtenerAreasZoomMenu();
-                addMouseListener(new Escucha(areas, Escucha.REDOMENU,canvas));
+                obtenerAreasRedoMenu();
                 break;
         }
         
@@ -67,6 +76,25 @@ public class Menu extends JComponent implements MouseListener{
                 int area = whichArea(me.getPoint());
                 updateMenu(area);
             }
+        });
+        
+        this.addMouseListener(new MouseAdapter()
+        {
+           @Override
+           public void mouseClicked(MouseEvent me) 
+           {
+                switch (b.getActionCommand()) {
+                case "file":
+                    clicFileMenu();
+                    break;
+                case "lupa":
+                    clicZoomMenu();
+                    break;
+                case "redo-menu":
+                    clicRedoMenu();
+                    break;
+        }
+           }
         });
 
         this.setVisible(false);
@@ -110,23 +138,12 @@ public class Menu extends JComponent implements MouseListener{
         int aY=getHeight();
         double si = Math.sin(Math.PI/4);
         double se = 1-si;
-        int c[] = new int[8];
+        int c[] = new int[4];
         c[0]=(int)(cX*se);
-        c[1]=(int)(cY*se);
-        c[2]=cX-1-((int)(bX*si))/2;
-        c[3]=cY-1-(int)((bY*si))/2;
-        c[4]=aX-(int)(cX*se);
-        c[5]=aY-(int)(cY*se);
-        c[6]=cX+((int)(bX*si))/2;
-        c[7]=cY+(int)((bY*si))/2;
-        g2.drawLine(0, cY, bX, cY);//Esta es la línea que divide la mitad
-        if(b.getActionCommand().equals("file"))
-        {
-            //Las líneas extras que necesita el menu de Archivo
-            g2.drawLine(c[0],c[1],c[2],c[3]);
-            g2.drawLine(c[0], c[4], c[2], c[6]);
-            g2.drawLine(c[7], c[3], c[5], c[1]);
-        }
+        c[1]=cX-1-((int)(bX*si))/2;
+        c[2]=aX-(int)(cX*se);
+        c[3]=cX+((int)(bX*si))/2;
+
         g2.setColor(Color.black);
 	g2.drawOval(SIZE/3, SIZE/3, SIZE/3, SIZE/3);//Dibuja la linea interior del menu
 	g2.drawOval(0, 0, SIZE, SIZE);//Dibuja la linea del circulo interior del menu
@@ -136,63 +153,32 @@ public class Menu extends JComponent implements MouseListener{
         MenuDrawer md = new MenuDrawer();
         switch (b.getActionCommand()) {
             case "file":
+                g2.drawLine(0, cY, bX, cY);
+                g2.drawLine(c[0],c[0],c[1],c[1]);
+                g2.drawLine(c[0], c[2], c[1], c[3]);
                 md.paint(MenuDrawer.IMAGE, g, areas.get(1));
                 md.paint(MenuDrawer.NEW, g, areas.get(2));
                 md.paint(MenuDrawer.OPEN, g, areas.get(3));
                 md.paint(MenuDrawer.SAVE, g, areas.get(4));
                 break;
             case "lupa":
+                g2.drawLine(c[0],c[0],c[1],c[1]);
+                g2.drawLine(c[0], c[2], c[1], c[3]);
                 md.paint(MenuDrawer.MAS, g, areas.get(1));
-                md.paint(MenuDrawer.MENOS, g, areas.get(2));
+                md.paint(MenuDrawer.MENOS, g, areas.get(3));
+                String indice = canvas.getIndiceZoom() + "%";
+                g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, 22));
+                g2.drawChars(indice.toCharArray(), 0, indice.length(), 15, 100);
                 break;
             case "redo-menu":
+                g2.drawLine(0, cY, bX, cY);//Esta es la línea que divide la mitad
                 md.paint(MenuDrawer.UNDO, g, areas.get(1));
                 md.paint(MenuDrawer.REDO, g, areas.get(2));
                 break;
         }
         
     }
-
-    /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder saber cuando se 
-    ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
-    @Override
-    //Esta parte también es temporal, mientras se define bien las acciones del ratón,
-    public void mouseClicked(MouseEvent e) {
-        switch(e.getButton())
-        {
-            case MouseEvent.BUTTON1 ://clic izquierdo sobre el boton asociado
-                this.setVisible(true);//se muestra
-                Point centroBoton = new Point(b.getX() + b.getWidth()/2, b.getY() + b.getHeight()/2);
-                location.setLocation(centroBoton.getX() - SIZE/2, centroBoton.getY() - SIZE/2);
-                this.setLocation(location);//se define la localizacion.
-            break;
-            case MouseEvent.BUTTON3 :
-                //este case es por si alguna vez se necesita
-            break;
-                
-        }
-    }
     
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        areaActual = -1;
-    }
-    
-    //funcion que regresa el area sobre la cual esta el punto p,
-    //si el punto no está en ninguna area, devuelve -1
     public int whichArea(Point p)
     {
         for(int i = 0; i < areas.size(); i++)
@@ -248,6 +234,39 @@ public class Menu extends JComponent implements MouseListener{
             areas.add(s);
     }
     
+    
+    public final void obtenerAreasRedoMenu()
+    {
+        Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
+	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
+        
+        Polygon p;
+        
+        //AREA CENTRAL USADA PARA SALIR
+            Area s = new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3));
+            areas.add(s);
+        //AREA UNDO
+            p = new Polygon();
+            p.addPoint(0, 0);
+            p.addPoint(SIZE,0);
+            p.addPoint(SIZE, SIZE/2);
+	    p.addPoint(0,SIZE/2);
+            s = ((Area)gen.clone());
+            s.intersect(new Area(p));
+            areas.add(s);
+           
+            
+        //AREA REDO
+            p = new Polygon();
+            p.addPoint(0, SIZE);
+            p.addPoint(SIZE, SIZE);
+	    p.addPoint(SIZE, SIZE/2);
+            p.addPoint(0, SIZE/2);
+            s = ((Area)gen.clone());
+            s.intersect(new Area(p));
+            areas.add(s);
+        
+    }
     public final void obtenerAreasZoomMenu()
     {
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
@@ -263,18 +282,24 @@ public class Menu extends JComponent implements MouseListener{
             p.addPoint(0, 0);
             p.addPoint(SIZE,0);
             p.addPoint(SIZE, SIZE/2);
-	    p.addPoint(0,SIZE/2);
+	    p.addPoint(SIZE/2,SIZE/2);
             s = ((Area)gen.clone());
             s.intersect(new Area(p));
             areas.add(s);
             
+        //AREA INDICE
+            p = new Polygon();
+            p.addPoint(0,0);
+            p.addPoint(SIZE/2,SIZE/2);
+            p.addPoint(SIZE, SIZE);
+            areas.add(s);
+            
         //AREA MENOS
             p = new Polygon();
-            p.addPoint(0, SIZE/2);
             p.addPoint(0, SIZE);
             p.addPoint(SIZE, SIZE);
 	    p.addPoint(SIZE, SIZE/2);
-            
+            p.addPoint(SIZE/2, SIZE/2);
             s = ((Area)gen.clone());
             s.intersect(new Area(p));
             areas.add(s);
@@ -283,5 +308,94 @@ public class Menu extends JComponent implements MouseListener{
     
     public JButton getBoton()
     {return this.b;}
+    
+    
+    public void clicFileMenu()
+    {
+        int opc=0;
+        switch(areaActual)
+        {
+            case EXIT : 
+                this.setVisible(false);
+            break;
+            case IMAGE :
+                try{
+                    JFileChooser fci = new JFileChooser();
+                    opc=fci.showOpenDialog(null);
+                    Imagen im = new Imagen(fci.getSelectedFile().getPath());
+                    canvas.addElement(im);
+                    canvas.repaint();
+                    this.setVisible(false);
+                }
+                catch(Exception ex){}
+            break;
+            case NEW :
+                if(((GUI)(b.getTopLevelAncestor())).getFile().getName() == null)
+                {
+                    int op = JOptionPane.showConfirmDialog(null, "Estas a punto de cerrar un lienzo sin guardar ¿Continuar?", "Cerrar",YES_NO_OPTION);
+                    if(op == YES_OPTION)
+                    {
+                        ((GUI)(b.getTopLevelAncestor())).setTitle( "Lienzo en blanco - iDraw");
+                        canvas.elements.clear();
+                        canvas.repaint();
+                    }
+                    setVisible(false);    
+                }
+                            
+            break;
+            case SAVE :
+                File archivo = ((GUI)(b.getTopLevelAncestor())).getFile();
+                archivo.saveFile();
+                ((GUI)(getTopLevelAncestor())).setTitle(archivo.getName() + " - iDraw");
+                ((GUI)(getTopLevelAncestor())).repaint();
+                setVisible(false);    
+                
+            break;
+            case OPEN :
+                archivo = ((GUI)(b.getTopLevelAncestor())).getFile();
+                archivo.readFile();
+                setVisible(false);
+                
+            break;
+        }
+    }
+    
+    public void clicZoomMenu()
+    {
+        switch(areaActual)
+        {
+            case EXIT :
+                setVisible(false);
+            break;
+            case MAS :
+               canvas.doZoom(10);
+               repaint();
+            break;
+            case MENOS :
+                canvas.doZoom(-10);
+                repaint();
+            break;
+        }
+    }
+  
+    public void clicRedoMenu()
+    {
+        switch(areaActual)
+        {
+            case EXIT :
+                setVisible(false);
+            break;
+            case UNDO :
+                canvas.returnPast();
+                canvas.repaint();
+            break;
+            case REDO :
+                canvas.toFuture();
+                canvas.repaint();
+            break;
+        }    
+    }
+    
+    
 }
 
