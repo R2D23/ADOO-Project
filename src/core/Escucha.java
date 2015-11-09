@@ -189,10 +189,10 @@ public class Escucha implements MouseInputListener {
                 e.getComponent().setVisible(false);
             break;
             case MenuDrawer.MAS :
-               canvas.doZoom(0.1f);
+//               canvas.doZoom(0.1f);
             break;
             case MenuDrawer.MENOS :
-                canvas.doZoom(-0.1f);
+  //              canvas.doZoom(-0.1f);
             break;
         }
     }
