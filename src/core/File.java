@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -26,28 +27,39 @@ public class File {
         this.canvas = c;
     }
     
-    public void saveFile(String name){
-        try {
-            ObjectOutputStream salida=new ObjectOutputStream(new FileOutputStream(name+".lz"));
-            salida.writeObject(canvas.elements);
-            salida.close();
-        } catch (IOException ex) {
-            Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
+    public void saveFile(){
+        JFileChooser fcs = new JFileChooser();
+        int opc = fcs.showSaveDialog(null);
+        if(opc == JFileChooser.APPROVE_OPTION)
+        {
+            name = fcs.getSelectedFile().getName();
+            try {
+                ObjectOutputStream salida=new ObjectOutputStream(new FileOutputStream(name+".lz"));
+                salida.writeObject(canvas.elements);
+                salida.close();
+            } catch (IOException ex) {
+                Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
-    public ArrayList<Element> readFile(String dir){
-        //ArrayList<Element> file=null;
-        try {
-            ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(dir));
-            canvas.elements = (ArrayList<Element>)entrada.readObject();
-        } catch (Exception ex) {
-            Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
-        for(int i = 0; i < canvas.elements.size(); i++)
-            canvas.elements.get(i).area = canvas.elements.get(i).getArea();
-        return canvas.elements;
+    public void readFile(){
+        JFileChooser fco = new JFileChooser();
+        int opc = fco.showOpenDialog(null);
+        if(opc == JFileChooser.APPROVE_OPTION){
+            try {
+              ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(fco.getSelectedFile().getPath()));
+              canvas.elements = (ArrayList<Element>)entrada.readObject();
+              for(int i = 0; i < canvas.elements.size(); i++)
+                canvas.elements.get(i).getArea();
+              canvas.repaint();
+              name = fco.getSelectedFile().getName();
+            } catch (Exception ex) {
+                Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+
+           name = fco.getSelectedFile().getName();
+        }
     }
     
     public void setName(String s)
