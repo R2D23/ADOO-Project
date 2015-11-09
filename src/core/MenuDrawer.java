@@ -36,6 +36,7 @@ public class MenuDrawer{
     public static final int ROTATE = 17;
     public static final int DISPOSE = 18;
     public static final int EXIT2 = 19;
+    public static final int TEXT = 20;
     private Color color = Color.black;
     
     /*
@@ -52,7 +53,7 @@ public class MenuDrawer{
 	    case TRIANGLE:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("triangulo.png");
+                FileInputStream img = new FileInputStream("./images/triangulo.png");
                 BufferedImage in = ImageIO.read(img);
                 g2.drawImage(in, x + ancho/3, y + alto/3,ancho/2,alto/2, null);
                
@@ -61,7 +62,7 @@ public class MenuDrawer{
             case CIRCLE:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("circulo.png");
+                FileInputStream img = new FileInputStream("./images/circulo.png");
                 BufferedImage in = ImageIO.read(img);
                 g2.drawImage(in, x + ancho/7, y + alto/4,ancho/2,alto/2, null);
                 
@@ -70,7 +71,7 @@ public class MenuDrawer{
             case POLIGONE:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("poligono.png");
+                FileInputStream img = new FileInputStream("./images/poligono.png");
                 BufferedImage in = ImageIO.read(img);
                 g2.drawImage(in, x + ancho/4, y + alto/4,ancho/2,alto/2, null);
 	    }
@@ -78,7 +79,7 @@ public class MenuDrawer{
             case RECTANGLE:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("cuadrado.png");
+                FileInputStream img = new FileInputStream("./images/cuadrado.png");
                 BufferedImage in = ImageIO.read(img);
                 g2.drawImage(in, x + ancho/4, y + alto/2,ancho/2,alto/2, null);
 	    }
@@ -86,7 +87,7 @@ public class MenuDrawer{
             case LINE:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("line.png");
+                FileInputStream img = new FileInputStream("./images/line.png");
                 BufferedImage in = ImageIO.read(img);
                 g2.drawImage(in, x + ancho/4, y + alto/7,ancho/2,alto/2, null);
 	    }
@@ -94,15 +95,15 @@ public class MenuDrawer{
             case IRREGULAR:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("doodle.png");
+                FileInputStream img = new FileInputStream("./images/doodle.png");
                 BufferedImage in = ImageIO.read(img);
-                g2.drawImage(in, x + ancho/3, y + alto/7,ancho/2,alto/2, null);
+                g2.drawImage(in, x + ancho/2, y + alto/6,ancho/2,alto/2, null);
 	    }
             break;                        
             case EXIT:
 	    {
 		g2 = (Graphics2D) g;
-                FileInputStream img = new FileInputStream("salir.png");
+                FileInputStream img = new FileInputStream("./images/salir.png");
                 BufferedImage in = ImageIO.read(img);
                 g2.drawImage(in, x + ancho/4, y + alto/7,ancho/2,alto/2, null);
 	    }
@@ -110,7 +111,7 @@ public class MenuDrawer{
                 case IMAGE : 
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("image.png");
+                    FileInputStream img = new FileInputStream("./images/image.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/3,ancho/3,alto/2, null);
                 }
@@ -118,7 +119,7 @@ public class MenuDrawer{
                 case NEW :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("new.png");
+                    FileInputStream img = new FileInputStream("./images/new.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/3,ancho/2,alto/2, null);
                 }
@@ -126,7 +127,7 @@ public class MenuDrawer{
                 case SAVE :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("save.png");
+                    FileInputStream img = new FileInputStream("./images/save.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/5, y + alto/7,ancho/2,alto*2/3, null);
                 }
@@ -134,7 +135,7 @@ public class MenuDrawer{
                 case OPEN :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("open.png");
+                    FileInputStream img = new FileInputStream("./images/open.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/7,ancho/2,alto/2, null);
                 }
@@ -142,7 +143,7 @@ public class MenuDrawer{
                 case MAS :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("plus.png");
+                    FileInputStream img = new FileInputStream("./images/plus.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/5,ancho/3,alto/2, null);
                 }
@@ -150,7 +151,7 @@ public class MenuDrawer{
                 case MENOS :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("menos.png");
+                    FileInputStream img = new FileInputStream("./images/menos.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/3,ancho/3,alto/2, null);
                 }
@@ -158,7 +159,7 @@ public class MenuDrawer{
                 case UNDO :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("undo.png");
+                    FileInputStream img = new FileInputStream("./images/undo.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/5,ancho/3,alto/2, null);
                 }
@@ -166,7 +167,7 @@ public class MenuDrawer{
                 case REDO :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("redo.png");
+                    FileInputStream img = new FileInputStream("./images/redo.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/3,ancho/3,alto/2, null);
                 }
@@ -174,7 +175,7 @@ public class MenuDrawer{
                 case CONFIGURE :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("configure.png");
+                    FileInputStream img = new FileInputStream("./images/configure.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/3,ancho/2,alto/2, null);
                 }
@@ -182,7 +183,7 @@ public class MenuDrawer{
                 case MOVE :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("move.png");
+                    FileInputStream img = new FileInputStream("./images/move.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/3, y + alto/3,ancho/2,alto/2, null);
                 }
@@ -190,7 +191,7 @@ public class MenuDrawer{
                 case ROTATE :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("rotate.png");
+                    FileInputStream img = new FileInputStream("./images/rotate.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/4, y + alto/5,ancho/2,alto/2, null);
                 }
@@ -198,11 +199,19 @@ public class MenuDrawer{
                 case DISPOSE :
                 {
                     g2 =(Graphics2D)g;
-                    FileInputStream img = new FileInputStream("trash.png");
+                    FileInputStream img = new FileInputStream("./images/trash.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, x + ancho/8, y + alto/4,ancho/2,alto/2, null);
                 }
                 break;    
+                case TEXT :
+                {
+                    g2 =(Graphics2D)g;
+                    FileInputStream img = new FileInputStream("./images/text.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, x + ancho/8, y + alto/4,ancho/2,alto/2, null);
+                }
+                break;
 	    
 	}
         }
