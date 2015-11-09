@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public abstract class Element implements Cloneable,Serializable{
     //Coordenadas
-    private static long serialVersionUID = 1113799434508676095L;
+    private static final long serialVersionUID = 1113799434508676095L;
     public int posX; 
     public int posY;
     public double incline;
@@ -23,6 +23,7 @@ public abstract class Element implements Cloneable,Serializable{
     public static final int BUSY = 1;
     public static final int MOVING = 2;
     public static final int ROTATING = 3;
+    public static final int GETTINGPOINTS = 4;
     
      public Object clone(){
         Object obj=null;
@@ -38,30 +39,32 @@ public abstract class Element implements Cloneable,Serializable{
     //Cuando algun elemento se selecciona se ejecuta select cambiando el estado
     public void select() {
         state = BUSY; //Entonces lo deja de estar (1)
-        //color = Util.negative(color);
     }
     
     //Este metodo actualiza el valor de la inclinación
     public void rotate(java.awt.Point p) {
-        this.incline = incline; //Asigna la nueva inclinacion
     }
     
     //Este método cambia las coordenadas del Elemento
     public void move(int posX, int posY) {
-        //this.posX = posX;
-        //this.posY = posY;
     }
     
     public abstract void draw(Graphics g);
-    //public abstract void configure(Canvas canvas);
+    public abstract void configure(Canvas canvas);
     
-    public abstract Area getArea();
+    /*public void configure()
+    {
+    
+    }
+    public void configure(Canvas c)
+    {
+    }*/
+    public abstract void getArea();
     public void doZoom(float escala)
     {
         posX *= (1 + escala);
         posY *= (1 + escala);
     }
-     public double getInclination() {
-	return incline;
-    }
+    public double getInclination() 
+    {return incline;}
 }
