@@ -37,7 +37,7 @@ public class GraphicDrawer{
 		g2 = (Graphics2D) g;
 		try
                 {
-                    FileInputStream img = new FileInputStream("archivo.png");
+                    FileInputStream img = new FileInputStream("./images/archivo.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
                 }
@@ -74,7 +74,7 @@ public class GraphicDrawer{
                 g2 = (Graphics2D)g;
                 try
                 {
-                    FileInputStream img = new FileInputStream("mano.png");
+                    FileInputStream img = new FileInputStream("./images/mano.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*1/10, r.height*1/10,r.width*2/3,r.height*2/3, null);
                 }
@@ -89,7 +89,7 @@ public class GraphicDrawer{
                 g2 = (Graphics2D)g;
                 try
                 {
-                    FileInputStream img = new FileInputStream("lapiz.png");
+                    FileInputStream img = new FileInputStream("./images/lapiz.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
                 }
@@ -105,7 +105,7 @@ public class GraphicDrawer{
                 g2 = (Graphics2D)g;
                 try
                 {
-                    FileInputStream img = new FileInputStream("cursorBase.png");
+                    FileInputStream img = new FileInputStream("./images/cursorBase.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
                 }
@@ -120,7 +120,7 @@ public class GraphicDrawer{
                 g2 = (Graphics2D)g;
                 try
                 {
-                    FileInputStream img = new FileInputStream("zoom.png");
+                    FileInputStream img = new FileInputStream("./images/zoom.png");
                     BufferedImage in = ImageIO.read(img);
                     g2.drawImage(in, r.width*2/10, r.height*2/10,r.width*2/3,r.height*2/3, null);
                 }
