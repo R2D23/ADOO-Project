@@ -64,13 +64,9 @@ public class Triangle extends Figure{
         g2.draw(area);
     }
 
+    @Override
     public void configure(Canvas canvas) {
-        pointsX = getCoordsX();
-        pointsY = getCoordsY();
-        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+base/2, posY+height/2);
-        area.transform(rot);
+        new ConfigurarTriangulo(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
     }
 
     public int[] getCoordsX() {
@@ -111,7 +107,8 @@ public class Triangle extends Figure{
         }
         return coordY;
     }
-    public Area getArea()
+    
+    public void getArea()
     {
         pointsX = getCoordsX();
         pointsY = getCoordsY();
@@ -119,16 +116,17 @@ public class Triangle extends Figure{
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, posX+base/2, posY+height/2);
         area.transform(rot);
-        return area;
     }
     
+    @Override
     public void move(int x, int y)
     {
         posX = (int)(x - base/2);
         posY = (int)(y - height/2);
-        area = getArea();
+        getArea();
     }
     
+    @Override
     public void doZoom(float escala)
     {
         super.doZoom(escala);
@@ -136,16 +134,17 @@ public class Triangle extends Figure{
         this.height *= (1+escala);
         pointsX = getCoordsX();
         pointsY = getCoordsY();
-        area = getArea();
+        getArea();
     }
     
+    @Override
     public void rotate(Point e) {
-         double Y = (posY + height/2) - e.getY();
+        double Y = (posY + height/2) - e.getY();
         double X = (posX + base/2) - e.getX();
         double pendiente = Y/X;
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
-        area = getArea();
+        getArea();
     }
 }
