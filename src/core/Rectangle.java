@@ -17,10 +17,10 @@ import java.awt.geom.Area;
  */
 public class Rectangle extends core.Figure {
 
-    double width;
-    double height;
+    int width;
+    int height;
             
-    public Rectangle(double width, double height) {
+    public Rectangle(int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -70,11 +70,29 @@ public class Rectangle extends core.Figure {
         getArea();
     }
     
-    public void move(int x, int y)
-    {
-        posX = (int)(x - width/2);
-        posY = (int)(y - height/2);
-        getArea();
+    public void setWidth(int b){
+	this.width = b;
+	getArea();
     }
     
+    public double getWidth(){
+	return width;
+    }
+    
+    public void setHeight(int h){
+	this.height = h;
+	getArea();
+    }
+    
+    public double getHeight(){
+	return height;
+    }
+    
+    public void setSize(Point p){
+	width = p.x;
+    }
+    
+    public Point getSize(){
+	return new Point(width, height);
+    }
 }

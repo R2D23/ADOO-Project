@@ -187,8 +187,8 @@ public class ConfigurarPoligono extends javax.swing.JFrame{
             {
                 p.bgColor = relleno;
                 p.lnColor = contorno;
-                p.longSide = lado;
-                p.numSides = noLados;
+                p.setLongSide((int) lado);
+                p.setNumSides(noLados);
                 p.pointsX = p.getCoordsX();
                 p.pointsY = p.getCoordsY();
                 p.area = new Area(new java.awt.Polygon(p.pointsX, p.pointsY, p.pointsX.length));
@@ -231,8 +231,8 @@ public class ConfigurarPoligono extends javax.swing.JFrame{
 
     public final void cargarValores()
     {
-        this.lados.setText("" + p.numSides);
-        this.Lado.setText("" + p.longSide);
+        this.lados.setText("" + p.getNumSides());
+        this.Lado.setText("" + p.getLongSide());
         relleno = p.bgColor;
         contorno = p.lnColor;
         this.EscogerColorRelleno.setBackground(relleno);

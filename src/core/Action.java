@@ -30,6 +30,9 @@ public class Action {
     public static final int FIGURE_BCOLOR = 5;
     public static final int FIGURE_LCOLOR = 6;
     public static final int CIRCLE_RADIUS = 7;
+    public static final int TRIANGLE_TYPE = 8;
+    public static final int SQUARE = 9;
+    public static final int NO_SIDES = 10;
     
 //    La clase Action está diseñada para grabar las acciones del usuario
 //    para volver a realizarlas 'make()' o para deshacerlas 'rollback'
@@ -70,6 +73,15 @@ public class Action {
 	    case CIRCLE_RADIUS:
 		prev = ((Circle) elements.get(id)).getRadius();
 		break;
+	    case TRIANGLE_TYPE:
+		prev = ((Triangle) elements.get(id)).getType();
+		break;
+	    case SQUARE:
+		prev = ((Rectangle) elements.get(id)).getSize();
+		break;
+	    case NO_SIDES:
+		prev = ((RegularPolygon) elements.get(id)).getNumSides();
+		break;
 	}
     }
     
@@ -101,7 +113,15 @@ public class Action {
 	    case CIRCLE_RADIUS:
 		((Circle) elements.get(id)).setRadius((Double) next);
 		break;
-		
+	    case TRIANGLE_TYPE:
+		((Triangle) elements.get(id)).setType((Integer) next);
+		break;
+	    case SQUARE:
+		((Rectangle) elements.get(id)).setSize((Point) next);
+		break;
+	    case NO_SIDES:
+		((RegularPolygon) elements.get(id)).setNumSides((Integer) next);
+		break;
 	}
     }
     
@@ -128,6 +148,15 @@ public class Action {
 	    case CIRCLE_RADIUS:
 		((Circle) elements.get(id)).setRadius((Double) prev);
 		break;
+	    case TRIANGLE_TYPE:
+		((Triangle) elements.get(id)).setType((Integer) prev);
+		break;
+	    case SQUARE:
+		((Rectangle) elements.get(id)).setSize((Point) prev);
+		break;
+	    case NO_SIDES:
+		((RegularPolygon) elements.get(id)).setNumSides((Integer) prev);
+	    break;
 	}
     }
     

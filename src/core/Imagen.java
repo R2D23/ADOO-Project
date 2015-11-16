@@ -44,11 +44,6 @@ public class Imagen extends Element implements Serializable{
     }
 
     @Override
-    public void configure(Canvas canvas) {
-        JOptionPane.showMessageDialog(null, "No disponible aun");
-    }
-
-    @Override
     public void getArea() {
         area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
         AffineTransform rot = new AffineTransform();
@@ -72,14 +67,6 @@ public class Imagen extends Element implements Serializable{
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
-        getArea();
-    }
-    
-    @Override
-    public void move(int x, int y)
-    {
-        posX = x - width/2;
-        posY = y - height/2;
         getArea();
     }
 }

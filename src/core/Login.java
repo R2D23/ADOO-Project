@@ -169,7 +169,7 @@ public class Login extends javax.swing.JFrame {
 
     private void botonIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarActionPerformed
         this.setVisible(false);
-        javax.swing.SwingUtilities.invokeLater(new GUI());
+	core.GUI.initializeGUI();
     }//GEN-LAST:event_botonIniciarActionPerformed
 
     /**

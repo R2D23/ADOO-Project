@@ -16,10 +16,9 @@ import java.awt.geom.Area;
  *
  * @author douxm_000
  */
-public class Triangle extends Figure{
+public class Triangle extends Rectangle{
 
-    double base;
-    double height;
+   
     int type;
     public int pointsX[];
     public int pointsY[];
@@ -27,25 +26,28 @@ public class Triangle extends Figure{
     public static final int RIGHT_TRIANGLE = 2;
     public static final int ISOSCELES_TRIANGLE = 3;
     
-    public Triangle(double base, double height, int type) {
-        this.base = base;
+    public Triangle(int base, int height, int type) {
+        this.width = base;
         this.height = height;
         this.type = type;
         pointsX = new int[3];
         pointsY = new int[3];
     }
     
-    public Triangle(double base) {
-        this.base = base;
-        this.height = Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2)); //Pitágoras
+    public Triangle(int base) {
+        this.height = base;
+        this.height = (int) Math.sqrt(Math.pow(base, 2)-Math.pow(base/2, 2)); //Pitágoras
         type = EQUILATERAL_TRIANGLE;
         pointsX = new int[3];
         pointsY = new int[3];
     }
     
-    
-
-    public Triangle() {}
+    public Triangle(){
+	super();
+	type = Triangle.EQUILATERAL_TRIANGLE;
+	width = 50;
+	height = 50;
+    }
     
     @Override
     public void draw(Graphics g) {
@@ -64,23 +66,18 @@ public class Triangle extends Figure{
         g2.draw(area);
     }
 
-    @Override
-    public void configure(Canvas canvas) {
-        new ConfigurarTriangulo(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
-    }
-
     public int[] getCoordsX() {
         int coordX[] = new int[3];
         switch(type) {
             case EQUILATERAL_TRIANGLE: case ISOSCELES_TRIANGLE:
                 coordX[0] = posX;
-                coordX[1] = (int)(posX+base/2);
-                coordX[2] = (int)(posX+base);
+                coordX[1] = (int)(posX+width/2);
+                coordX[2] = (int)(posX+width);
             break;
             case RIGHT_TRIANGLE:
                 coordX[0] = posX;
                 coordX[1] = posX;
-                coordX[2] = (int)(posX+base);
+                coordX[2] = (int)(posX+width);
             break;
         }
         return coordX;
@@ -90,9 +87,9 @@ public class Triangle extends Figure{
         int coordY[] = new int[3];
         switch(type) {
             case EQUILATERAL_TRIANGLE: 
-                coordY[0] = (int)(posY+base*Math.sin(Math.PI/3));
+                coordY[0] = (int)(posY+width*Math.sin(Math.PI/3));
                 coordY[1] = posY;
-                coordY[2] = (int)(posY+base*Math.sin(Math.PI/3));
+                coordY[2] = (int)(posY+width*Math.sin(Math.PI/3));
             break;
             case ISOSCELES_TRIANGLE:
                 coordY[0] = (int)(posY+height);
@@ -114,23 +111,15 @@ public class Triangle extends Figure{
         pointsY = getCoordsY();
         area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
         AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+base/2, posY+height/2);
+        rot.setToRotation(incline, posX+width/2, posY+height/2);
         area.transform(rot);
-    }
-    
-    @Override
-    public void move(int x, int y)
-    {
-        posX = (int)(x - base/2);
-        posY = (int)(y - height/2);
-        getArea();
     }
     
     @Override
     public void doZoom(float escala)
     {
         super.doZoom(escala);
-        this.base *= (1+escala);     
+        this.width *= (1+escala);     
         this.height *= (1+escala);
         pointsX = getCoordsX();
         pointsY = getCoordsY();
@@ -140,11 +129,20 @@ public class Triangle extends Figure{
     @Override
     public void rotate(Point e) {
         double Y = (posY + height/2) - e.getY();
-        double X = (posX + base/2) - e.getX();
+        double X = (posX + width/2) - e.getX();
         double pendiente = Y/X;
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
         getArea();
+    }
+    
+    public void setType(int i){
+	type = i;
+	getArea();
+    }
+    
+    public int getType(){
+	return type;
     }
 }

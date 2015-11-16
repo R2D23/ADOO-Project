@@ -32,10 +32,12 @@ public abstract class Figure extends core.Element {
     
     public void setBgColor(Color c){
 	bgColor = new Color(c.getRGB());
+	getArea();
     }
     
     public void setLnColor(Color c){
 	lnColor = new Color(c.getRGB());
+	getArea();
     }
     
     public Color getBgColor(){return bgColor;}

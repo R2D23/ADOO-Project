@@ -1,6 +1,5 @@
 
 package core;
-import static core.SelectionMenu.SIZE;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,6 +10,9 @@ import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import javax.swing.*;
+
+import static core.Canvas.seleccionado;
+
 /**
  *
  * @author LuisArturo
@@ -168,39 +170,42 @@ public class FigureMenu extends JComponent{
         switch(areaActual)
         {
             case TRIANGLE:
-                new ConfigurarTriangulo(((GUI)this.getTopLevelAncestor()).getCanvas(), null, this.getLocation()).setVisible(true);
+                seleccionado = new Triangle();
             break;
             case CIRCLE:
-                new ConfigurarCirculo(((GUI)this.getTopLevelAncestor()).getCanvas(),null, this.getLocation()).setVisible(true);
+		seleccionado = new Circle();
             break;
             case POLYGON:
-                new ConfigurarPoligono(((GUI)this.getTopLevelAncestor()).getCanvas(),null, this.getLocation()).setVisible(true);
+                seleccionado = new RegularPolygon();
             break;
             case RECTANGLE:
-                new ConfigurarCuadrado(((GUI)this.getTopLevelAncestor()).getCanvas(),null, this.getLocation()).setVisible(true);
+                seleccionado = new Rectangle();
             break;
             case LINE:
-                new ConfigurarLinea(((GUI)this.getTopLevelAncestor()).getCanvas(),null, this.getLocation()).setVisible(true);
+                seleccionado = new Line();
             break;
             case IRREGULAR:
                 setVisible(false);
                 Irregular fig = new Irregular();
                 fig.setFirst(center);
-                ((GUI)this.getTopLevelAncestor()).getCanvas().seleccionado = fig;
+                canvas.seleccionado = fig;
                 fig.state = Element.GETTINGPOINTS;
-                ((GUI)this.getTopLevelAncestor()).getCanvas().addElement(fig);
+                canvas.addElement(fig);
                 //fig.newPoint(e.getLocationOnScreen());
                 //canvas.addElement(fig);
             break;
             case TEXT:
-                ((GUI)this.getTopLevelAncestor()).getCanvas().elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
-                ((GUI)this.getTopLevelAncestor()).getCanvas().repaint();
+                canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
+                canvas.repaint();
                 //new ConfigurarCirculo(areas, canvas, Escucha.FIGUREMENU);
             break;
             case EXIT :
                 this.setVisible(false);
             break;
         }
+	Canvas.addElement(seleccionado);
+	seleccionado.move(location);
+	ConfFrame.showFrame(center);
         this.setVisible(false);
     }
     

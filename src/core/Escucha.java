@@ -13,6 +13,9 @@ import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.event.MouseInputListener;
 import static core.Action.*;
 
+//Importing Static Project Variables
+import static core.GUI.archivo;
+
 /**
  *
  * @author Angeles
@@ -26,18 +29,11 @@ public class Escucha implements MouseInputListener {
     public static final int ZOOMMENU = 2; //menu de zoom
     public static final int REDOMENU = 3; //menu de hacer/deshacer
     public static final int SELECTIONMENU = 4;//menu de seleccion
-    Canvas canvas;
     
-    
-    public Escucha(Canvas canvas) {
-        this.canvas = canvas;
-    }
-    
-    public Escucha(ArrayList<Area> as, int t, Canvas canvas)
+    public Escucha(ArrayList<Area> as, int t)
     {
        areas = as;
        tipoMenu = t;
-       this.canvas = canvas;
     }
 
     /*Escucha(ArrayList<Area> as, int t) {
@@ -130,21 +126,21 @@ public class Escucha implements MouseInputListener {
                     JFileChooser fci = new JFileChooser();
                     opc=fci.showOpenDialog(null);
                     Imagen im = new Imagen(fci.getSelectedFile().getPath());
-                    canvas.addElement(im);
-                    canvas.repaint();
+                    Canvas.addElement(im);
+                    Canvas.repaint();
                     e.getComponent().setVisible(false);
                 }
                 catch(Exception ex){}
             break;
             case MenuDrawer.NEW :
-                if(((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).getFile().getName() == null)
+                if(GUI.getName() == null)
                 {
                     int op = JOptionPane.showConfirmDialog(null, "Estas a punto de cerrar un lienzo sin guardar ¿Continuar?", "Cerrar",YES_NO_OPTION);
                     if(op == YES_OPTION)
                     {
-                        ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).setTitle( "Lienzo en blanco - iDraw");
-                        canvas.elements.clear();
-                        canvas.repaint();
+                        GUI.setTitle( "Lienzo en blanco - iDraw");
+                        Canvas.elements.clear();
+                        Canvas.repaint();
                     }
                 e.getComponent().setVisible(false);    
                 }
@@ -152,7 +148,6 @@ public class Escucha implements MouseInputListener {
             break;
             case MenuDrawer.SAVE :
                 //System.out.println((((Menu)e.getComponent()).getBoton().getTopLevelAncestor()).getName());
-                File archivo = ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).getFile();
                 JFileChooser fcs = new JFileChooser();
                 opc=fcs.showSaveDialog(null);
                 if(opc == JFileChooser.APPROVE_OPTION){
@@ -164,16 +159,15 @@ public class Escucha implements MouseInputListener {
             break;
             case MenuDrawer.OPEN :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Abrir Archivo");
-                archivo = ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).getFile();
                 JFileChooser fco = new JFileChooser();
                 opc=fco.showOpenDialog(null);
                 if(opc == JFileChooser.APPROVE_OPTION){
                     //File file = new File(canvas.elements, canvas);
                    //canvas.elements=archivo.readFile(fco.getSelectedFile().getPath());
-                   canvas.repaint();
+                   Canvas.repaint();
                    archivo.setName(fco.getSelectedFile().getName());
-                   ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).setTitle(fco.getSelectedFile().getName() + " - iDraw");
-                   ((GUI)(((Menu)e.getComponent()).getBoton().getTopLevelAncestor())).repaint();
+                   GUI.setTitle(fco.getSelectedFile().getName() + " - iDraw");
+                   GUI.repaint();
                    e.getComponent().setVisible(false);
                 }
             break;
@@ -213,7 +207,7 @@ public class Escucha implements MouseInputListener {
 		    System.out.println("There are no action to be Undone");
 		else
 		    undo();
-                canvas.repaint();
+                Canvas.repaint();
             break;
             case MenuDrawer.REDO :
                 //JOptionPane.showMessageDialog(e.getComponent(),"Rehacer ultima accion");
@@ -221,7 +215,7 @@ public class Escucha implements MouseInputListener {
 		    System.out.println("There are no action to be Redone");
 		else
 		    redo();
-                canvas.repaint();
+                Canvas.repaint();
             break;
         }    
     }

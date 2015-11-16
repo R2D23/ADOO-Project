@@ -9,7 +9,6 @@ package core;
 
 import java.awt.*;
 import java.awt.geom.Area;
-import javax.swing.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -37,7 +36,6 @@ public class MenuDrawer{
     public static final int DISPOSE = 18;
     public static final int EXIT2 = 19;
     public static final int TEXT = 20;
-    private Color color = Color.black;
     
     /*
     * @author LuisArturo
@@ -220,12 +218,6 @@ public class MenuDrawer{
             e.printStackTrace();
         }
     }
-    
-    public void setColor(Color color){
-	this.color = color;
-    }
-
-    
 }
 
     

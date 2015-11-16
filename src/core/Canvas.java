@@ -7,48 +7,66 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseListener;
-import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.Scrollable;
+
+//Importing Static Project Variables
+import static core.GUI.frame;
+import static core.GUI.fm;
+import static core.GUI.sm;
+import java.awt.event.MouseAdapter;
 
 /**
  *
  * @author douxm_000
  */
-public class Canvas extends JPanel implements Serializable, MouseListener
-, MouseMotionListener{
-    public static ArrayList<Element> elements;
-    private static FigureMenu fm;
-    private static SelectionMenu sm;
-    public static Canvas canvas;
-    public ArrayList<Element> pastelements;
-    public ArrayList<Element> futureelements;
-    Element seleccionado;
-    private int originalWidth;
-    private int originalHeight;
-    private int indiceZoom;
+public class Canvas {
+    public static ArrayList<Element> elements; //The created Elements by the User.
+    public static JPanel panel; //The Panel representing the Canvas.
+    public static ArrayList<Element> pastelements;
+    public static ArrayList<Element> futureelements;
+    public static Element seleccionado;
+    private static int indiceZoom;
     
-    
-    public Canvas() {
-	canvas = this;
-        elements = new ArrayList<>();
-        //addMouseMotionListener(new Escucha(this));
-        pastelements=null;
+ /* 
+    El uso de este método estático es para inicializar el Canvas, su panel y
+    otros componentes.
+ */
+    public static void initializeCanvas(){
+	pastelements=null;
         futureelements=null;
         seleccionado = null;
         indiceZoom = 100;
-        //sm = ((GUI)getTopLevelAncestor()
-    //).getSelectionMenu();
+        elements = new ArrayList<>();
+	
+	panel = new JPanel(){
+	    @Override
+	    public void paint(Graphics g){
+		super.paint(g);
+		g.clearRect(0, 0, WIDTH, HEIGHT);
+		for(int i = 0; i < elements.size(); i++)
+		    elements.get(i).draw(g);
+	    }
+	};
+	
+	MouseAdapter ma = new MouseAdapter(){
+	    @Override
+	    public void mouseClicked(MouseEvent me){Canvas.mouseClicked(me);}
+	    
+	    @Override
+	    public void mouseMoved(MouseEvent me){Canvas.mouseMoved(me);}
+	};
+	
+	panel.addMouseListener(ma);
+	panel.addMouseMotionListener(ma);
     }
     
-    
-    public void actElements(){
-        pastelements=cloneList(elements);
+    public static void actElements(){
+        pastelements = cloneList(elements);
     }
      
-    public void returnPast(){
+    public static void returnPast(){
         if(pastelements!=null){
             futureelements=cloneList(elements);
             elements=cloneList(pastelements);
@@ -58,7 +76,7 @@ public class Canvas extends JPanel implements Serializable, MouseListener
         }
     }
     
-    public void toFuture(){
+    public static void toFuture(){
         if(futureelements!=null){
             pastelements=cloneList(elements);
             elements=cloneList(futureelements);
@@ -68,7 +86,7 @@ public class Canvas extends JPanel implements Serializable, MouseListener
         }
     }
     
-    ArrayList<Element> cloneList(ArrayList<Element> origen){
+    private static ArrayList<Element> cloneList(ArrayList<Element> origen){
         ArrayList<Element> copia=new ArrayList<Element>();
         for(int i=0;i<origen.size();i++){
             copia.add((Element)origen.get(i).clone());
@@ -77,32 +95,23 @@ public class Canvas extends JPanel implements Serializable, MouseListener
     }
     
     //Agrega un elemento a la lista de Elementos sobre el Lienzo.
-    public void addElement(Element e) {
+    public static void addElement(Element e) {
 	createAction(Action.CREATE, 0, e);
         elements.add(e);
     }
     
     //Elimina un elemento siempre y cuando lo contenga
-    public void deleteElement(Element e) {
+    public static void deleteElement(Element e) {
         if(elements.contains(e))
             deleteElement(elements.indexOf(e));
     }
     
-    public void deleteElement(int i){
+    public static void deleteElement(int i){
 	createAction(Action.DELETE, i, null);
 	elements.remove(i);
     }
     
-    @Override
-    public void paint(Graphics g)
-    {
-        super.paint(g);
-        for(int i = 0; i < elements.size(); i++)
-            elements.get(i).draw(g);
-        
-    }
-    
-    public void doZoom(int escala)
+    public static void doZoom(int escala)
     {
         System.out.println("escala : " + (indiceZoom + escala));
         if(indiceZoom + escala <= 0)
@@ -110,22 +119,21 @@ public class Canvas extends JPanel implements Serializable, MouseListener
         else
         {
             indiceZoom += escala;
-            this.setSize((int)(originalWidth*indiceZoom/100), (int)(originalHeight*indiceZoom/100));
+            panel.setSize(  (int)(panel.getWidth()*indiceZoom/100),
+			    (int)(panel.getHeight()*indiceZoom/100));
             for(Element e : elements)
                e.doZoom(escala/100);
-            this.repaint();
+            panel.repaint();
         }
     }
     
-    @Override
-    public void mouseClicked(MouseEvent e) {
+    public static void mouseClicked(MouseEvent e) {
         if(e.getButton() == MouseEvent.BUTTON1)
         {
-            switch(getCursor().getName())//if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
+            switch(frame.getCursor().getName())//if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
             {
                 case "mano":
-                    if(seleccionado == null)
-                    {
+                    if(seleccionado == null){
                         int sel = sm.cualFigura(e.getPoint());
                         if(sel >= 0)
                         {   
@@ -140,10 +148,9 @@ public class Canvas extends JPanel implements Serializable, MouseListener
                             sm.setVisible(!sm.isVisible());
                         }
                     }
-                    else
-                    {
+                    else{
                         seleccionado.state = Element.AVAILABLE;
-                        seleccionado.draw(this.getGraphics());
+                        seleccionado.draw(panel.getGraphics());
                         seleccionado = null;
                     }
                        
@@ -173,32 +180,11 @@ public class Canvas extends JPanel implements Serializable, MouseListener
                     }
                 break;
             }
-//        else
-//            this.setVisible(false);
         }
     }
     
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    
-    @Override
-    public void mouseMoved(MouseEvent e){
-        if(seleccionado != null)
-        {
+    public static void mouseMoved(MouseEvent e){
+        if(seleccionado != null){
             switch(seleccionado.state)
             {
                 case Element.MOVING:
@@ -209,7 +195,7 @@ public class Canvas extends JPanel implements Serializable, MouseListener
                 break;
                 case Element.GETTINGPOINTS:
                     Point lastPoint = ((Irregular)seleccionado).getLast();
-                    Graphics g = getGraphics();
+                    Graphics g = frame.getGraphics();
                     g.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY()+30);
                     repaint();
                 break;
@@ -218,24 +204,10 @@ public class Canvas extends JPanel implements Serializable, MouseListener
         }
     }
     
-    @Override
-    public void mouseDragged(MouseEvent e)
-    {}
-      
-    public void setMenus()
-    {
-        fm = ((GUI)getTopLevelAncestor()).getFigureMenu();
-        sm = ((GUI)getTopLevelAncestor()).getSelectionMenu();
-    }
-    
-    public void setOriginals()
-    {
-        originalWidth = this.getWidth();
-        originalHeight = this.getHeight();
-        System.out.println("w : " + originalWidth + " h : " + originalHeight );
-    }
-    
-    public int getIndiceZoom()
+    public static int getIndiceZoom()
     {return indiceZoom;}
-  
+    
+    public static void repaint(){
+	panel.repaint();
+    }  
 }

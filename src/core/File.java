@@ -22,10 +22,6 @@ import javax.swing.JFileChooser;
 public class File {
     String name;
     Canvas canvas;
-    File(Canvas c){
-        name = null;
-        this.canvas = c;
-    }
     
     public void saveFile(){
         JFileChooser fcs = new JFileChooser();
@@ -67,7 +63,4 @@ public class File {
     
     public String getName()
     {return name;}
-    
-    
-    
 }

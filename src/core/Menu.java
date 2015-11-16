@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.Polygon;
@@ -13,11 +12,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
-import javax.swing.event.*;
-/**
- *
- * @author LuisArturo
- */
+
+//Importing Static Project Variables
+import static core.Canvas.panel;
+import static core.Canvas.elements;
 
 /*Clase que implementa los menus que se asocian a los botones
     Estos menus son:
@@ -42,9 +40,8 @@ public class Menu extends JComponent{
     private JButton b;//Boton al que está asociado
     private ArrayList<Area> areas;//Botones que tiene el menu
     private int areaActual;    //Area/Boton sobre la cual esta el cursor
-    public Canvas canvas;
-    public Menu(JButton b,Canvas c){
-        this.canvas = c;
+    
+    public Menu(JButton b){
 	setSize(SIZE, SIZE);
 //	location = new Point();
 	center = new Point();
@@ -166,7 +163,7 @@ public class Menu extends JComponent{
                 g2.drawLine(c[0], c[2], c[1], c[3]);
                 md.paint(MenuDrawer.MAS, g, areas.get(1));
                 md.paint(MenuDrawer.MENOS, g, areas.get(3));
-                String indice = canvas.getIndiceZoom() + "%";
+                String indice = Canvas.getIndiceZoom() + "%";
                 g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, 22));
                 g2.drawChars(indice.toCharArray(), 0, indice.length(), 15, 100);
                 break;
@@ -323,36 +320,36 @@ public class Menu extends JComponent{
                     JFileChooser fci = new JFileChooser();
                     opc=fci.showOpenDialog(null);
                     Imagen im = new Imagen(fci.getSelectedFile().getPath());
-                    canvas.addElement(im);
-                    canvas.repaint();
+                    Canvas.addElement(im);
+                    Canvas.repaint();
                     this.setVisible(false);
                 }
                 catch(Exception ex){}
             break;
             case NEW :
-                if(((GUI)(b.getTopLevelAncestor())).getFile().getName() == null)
+                if(GUI.getFile().getName() == null)
                 {
                     int op = JOptionPane.showConfirmDialog(null, "Estas a punto de cerrar un lienzo sin guardar ¿Continuar?", "Cerrar",YES_NO_OPTION);
                     if(op == YES_OPTION)
                     {
-                        ((GUI)(b.getTopLevelAncestor())).setTitle( "Lienzo en blanco - iDraw");
-                        canvas.elements.clear();
-                        canvas.repaint();
+                        GUI.setTitle( "Lienzo en blanco - iDraw");
+                        elements.clear();
+                        Canvas.repaint();
                     }
                     setVisible(false);    
                 }
                             
             break;
             case SAVE :
-                File archivo = ((GUI)(b.getTopLevelAncestor())).getFile();
+                File archivo = GUI.getFile();
                 archivo.saveFile();
-                ((GUI)(getTopLevelAncestor())).setTitle(archivo.getName() + " - iDraw");
-                ((GUI)(getTopLevelAncestor())).repaint();
+                GUI.setTitle(archivo.getName() + " - iDraw");
+                GUI.repaint();
                 setVisible(false);    
                 
             break;
             case OPEN :
-                archivo = ((GUI)(b.getTopLevelAncestor())).getFile();
+                archivo = GUI.getFile();
                 archivo.readFile();
                 setVisible(false);
                 
@@ -368,12 +365,12 @@ public class Menu extends JComponent{
                 setVisible(false);
             break;
             case MAS :
-               canvas.doZoom(10);
-               repaint();
+		Canvas.doZoom(10);
+		repaint();
             break;
             case MENOS :
-                canvas.doZoom(-10);
-                repaint();
+		Canvas.doZoom(-10);
+		repaint();
             break;
         }
     }
@@ -386,12 +383,12 @@ public class Menu extends JComponent{
                 setVisible(false);
             break;
             case UNDO :
-                canvas.returnPast();
-                canvas.repaint();
+                Canvas.returnPast();
+                Canvas.repaint();
             break;
             case REDO :
-                canvas.toFuture();
-                canvas.repaint();
+                Canvas.toFuture();
+                Canvas.repaint();
             break;
         }    
     }

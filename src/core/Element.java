@@ -64,10 +64,12 @@ public abstract class Element implements Cloneable,Serializable{
     
     //Este método cambia las coordenadas del Elemento
     public void move(int posX, int posY) {
+	this.posX = posX;
+	this.posY = posY;
+	getArea();
     }
     
     public abstract void draw(Graphics g);
-    public abstract void configure(Canvas canvas);
     
     /*public void configure()
     {
@@ -91,5 +93,6 @@ public abstract class Element implements Cloneable,Serializable{
 
     void move(Point point) {
 	posX = point.x; posY = point.y;
+	getArea();
     }
 }

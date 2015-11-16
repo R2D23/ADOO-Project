@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
 public class ConfigurarCuadrado extends javax.swing.JFrame {
     private Color contorno;
     private Color relleno;
-    private double base;
-    private double Altura;
+    private int base;
+    private int Altura;
     private Canvas canvas;
     private Rectangle r;
     
@@ -209,8 +209,8 @@ public class ConfigurarCuadrado extends javax.swing.JFrame {
         canvas.actElements();
         try
         {
-            base=Double.parseDouble(this.Base.getText());
-            Altura = Double.parseDouble(this.altura.getText());
+            base= Integer.parseInt(this.Base.getText());
+            Altura = Integer.parseInt(this.altura.getText());
             if((base!=0)&&(Altura != 0) && (relleno != null) && (contorno != null))
             {
                 r.bgColor = relleno;

@@ -14,15 +14,17 @@ import java.awt.geom.Ellipse2D;
  * @author douxm_000
  */
 public class Circle extends Figure{
-
+    
     double radio;
     
     public Circle(double radio) {
         this.radio = radio;
     }
-    
-    public Circle() {}
-    
+
+    Circle() {
+	super();
+	radio = 50;
+    }
 
     @Override
     public void draw(Graphics g) {
@@ -38,12 +40,6 @@ public class Circle extends Figure{
             g2.setColor(lnColor);
             g2.draw(area);
         }
-        
-    }
-
-    @Override
-    public void configure(Canvas canvas) {
-        new ConfigurarCirculo(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
     }
     
     @Override
@@ -73,14 +69,6 @@ public class Circle extends Figure{
             this.incline += Math.PI;
         getArea();
     }
-     
-    @Override
-    public void move(int x, int y)
-    {
-        posX = (int)(x - radio/2);
-        posY = (int)(y - radio/2);
-        getArea();
-    }
 
     public double getRadius() {
 	return radio;
@@ -88,5 +76,6 @@ public class Circle extends Figure{
 
     public void setRadius(Double aDouble) {
 	radio = aDouble;
+	getArea();
     }
 }

@@ -9,47 +9,61 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+//Importing Static Project Variables
+import static core.Canvas.panel;
+
 /**
  *
  * @author LuisArturo
  */
-public class GUI extends JFrame implements Runnable, ActionListener{
+public class GUI {
     //The Components
-    public Canvas canvas;
-    private final Members members;
-    private final ArrayList<JButton> toolKit;
-    private final ArrayList<Menu> menus;
-    private final FigureMenu fm;
-    private final SelectionMenu sm;
-    File archivo;
-    private final JScrollPane js;
+    private static Members members; //The Collaborators Button
+    private static ArrayList<JButton> toolKit; //The list of Tool Buttons
+    private static ArrayList<Menu> menus; //Circular Menus
+    static FigureMenu fm; //Circular Create Figure
+    static SelectionMenu sm; //Circular Selection Menu
+    public static File archivo;
+    private static JScrollPane js;
+    static JFrame frame;
     
     //The UI parameters
     public final static int GAP = 50;
+
+    public static void setTitle(String s) {
+	frame.setName(s);
+    }
+
+    public static String getName() {
+	return frame.getName();
+    }
     
-    public GUI(){
+    public static void initializeGUI() {
+	Canvas.initializeCanvas();
+	ActionListener al = (ActionEvent ae) -> {
+	    GUI.actionPerformed(ae);
+	};
         fm = new FigureMenu();
         sm = new SelectionMenu();
-        canvas = new Canvas();
-        archivo = new File(canvas);
-        js = new JScrollPane(canvas);
+        archivo = new File();
+        js = new JScrollPane(panel);
 
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
 	    
 	    ToolButton file = new ToolButton(GraphicDrawer.FILE);
 	    toolKit.add(file);//La constante se define en la clase GraphicDrawer y es para saber que icono dibujar
-		file.addActionListener(this);//se define este JFrame como ActionListener de los botones
+		file.addActionListener(al);//se define este JFrame como ActionListener de los botones
 		file.setActionCommand("file");//se define el actionCommand para saber sobre que botón se realizó la acción
-		    Menu fileM = new Menu(file,canvas);
+		    Menu fileM = new Menu(file);
 		    menus.add(fileM);//se agrega el menú circular de archivo
                 file.setMenu(fileM);
                 //file.addMouseListener(fileM);//se agrega el menu circualar de archivo como MouseListener
 	    ToolButton action = new ToolButton(GraphicDrawer.REDO);
 		toolKit.add(action);
-		action.addActionListener(this);
+		action.addActionListener(al);
 		action.setActionCommand("redo-menu");
-		    Menu actionM = new Menu(action,canvas);
+		    Menu actionM = new Menu(action);
                     menus.add(actionM);
                 action.setMenu(actionM);
                 //action.addMouseListener(actionM);
@@ -59,83 +73,76 @@ public class GUI extends JFrame implements Runnable, ActionListener{
 		text.setActionCommand("text");*/
 	    ToolButton arrow = new ToolButton(GraphicDrawer.ARROW);
 		toolKit.add(arrow);
-		arrow.addActionListener(this);
+		arrow.addActionListener(al);
 		arrow.setActionCommand("arrow");    
 	    ToolButton select = new ToolButton(GraphicDrawer.SELECT);
 		toolKit.add(select);
-                select.addActionListener(this);
+                select.addActionListener(al);
                 select.setActionCommand("mano");
 	    ToolButton pencil = new ToolButton(GraphicDrawer.PENCIL);
 		toolKit.add(pencil);
-		pencil.addActionListener(this);
+		pencil.addActionListener(al);
 		pencil.setActionCommand("lapiz");
 	    ToolButton zoom = new ToolButton(GraphicDrawer.ZOOM);
 		toolKit.add(zoom);
-                zoom.addActionListener(this);
+                zoom.addActionListener(al);
                 zoom.setActionCommand("lupa");
-                    Menu zoomM = new Menu(toolKit.get(toolKit.size() - 1),canvas);
+                    Menu zoomM = new Menu(toolKit.get(toolKit.size() - 1));
 		    menus.add(zoomM);
                 zoom.setMenu(zoomM);
                 //zoom.addMouseListener(zoomM);
 	}
+	frame = new JFrame("GUI");
+	    members = new Members();{
+	    members.addActionListener(al);
+	    members.setActionCommand("collaborators");
+	    }
 	
-        canvas.addMouseListener(canvas);
-        canvas.addMouseMotionListener(canvas);
-        canvas.setName("Canvas"); //Damos un nombre
-        this.setName("GUI");
-        
-        
-        
-        members = new Members();{
-	members.addActionListener(this);
-	members.setActionCommand("collaborators");
-
-	}
-    }
-    
-    @Override
-    public void run() {
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	this.setMinimumSize(new Dimension(800, 600));
-	this.getContentPane().setLayout(null);
-        this.getContentPane().add(fm);
-        this.getContentPane().add(sm);
-        this.getContentPane().add(js);
-        this.setIconImage(new ImageIcon("./images/iconoGeneral.png").getImage());
-        this.setTitle("Lienzo en blanco - iDraw");
-        this.canvas.setMenus();
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.setMinimumSize(new Dimension(800, 600));
+	frame.getContentPane().setLayout(null);
+        frame.getContentPane().add(fm);
+        frame.getContentPane().add(sm);
+        frame.getContentPane().add(js);
+        frame.setIconImage(new ImageIcon("./images/iconoGeneral.png").getImage());
+        frame.setTitle("Lienzo en blanco - iDraw");
         js.setPreferredSize(new Dimension(100, 100));
-        js.getViewport().setView(canvas);
+        js.getViewport().setView(panel);
         js.getViewport().setBackground(Color.red);
-        sm.setCanvas(canvas);
         
         
         for (core.Menu menu : menus)
-	  getContentPane().add(menu);
+	  frame.getContentPane().add(menu);
 
-        this.getContentPane().add(members);
-        this.getContentPane().add(canvas);
+        frame.getContentPane().add(members);
+        frame.getContentPane().add(panel);
 	for(int i = 0; i < toolKit.size(); i++)
-	    getContentPane().add(toolKit.get(i));
+	    frame.getContentPane().add(toolKit.get(i));
 	
-	pack();
+	frame.pack();
 	updateGUI();
 	showGUI();
+        javax.swing.SwingUtilities.invokeLater(new Runnable(){
+	    @Override
+	    public void run(){
+		showGUI();
+	    }
+	});
     }
     
-    public void updateGUI(){
-	canvas.setBackground(Color.WHITE);
-        canvas.setLocation(GAP, GAP);
-        canvas.setSize(
-            new Dimension(getContentPane().getWidth()  - GAP*2,
-			  getContentPane().getHeight() - GAP*2));
-        canvas.setPreferredSize(new Dimension(getContentPane().getWidth()  - GAP*2,
-			  getContentPane().getHeight() - GAP*2));
-        canvas.updateUI();
-        canvas.setOriginals();
+    public static void updateGUI(){
+	panel.setBackground(Color.WHITE);
+        panel.setLocation(GAP, GAP);
+        panel.setSize(
+            new Dimension(frame.getContentPane().getWidth()  - GAP*2,
+			  frame.getContentPane().getHeight() - GAP*2));
+        panel.setPreferredSize(new Dimension(
+		frame.getContentPane().getWidth()  - GAP*2,
+		frame.getContentPane().getHeight() - GAP*2));
+        panel.updateUI();
 	for(int i = 0; i < toolKit.size(); i++){
 	    toolKit.get(i).setLocation
-	(getContentPane().getWidth() - GAP, GAP * (1 + i));
+	(frame.getContentPane().getWidth() - GAP, GAP * (1 + i));
 	    toolKit.get(i).setSize(GAP, GAP);
 	    toolKit.get(i).updateUI();
 	}
@@ -148,33 +155,31 @@ public class GUI extends JFrame implements Runnable, ActionListener{
         
     }
     
-    private void showGUI(){
-	this.setVisible(true);
+    private static void showGUI(){
+	frame.setVisible(true);
     }
     
-    @Override
-    public void paint(Graphics g){
-	super.paint(g);
+    public static void repaint(){
+	frame.repaint();
 	updateGUI();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent ae) {
+    public static void actionPerformed(ActionEvent ae) {
 	System.out.println(ae.getActionCommand());
         switch (ae.getActionCommand()) {//detecta quien dio clic y cambia el cursor al que sea necesario
             case "lapiz":
-                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("./images/lapiz.png").getImage(),new Point(0,0),"lapiz"));
+                frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("./images/lapiz.png").getImage(),new Point(0,0),"lapiz"));
             break;
             case "arrow":
-                setCursor(Cursor.getDefaultCursor());
+                frame.setCursor(Cursor.getDefaultCursor());
             break;
             case "mano":
-                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("./images/mano.png").getImage(),new Point(0,0),"mano"));
+                frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("./images/mano.png").getImage(),new Point(0,0),"mano"));
             break;    
         }
     }
     
-    public File getFile()
+    public static File getFile()
     {return archivo;}
     
     public FigureMenu getFigureMenu()
@@ -182,7 +187,4 @@ public class GUI extends JFrame implements Runnable, ActionListener{
     
     public SelectionMenu getSelectionMenu()
     {return sm;}
-    
-    public Canvas getCanvas()
-    {return this.canvas;}
 }

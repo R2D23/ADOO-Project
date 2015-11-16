@@ -17,12 +17,12 @@ import java.awt.geom.Area;
  */
 public class RegularPolygon extends Figure {
 
-    int numSides;
-    double longSide;
+    private int numSides;
+    private int longSide;
     int pointsX[];
     int pointsY[];
     
-    public RegularPolygon(int numSides, double longSide) {
+    public RegularPolygon(int numSides, int longSide) {
         /*Poligono Regular de numSides lados, donde cada lado mide longSide
           numSides >= 3   */
         this.numSides = numSides;
@@ -31,7 +31,10 @@ public class RegularPolygon extends Figure {
         pointsY = new int[numSides];
     }
     
-    public RegularPolygon() {}
+    public RegularPolygon() {
+	longSide = 30;
+	numSides = 5;
+    }
 
     @Override
     public void draw(Graphics g) {
@@ -46,11 +49,6 @@ public class RegularPolygon extends Figure {
         }
         g2.fill(area);
         g2.draw(area);
-    }
-
-    @Override
-    public void configure(Canvas canvas) {
-        new ConfigurarPoligono(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
     }
     
     public int[] getCoordsX() {
@@ -91,12 +89,6 @@ public class RegularPolygon extends Figure {
         getArea();
     }
     
-    public void move(int x, int y)
-    {   posX = (int)(x);
-        posY = (int)(y);
-        getArea();
-    }
-    
     public void rotate(java.awt.Point e) {
         double Y = posY - e.getY();
         double X = posX - e.getX();
@@ -105,5 +97,23 @@ public class RegularPolygon extends Figure {
         if(X < 0)
             this.incline += Math.PI;
         getArea();
+    }
+
+    public int getNumSides() {
+	return numSides;
+    }
+
+    public void setNumSides(int numSides) {
+	this.numSides = numSides;
+	getArea();
+    }
+
+    public int getLongSide() {
+	return longSide;
+    }
+
+    public void setLongSide(int longSide) {
+	this.longSide = longSide;
+	getArea();
     }
 }

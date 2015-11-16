@@ -58,11 +58,6 @@ public class Irregular extends Figure {
         }
     }
 
-    @Override
-    public void configure(Canvas canvas) {
-        JOptionPane.showMessageDialog(null, "Configurar");
-    }
-
     private int[] getCoordsX() {
         int[] coord = new int [vertices.size()];
         for(int i=0; i<vertices.size(); i++)

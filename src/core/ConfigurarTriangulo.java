@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
 public class ConfigurarTriangulo extends javax.swing.JFrame{
     private Color contorno;
     private Color relleno;
-    private double altura;
-    private double base;
+    private int altura;
+    private int base;
     private Canvas canvas;
     private Triangle trian;
     
@@ -311,12 +311,12 @@ public class ConfigurarTriangulo extends javax.swing.JFrame{
         
         try
         {
-            altura = Double.parseDouble(this.AlturaTriangulo.getText());
-            base = Double.parseDouble(this.BaseTriangulo.getText());
+            altura = Integer.parseInt(this.AlturaTriangulo.getText());
+            base = Integer.parseInt(this.BaseTriangulo.getText());
             if((altura!=0) && (base!=0)&&(relleno != null)&&(contorno != null))
             {
                 trian.type = comboTipo.getSelectedIndex() + 1;
-                trian.base = this.base;
+                trian.setWidth(base);
                 trian.bgColor = relleno;
                 trian.height = altura;
                 trian.lnColor = contorno;
@@ -355,7 +355,7 @@ public class ConfigurarTriangulo extends javax.swing.JFrame{
     public final void cargarValores()
     {
         this.AlturaTriangulo.setText("" + trian.height);
-        this.BaseTriangulo.setText("" + trian.base);
+        this.BaseTriangulo.setText("" + trian.getWidth());
         relleno = trian.bgColor;
         contorno = trian.lnColor;
         this.EscogerColorRelleno.setBackground(relleno);

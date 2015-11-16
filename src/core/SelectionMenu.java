@@ -9,7 +9,6 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Area;
@@ -104,6 +103,7 @@ public class SelectionMenu extends JComponent{
         /*Este MouseMotionListener es el que detecta sobre qué botón está 
             el cursor del mouse y así poder resaltarlo*/
         this.addMouseMotionListener(new MouseAdapter(){
+	    @Override
             public void mouseMoved(MouseEvent me)
             {
                 int area = whichArea(me.getPoint());
@@ -112,9 +112,10 @@ public class SelectionMenu extends JComponent{
         });
         
         this.addMouseListener(new MouseAdapter(){
+	    @Override
             public void mouseClicked(MouseEvent me)
             {
-                realizarAccion(me.getPoint());
+                realizarAccion(me.getLocationOnScreen());
             }
         
         });
@@ -197,7 +198,7 @@ public class SelectionMenu extends JComponent{
         switch(areaActual)
         {
             case CONFIGURE:
-                canvas.seleccionado.configure(canvas);
+                ConfFrame.showFrame(p);
             break;
             case MOVE:
                 canvas.seleccionado.state = Element.MOVING;

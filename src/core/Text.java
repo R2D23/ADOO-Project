@@ -46,10 +46,6 @@ public class Text extends Element implements Serializable{
     }
 
     @Override
-    public void configure(Canvas canvas) {
-        JOptionPane.showMessageDialog(null, "No disponible aun");
-    }
-    @Override
     public void getArea()
     {
         area = new Area(new java.awt.Rectangle(posX, posY - tamanio, mensaje.length()*tamanio, tamanio));
@@ -73,13 +69,4 @@ public class Text extends Element implements Serializable{
             this.incline += Math.PI;
         getArea();
     }
-    
-    public void move(int x, int y)
-    {
-        posX = (int)(x - mensaje.length()*tamanio/2);
-        posY = (int)(y - tamanio/2);
-        getArea();
-    }
-    
-    
 }

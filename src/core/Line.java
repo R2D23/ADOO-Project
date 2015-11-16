@@ -37,7 +37,9 @@ public class Line extends Element {
         this.color = color;
     }
     
-    public Line() {}
+    public Line(){
+	
+    }
 
     @Override
     public void draw(Graphics g) {
@@ -50,11 +52,6 @@ public class Line extends Element {
             g2.setColor(color);
         g2.draw(area);
         g2.fill(area);
-    }
-
-    @Override
-    public void configure(Canvas canvas) {
-        new ConfigurarLinea(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
     }
     
     @Override
@@ -82,14 +79,6 @@ public class Line extends Element {
         this.incline = Math.atan(pendiente) + Math.PI/2;
         if(X < 0)
             this.incline += Math.PI;
-        getArea();
-    }
-    
-    @Override
-    public void move(int x, int y)
-    {
-        posX = (int)(x - length/2);
-        posY = (int)(y - area.getBounds().height/2);
         getArea();
     }
 }
