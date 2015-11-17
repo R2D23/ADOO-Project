@@ -71,13 +71,7 @@ public abstract class Element implements Cloneable,Serializable{
     
     public abstract void draw(Graphics g);
     
-    /*public void configure()
-    {
     
-    }
-    public void configure(Canvas c)
-    {
-    }*/
     public abstract void getArea();
     public void doZoom(float escala)
     {
@@ -95,4 +89,9 @@ public abstract class Element implements Cloneable,Serializable{
 	posX = point.x; posY = point.y;
 	getArea();
     }
+    
+    public void setFirst(Point p){}
+    public void setLast(Point p){}
+    
+    public Point getLast(){return new Point();}
 }
