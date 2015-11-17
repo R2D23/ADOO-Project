@@ -182,26 +182,25 @@ public class FigureMenu extends JComponent{
                 ConfFrame.create(ConfFrame.RECTANGLE, center);
             break;
             case LINE:
-                ConfFrame.create(ConfFrame.LINE, center);
+                setVisible(false);
+                seleccionado = new Line();
+                seleccionado.setFirst(center);
+                seleccionado.state = Element.GETTINGPOINTS;
             break;
             case IRREGULAR:
                 setVisible(false);
                 Irregular fig = new Irregular();
                 fig.setFirst(center);
-                canvas.seleccionado = fig;
+                Canvas.seleccionado = fig;
                 fig.state = Element.GETTINGPOINTS;
-                canvas.addElement(fig);
-                //fig.newPoint(e.getLocationOnScreen());
-                //canvas.addElement(fig);
             break;
             case TEXT:
                 canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
                 canvas.repaint();
-                //new ConfigurarCirculo(areas, canvas, Escucha.FIGUREMENU);
             break;
             case EXIT :
                 this.setVisible(false);
-            break;
+                return;
         }
         this.setVisible(false);
     }

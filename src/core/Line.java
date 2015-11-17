@@ -25,6 +25,7 @@ public class Line extends Element {
     double length;
     Color color;
     float grosor;
+    Point [] puntos;
     
     public Line(double length, float angle, Color color) {
         this.length = length;
@@ -38,7 +39,9 @@ public class Line extends Element {
     }
     
     public Line(){
-	
+	puntos = new Point[2];
+        grosor = 5; 
+        color = Color.red;
     }
 
     @Override
@@ -46,20 +49,27 @@ public class Line extends Element {
         Graphics2D g2 = (Graphics2D) g.create();
         Stroke s = new BasicStroke(grosor);
         g2.setStroke(s);
-        if(state!=AVAILABLE)
-            g2.setColor(Util.negative(color));
-        else
-            g2.setColor(color);
-        g2.draw(area);
-        g2.fill(area);
+        if(state!=GETTINGPOINTS) {
+            g2.setColor(Color.BLACK);
+            g2.draw(area);
+            g2.fill(area);
+            if(state!=AVAILABLE)
+                g2.setColor(Util.negative(color));
+            else
+                g2.setColor(color);
+            //g2.drawLine(puntos[0].x,puntos[0].y, puntos[1].x,puntos[1].y);
+            
+        } 
     }
     
     @Override
     public void getArea()
     {
-        java.awt.Rectangle r2d = new java.awt.Rectangle(posX, posY, (int)(length), (int)grosor);
+        
+        length = puntos[0].distance(puntos[1]);
+        java.awt.Rectangle r2d = new java.awt.Rectangle(posX,posY, (int)(length), (int)grosor);
         AffineTransform atr = new AffineTransform();
-        atr.setToRotation(incline, posX+r2d.width/2, posY+r2d.height/2);
+        atr.setToRotation(incline, posX, posY);
         area = new Area(r2d);
         area.transform(atr);
 
@@ -81,4 +91,36 @@ public class Line extends Element {
             this.incline += Math.PI;
         getArea();
     }
+    
+    @Override
+    public void move(Point p)
+    {
+    }
+    
+    @Override
+    public void setLast(Point p)
+    {
+        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GUI.GAP/2));
+        puntos[1] = nuevoPunto;
+        state = Element.AVAILABLE;
+        posX = puntos[0].x;
+        posY = puntos[0].y;
+        
+        double Y = puntos[1].y - puntos[0].y;
+        double X = puntos[1].x - puntos[0].x;
+        double pendiente = Y/X;
+        this.incline = Math.atan(pendiente);
+        if(X < 0)
+            this.incline += Math.PI;
+        getArea();
+        Canvas.seleccionado = null;
+        
+    }
+    
+    @Override
+    public void setFirst(Point p)
+    {puntos[0] = p;}
+    
+    public Point getLast()
+    {return puntos[0];}
 }

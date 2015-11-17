@@ -167,6 +167,7 @@ public class ConfFrame extends JFrame{
 		    field1.setText(String.valueOf(((RegularPolygon) seleccionado).getNumSides()));
 		    
 		    add(name);	add(field1);	add(button);
+		    break;
 		case FACE_SIZE:
 		    name.setText("Tamaño de cada Lado: ");
 		    field1.setText(String.valueOf(((RegularPolygon) seleccionado).getLongSide()));
@@ -178,8 +179,6 @@ public class ConfFrame extends JFrame{
 	}
 	
 	public void submit(){
-	    if(isCreating)
-		return;
 	    switch(type){
 		case POSITION:{
 		    int x1;
@@ -331,8 +330,9 @@ public class ConfFrame extends JFrame{
 	    box.add(square);
 	} if (RegularPolygon.class.isAssignableFrom(seleccionado.getClass())){
 	    Property noSides = new Property(Property.FACES);
+	    Property side = new Property(Property.FACE_SIZE);
 	    
-	    box.add(noSides);
+	    box.add(noSides);	box.add(side);
 	}
 	
 	JButton close = new JButton("Terminar");
@@ -402,47 +402,56 @@ public class ConfFrame extends JFrame{
     }
     
     public static void setPosition(Point p){
+	if(!isCreating)
 	Action.createAction(Action.ELEMENT_MOVE, Canvas.elements.indexOf(seleccionado), p);
 	seleccionado.move(p.x, p.y);
     }
     
     public static void setAngle(double f){
+	if(!isCreating)
 	Action.createAction(Action.ELEMENT_ROTATE, Canvas.elements.indexOf(seleccionado), f);
 	seleccionado.setIncline(f);
     }
     
     public static void setBGColor(Color c){
+	if(!isCreating)
 	Action.createAction(Action.FIGURE_BCOLOR, Canvas.elements.indexOf(seleccionado), c);
 	((Figure) seleccionado).setBgColor(c);
     }
     
     public static void setLnColor(Color c){
+	if(!isCreating)
 	Action.createAction(Action.FIGURE_LCOLOR, Canvas.elements.indexOf(seleccionado), c);
 	((Figure) seleccionado).setLnColor(c);
     }
     
     public static void setRadius(double r){
+	if(!isCreating)
 	Action.createAction(Action.CIRCLE_RADIUS, Canvas.elements.indexOf(seleccionado), r);
 	((Circle) seleccionado).setRadius(r);
     }
     
     public static void setTriangleType(int i){
+	if(!isCreating)
 	Action.createAction(Action.TRIANGLE_TYPE, Canvas.elements.indexOf(seleccionado), i);
 	((Triangle) seleccionado).setType(i);
     }
     
     public static void setSquare(int x, int y){
+	if(!isCreating)
 	Action.createAction(Action.SQUARE, Canvas.elements.indexOf(seleccionado), new Point(x, y));
 	((Rectangle) seleccionado).setWidth(x);
 	((Rectangle) seleccionado).setWidth(y);
     }
     
     public static void setFaces(int n){
+	if(!isCreating)
 	Action.createAction(Action.NO_SIDES, Canvas.elements.indexOf(seleccionado), n);
 	((RegularPolygon) seleccionado).setNumSides(n);
     }
     
     public static void setFaceSize(int d){
+	if(!isCreating)
 	Action.createAction(Action.SIDE_SIZE, Canvas.elements.indexOf(seleccionado), d);
 	((RegularPolygon) seleccionado).setLongSide(d);
     }
