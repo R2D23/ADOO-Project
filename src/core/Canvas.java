@@ -158,16 +158,8 @@ public class Canvas {
                 case "lapiz" :
                     if((seleccionado != null) && (seleccionado.state == Element.GETTINGPOINTS))
                     {
-                        Irregular fig = (Irregular)seleccionado;
-                        Point nuevoPunto = new Point(e.getX(), e.getY() + GUI.GAP/2);
-                        if(fig.getFirst().distance(nuevoPunto) > 10)
-                            fig.newPoint(nuevoPunto);
-                        else
-                        {
-                            fig.getArea();
-                            fig.state = Element.AVAILABLE;
-                            seleccionado = null;
-                        }
+                        System.out.println("desde1");
+                        seleccionado.setLast(e.getPoint());
                         repaint();
                     }
                     else
@@ -194,15 +186,16 @@ public class Canvas {
                     seleccionado.rotate(e.getPoint());
                 break;
                 case Element.GETTINGPOINTS:
-                    Point lastPoint = ((Irregular)seleccionado).getLast();
-                    Graphics g = frame.getGraphics();
+                    Point lastPoint = seleccionado.getLast();
+                    Graphics g = panel.getGraphics();
                     g.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY()+30);
-                    repaint();
+                    //repaint();
                 break;
             }
             repaint();
         }
     }
+    
     
     public static int getIndiceZoom()
     {return indiceZoom;}

@@ -5,6 +5,7 @@
  */
 package core;
 
+import static core.Canvas.seleccionado;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -116,5 +117,19 @@ public class Irregular extends Figure {
         if(X < 0)
             this.incline += Math.PI;
         getArea();
+    }
+    
+    @Override
+    public void setLast(Point p)//Este metodo decide si es el ultimo punto
+    {
+        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GUI.GAP/2));
+        if(first.distance(nuevoPunto) > 10)//si no es el ultimo, solo agrega el punto a la lista
+            this.newPoint(nuevoPunto);
+        else
+        {
+            this.getArea();
+            this.state = Element.AVAILABLE;
+            seleccionado = null;
+        }
     }
 }
