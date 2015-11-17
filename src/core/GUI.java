@@ -119,6 +119,25 @@ public class GUI {
 	for(int i = 0; i < toolKit.size(); i++)
 	    frame.getContentPane().add(toolKit.get(i));
 	
+	
+	frame.addComponentListener(new ComponentListener(){
+
+	    @Override
+	    public void componentResized(ComponentEvent ce) {
+		repaint();
+	    }
+
+	    @Override
+	    public void componentMoved(ComponentEvent ce) {}
+
+	    @Override
+	    public void componentShown(ComponentEvent ce) {}
+
+	    @Override
+	    public void componentHidden(ComponentEvent ce) {}
+	    
+	});
+	
 	frame.pack();
 	updateGUI();
 	showGUI();
