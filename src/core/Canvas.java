@@ -98,6 +98,7 @@ public class Canvas {
     public static void addElement(Element e) {
 	createAction(Action.CREATE, 0, e);
         elements.add(e);
+	e.getArea();
     }
     
     //Elimina un elemento siempre y cuando lo contenga

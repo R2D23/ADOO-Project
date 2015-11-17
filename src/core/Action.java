@@ -33,6 +33,7 @@ public class Action {
     public static final int TRIANGLE_TYPE = 8;
     public static final int SQUARE = 9;
     public static final int NO_SIDES = 10;
+    public static final int SIDE_SIZE = 11;
     
 //    La clase Action está diseñada para grabar las acciones del usuario
 //    para volver a realizarlas 'make()' o para deshacerlas 'rollback'
@@ -82,6 +83,9 @@ public class Action {
 	    case NO_SIDES:
 		prev = ((RegularPolygon) elements.get(id)).getNumSides();
 		break;
+	    case SIDE_SIZE:
+		prev = ((RegularPolygon) elements.get(id)).getLongSide();
+		break;
 	}
     }
     
@@ -122,6 +126,9 @@ public class Action {
 	    case NO_SIDES:
 		((RegularPolygon) elements.get(id)).setNumSides((Integer) next);
 		break;
+	    case SIDE_SIZE:
+		((RegularPolygon) elements.get(id)).setLongSide((Integer) next);
+		break;
 	}
     }
     
@@ -156,7 +163,10 @@ public class Action {
 		break;
 	    case NO_SIDES:
 		((RegularPolygon) elements.get(id)).setNumSides((Integer) prev);
-	    break;
+		break;
+	    case SIDE_SIZE:
+		((RegularPolygon) elements.get(id)).setLongSide((Integer) prev);
+		break;
 	}
     }
     

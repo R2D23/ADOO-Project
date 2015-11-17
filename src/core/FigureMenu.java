@@ -170,19 +170,19 @@ public class FigureMenu extends JComponent{
         switch(areaActual)
         {
             case TRIANGLE:
-                seleccionado = new Triangle();
+                ConfFrame.create(ConfFrame.TRIANGLE, center);
             break;
             case CIRCLE:
-		seleccionado = new Circle();
+		ConfFrame.create(ConfFrame.CIRCLE, center);
             break;
             case POLYGON:
-                seleccionado = new RegularPolygon();
+                ConfFrame.create(ConfFrame.RPOLYGON, center);
             break;
             case RECTANGLE:
-                seleccionado = new Rectangle();
+                ConfFrame.create(ConfFrame.RECTANGLE, center);
             break;
             case LINE:
-                seleccionado = new Line();
+                ConfFrame.create(ConfFrame.LINE, center);
             break;
             case IRREGULAR:
                 setVisible(false);
@@ -203,9 +203,6 @@ public class FigureMenu extends JComponent{
                 this.setVisible(false);
             break;
         }
-	Canvas.addElement(seleccionado);
-	seleccionado.move(location);
-	ConfFrame.showFrame(center);
         this.setVisible(false);
     }
     

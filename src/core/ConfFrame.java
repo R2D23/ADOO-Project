@@ -31,6 +31,14 @@ import javax.swing.event.DocumentListener;
  */
 public class ConfFrame extends JFrame{
     private static ConfFrame frame;
+    private static boolean isCreating;
+    
+    public static final int RECTANGLE = 0;
+    public static final int CIRCLE = 1;
+    public static final int TRIANGLE = 2;
+    public static final int RPOLYGON = 3;
+    public static final int IPOLYGON = 4;
+    public static final int LINE = 5;
     
     private class Property extends JPanel{
 	public static final int POSITION = 0;
@@ -155,15 +163,23 @@ public class ConfFrame extends JFrame{
 		    add(button);
 		    break;
 		case FACES:
-		    name.setText("Número de Lados");
+		    name.setText("Número de Lados: ");
 		    field1.setText(String.valueOf(((RegularPolygon) seleccionado).getNumSides()));
 		    
 		    add(name);	add(field1);	add(button);
+		case FACE_SIZE:
+		    name.setText("Tamaño de cada Lado: ");
+		    field1.setText(String.valueOf(((RegularPolygon) seleccionado).getLongSide()));
+		    
+		    add(name);	add(field1);	add(button);
+		    break;
 	    }
 	    pack();
 	}
 	
 	public void submit(){
+	    if(isCreating)
+		return;
 	    switch(type){
 		case POSITION:{
 		    int x1;
@@ -268,6 +284,19 @@ public class ConfFrame extends JFrame{
 			field1.setText(String.valueOf(((RegularPolygon) seleccionado).getNumSides()));
 		    }
 		} break;
+		case FACE_SIZE:{
+		    int s;
+		    try{
+			s = Integer.parseInt(field1.getText());
+			if(s < 0)
+			    throw new NumberFormatException();
+			setFaceSize(s);
+		    } catch (Exception e) {
+			
+		    } finally {
+			field1.setText(String.valueOf(((RegularPolygon) seleccionado).getLongSide()));
+		    }
+		}
 	    }
 	    Canvas.repaint();
 	}
@@ -313,6 +342,16 @@ public class ConfFrame extends JFrame{
 	close.addActionListener(closeA);
 	box.add(close);
 	
+	if(isCreating){
+	    close.setText("Cancelar");
+	    JButton done = new JButton("Crear");
+	    ActionListener doneA = (ActionEvent ae) -> {
+		finnishCreate();
+	    };
+	    done.addActionListener(doneA);
+	    box.add(done);
+	}
+	
 	add(box);
 	pack();
     }
@@ -327,10 +366,39 @@ public class ConfFrame extends JFrame{
 	frame.setLocation(p);
     }
     
+    public static void create(int type, Point p){
+	isCreating = true;
+	switch(type){
+	    case CIRCLE:
+	    seleccionado = new Circle();
+	    break;
+	    case RECTANGLE:
+	    seleccionado = new Rectangle();
+	    break;
+	    case LINE:
+	    seleccionado = new Line();
+	    break;
+	    case RPOLYGON:
+	    seleccionado = new RegularPolygon();
+	    break;
+	    case TRIANGLE:
+	    seleccionado = new Triangle();
+	    break;
+	}
+	seleccionado.move(p);
+	showFrame(p);
+    }
+    
+    private static void finnishCreate(){
+	Canvas.addElement(seleccionado);
+	closeFrame();
+    }
+    
     private static void closeFrame(){
 	frame.setVisible(false);
 	frame = null;
 	System.gc();
+	isCreating = false;
     }
     
     public static void setPosition(Point p){
@@ -372,5 +440,10 @@ public class ConfFrame extends JFrame{
     public static void setFaces(int n){
 	Action.createAction(Action.NO_SIDES, Canvas.elements.indexOf(seleccionado), n);
 	((RegularPolygon) seleccionado).setNumSides(n);
+    }
+    
+    public static void setFaceSize(int d){
+	Action.createAction(Action.SIDE_SIZE, Canvas.elements.indexOf(seleccionado), d);
+	((RegularPolygon) seleccionado).setLongSide(d);
     }
 }
