@@ -71,7 +71,6 @@ public abstract class Element implements Cloneable,Serializable{
     
     public abstract void draw(Graphics g);
     
-    
     public abstract void getArea();
     public void doZoom(float escala)
     {

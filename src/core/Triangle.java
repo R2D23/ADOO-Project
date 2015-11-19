@@ -48,23 +48,6 @@ public class Triangle extends Rectangle{
 	width = 50;
 	height = 50;
     }
-    
-    @Override
-    public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgColor));
-        } else {
-            g2.setColor(bgColor);
-        }
-        g2.fill(area);
-        if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(lnColor));
-        } else {
-            g2.setColor(lnColor);
-        }
-        g2.draw(area);
-    }
 
     public int[] getCoordsX() {
         int coordX[] = new int[3];

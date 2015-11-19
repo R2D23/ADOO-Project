@@ -6,7 +6,10 @@
 package core;
 
 import core.Element;
+import static core.Element.AVAILABLE;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Area;
 
 /**
@@ -42,4 +45,20 @@ public abstract class Figure extends core.Element {
     
     public Color getBgColor(){return bgColor;}
     public Color getLnColor(){return lnColor;}
+    
+    @Override
+    public void draw(Graphics g){
+	Graphics2D g2 = (Graphics2D)g;
+        if(state!=AVAILABLE) {
+            g2.setColor(Util.negative(bgColor));
+            g2.fill(area);
+            g2.setColor(Util.negative(lnColor));
+            g2.draw(area);
+        } else {
+            g2.setColor(bgColor);
+            g2.fill(area);
+            g2.setColor(lnColor);
+            g2.draw(area);
+        }
+    }
 }

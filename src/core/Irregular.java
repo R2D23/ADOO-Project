@@ -39,17 +39,7 @@ public class Irregular extends Figure {
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         if(state!=GETTINGPOINTS) {
-            if(state!=AVAILABLE) {
-                g2.setColor(Util.negative(bgColor));
-                g2.fill(area);
-                g2.setColor(Util.negative(lnColor));
-                g2.draw(area);
-            } else {
-                g2.setColor(bgColor);
-                g2.fill(area);
-                g2.setColor(lnColor);
-                g2.draw(area);
-            }
+            super.draw(g);
         } else {
             for(int i=0; i<vertices.size()-1; i++) {
                 g2.drawLine(vertices.get(i).x, vertices.get(i).y, vertices.get(i+1).x, vertices.get(i+1).y);

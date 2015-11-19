@@ -25,22 +25,6 @@ public class Circle extends Figure{
 	super();
 	radio = 50;
     }
-
-    @Override
-    public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
-        if(state!=AVAILABLE) {
-            g2.setColor(Util.negative(bgColor));
-            g2.fill(area);
-            g2.setColor(Util.negative(lnColor));
-            g2.draw(area);
-        } else {
-            g2.setColor(bgColor);
-            g2.fill(area);
-            g2.setColor(lnColor);
-            g2.draw(area);
-        }
-    }
     
     @Override
     public void getArea()

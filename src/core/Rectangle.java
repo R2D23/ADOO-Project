@@ -27,20 +27,6 @@ public class Rectangle extends core.Figure {
 
     public Rectangle() {}
 
-    @Override
-    public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D) (g.create());
-        if(state!=AVAILABLE) {
-            g2.setBackground(Util.negative(bgColor));
-            g2.setColor(Util.negative(lnColor));
-        } else {
-            g2.setBackground(bgColor);
-            g2.setColor(lnColor);
-        }
-        g2.draw(area);
-        g2.fill(area);
-    }
-
     public void configure(Canvas canvas) {
         new ConfigurarCuadrado(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
         
