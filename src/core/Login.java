@@ -183,7 +183,6 @@ public class Login extends javax.swing.JFrame {
             System.out.println("se ha recibido algo2");
             if(recibido.getConfirmacion())
             {
-                System.out.println("Dentro de segundo if");
                 this.setVisible(false);
                 core.GUI.initializeGUI();
                 GUI.getFile().setOwner(this.jTextField1.getText());

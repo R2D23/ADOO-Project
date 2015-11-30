@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,7 +6,9 @@
  */
 package core;
 
-import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.util.ArrayList;
+//import java.sql.Connection;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,13 +16,17 @@ import javax.swing.JOptionPane;
  * @author Mauricio
  */
 public class Registro extends javax.swing.JFrame {
-
+    	//private final UsuarioBD data;
+        
     /**
      * Creates new form Registro
      */
     public Registro() {
         initComponents();
-        this.setIconImage(new ImageIcon("iconoGeneral.png").getImage());
+/*        conexion mysql = new conexion();
+	Connection con = mysql.conectar("jdbc:mysql://localhost:3306/paint", "root", "root");
+	data = new UsuarioBD();
+	data.setCon(con);*/
     }
 
     /**
@@ -35,19 +42,23 @@ public class Registro extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        labelpass2 = new javax.swing.JLabel();
+        tipopass = new javax.swing.JLabel();
+        apellidos = new javax.swing.JTextField();
+        usuario = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        camposreq = new javax.swing.JLabel();
+        password = new javax.swing.JPasswordField();
+        passConf = new javax.swing.JPasswordField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        correo = new javax.swing.JTextField();
+        btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("iDraw - Registro de Usuario");
+        setTitle("Registro de Usuario");
 
         jPanel1.setBackground(new java.awt.Color(233, 255, 255));
 
@@ -61,35 +72,41 @@ public class Registro extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("Nombre");
 
-        jTextField1.setText("Nombre");
+        nombre.setText(null);
 
         jLabel2.setText("Apellidos");
 
-        jTextField2.setText("Apellidos");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
+        apellidos.setText(null);
 
-        jTextField3.setText("Nombre de Usuario");
+        usuario.setText(null);
 
         jLabel3.setText("Usuario");
+        
+        tipopass.setText("<html>La contraseña debe tener una longitud de 6 caracteres,<br> debe comenzar con mayúsculas, seguido de minúsculas y <br> terminar mínimo un número.</html>");
+        
+        tipopass.setFont(new java.awt.Font("Tahoma", 0, 10));
 
         jLabel4.setText("Contraseña");
+        
+        camposreq.setText("Todos los campos son requeridos");
+        camposreq.setForeground(Color.red);
+        
+        labelpass2.setText("Confirmar contraseña");
 
-        jPasswordField1.setText("jPasswordField1");
+        password.setText(null);
+        
+        passConf.setText(null);
 
         jLabel7.setText("Correo Electronico");
 
-        jTextField5.setText("Correo");
+        correo.setText(null);
 
-        jButton1.setBackground(new java.awt.Color(102, 255, 255));
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("Terminar registro");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAceptar.setBackground(new java.awt.Color(102, 255, 255));
+        btnAceptar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnAceptar.setText("Terminar registro");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAceptarActionPerformed(evt);
             }
         });
 
@@ -103,20 +120,24 @@ public class Registro extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
+                            .addComponent(camposreq)
+                            .addComponent(tipopass)
+                            .addComponent(labelpass2)
                             .addComponent(jLabel7)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(passConf, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(correo, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(68, 68, 68)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -125,25 +146,31 @@ public class Registro extends javax.swing.JFrame {
                 .addGap(41, 41, 41)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(23, 23, 23)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(apellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(23, 23, 23)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passConf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelpass2))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(correo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(camposreq)
+                    .addComponent(tipopass)
                 .addGap(27, 27, 27)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
@@ -188,31 +215,154 @@ public class Registro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JOptionPane.showMessageDialog(null, "Registro Exitoso");
-        this.dispose();
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //if(!(nombre.getText().equals(""))&& !(apellidos.getText().equals(""))&&!(usuario.getText().equals(""))
+                //&&!(password.getText().equals(""))&&!(passConf.getText().equals(""))&&!(correo.getText().equals("")))
+        if((nombre.getText().equals("")) || (apellidos.getText().equals("")) || (usuario.getText().equals(""))
+                || (password.getText().equals("")) || (passConf.getText().equals("")) || (correo.getText().equals("")))
+        {    
+                JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");            
+                return;
+        }
         
+        if(!validarCadenaAlfabetica(nombre.getText()) || !validarCadenaAlfabetica(apellidos.getText()))
+        {
+            JOptionPane.showMessageDialog(null, "El nombre o apellido tiene un formato inválido.");
+            return;
+        }
+        //if(validarCadenaAlfabetica(nombre.getText())==true && validarCadenaAlfabetica(apellidos.getText())==true)
         
+        //if(validarCorreo(correo.getText())==true)
+        if(!validarCorreo(correo.getText()))
+        {
+            JOptionPane.showMessageDialog(null, "El correo no tiene un formato válido");
+            return;
+        }
+        
+        if(!validarPassword(password.getText()))
+        {
+            JOptionPane.showMessageDialog(null, "La contraseña no tiene el formato especificado");
+            return;
+        }
+        
+        if(validarPasswordCorrecta(password.getText(), passConf.getText())!= 0)
+        {
+            JOptionPane.showMessageDialog(null, "Los campos de contraseña no coinciden. Por favor ingresa de nuevo la contraseña");
+            return;
+        }
+        
+        ConexionServer cs = new ConexionServer();
+        ArrayList<String> aux = new ArrayList<>();
+        //Orden de lo que se envia: nombre, apellidos, usuario, contraseña, correo
+        aux.add(nombre.getText());
+        aux.add(apellidos.getText());
+        aux.add(usuario.getText());
+        aux.add(password.getText());
+        aux.add(correo.getText());
+        Mensaje  m = new Mensaje(ConexionServer.registrarUsuario,usuario.getText(),aux);
+        cs.enviarMensaje(m);
+        m = cs.recibirMensaje();
+        System.out.println("resp : " +m.getConfirmacion());
+        //if(validarPasswordCorrecta(password.getText(), passConf.getText())== 0 && validarPassword(password.getText())== true)
+        
+            /*if(!(data.buscar(usuario.getText())) && !(data.buscarcorreo(correo.getText())))
+            {
+                    if(data.insertar(usuario.getText(),password.getText(), nombre.getText(), apellidos.getText(), 
+                        correo.getText()))
+                    {
+                        JOptionPane.showMessageDialog(null, "Registro Exitoso");
+                        this.dispose();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Registro Fallido");
+                        this.dispose();
+                    }
+            }
+            else
+            {
+                if((data.buscarcorreo(correo.getText())))
+                {
+                    JOptionPane.showMessageDialog(null, "El correo ya está registrado.");
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "El Nombre de Usuario ya Existe.");
+            }*/
+        
+        /*else
+
+        {
+            if(validarPassword(password.getText())== false)
+                JOptionPane.showMessageDialog(null, "La contraseña no tiene el formato especificado");
+            else
+                JOptionPane.showMessageDialog(null, "Los campos de contraseña no coinciden. Por favor ingresa de nuevo la contraseña");
+            password.setText(null);
+            passConf.setText(null);
+        }
+
+        /*else
+        {
+        }
+        
+        /*else
+        {
+
+        }
+        /*else 
+        {
+        
+        }*/
+        
+       
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
+    
+    public boolean validarCadenaAlfabetica(String nombreOApellido)
+    {
+        boolean validacion;
+        validacion = nombreOApellido.matches("([a-z]|[A-Z]|\\\\s)+");
+        return validacion;
+    }
+    public boolean validarCorreo(String email)
+    {
+        boolean validacion;
+        validacion = email.matches("[-\\w\\.]+@\\w+\\.\\w+");
+        return validacion;
+    }
+    public int validarPasswordCorrecta(String pass1, String pass2)
+    {
+        int validacion;
+        validacion = pass1.compareTo(pass2);
+        return validacion;
+    }
+    public boolean validarPassword(String pass)
+    {
+        boolean validacion;
+        validacion = pass.matches("[A-Z]+[a-z]+\\d+");
+        if(validacion == true && pass.length()>= 6)
+            return true;
+        else
+            return false;
+                   
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAceptar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel camposreq;
+    private javax.swing.JLabel tipopass;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel labelpass2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JPasswordField password;
+    private javax.swing.JPasswordField passConf;
+    private javax.swing.JTextField nombre;
+    private javax.swing.JTextField apellidos;
+    private javax.swing.JTextField usuario;
+    private javax.swing.JTextField correo;
     // End of variables declaration//GEN-END:variables
 }
+

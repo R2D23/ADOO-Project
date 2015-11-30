@@ -9,13 +9,15 @@ import java.net.*;
 public class ConexionServer {
     public static final String SERVER = "127.0.0.1";
     public static final int puertoRecibe = 5678;
-    public static final int puertoEnvia = 4444;
+    public static final int puertoEnvia = 7777;
+    
     public static final int iniciarSesion = 0;
     public static final int agregarColaborador = 1;
     public static final int eliminarColaborador = 2;
     public static final int guardarArchivo = 3;
     public static final int abrirArchivo = 4;
     public static final int modificaciones = 5;
+    public static final int registrarUsuario = 6;
     
     
     

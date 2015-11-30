@@ -8,10 +8,11 @@ import java.io.Serializable;
  * @author Angeles
  */
 public class Mensaje implements Serializable{
-    private int opCode;
-    private String remitente;
-    private String sData;
+    private int opCode; //indica que operacion se hara, o causa de error
+    private String remitente;//usuario
+    private String sData;//password,nombreArchivo
     boolean confirmacion;
+    Object multiusos;//agregarCol
     
     public Mensaje(int oc, String r, String s)
     {
@@ -22,6 +23,16 @@ public class Mensaje implements Serializable{
     
     public Mensaje(boolean co)
     {confirmacion = co;}
+    
+    public Mensaje(boolean co, int opCode)
+    {confirmacion = co;}
+    
+    public Mensaje(int oc, String r, Object o)
+    {
+        opCode = oc;
+        remitente = r;
+        multiusos = o;
+    }
     
     public int getOpCode()
     {return opCode;}
@@ -34,4 +45,7 @@ public class Mensaje implements Serializable{
     
     public boolean getConfirmacion()
     {return confirmacion;}
+    
+    public Object getObject()
+    {return multiusos;}
 }
