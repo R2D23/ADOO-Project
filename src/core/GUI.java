@@ -25,6 +25,7 @@ public class GUI {
     static SelectionMenu sm; //Circular Selection Menu
     public static File archivo;
     private static JScrollPane js;
+    private static PanelColaboradores pc;
     static JFrame frame;
     
     //The UI parameters
@@ -47,6 +48,8 @@ public class GUI {
         sm = new SelectionMenu();
         archivo = new File();
         js = new JScrollPane(panel);
+        pc = new PanelColaboradores();
+        
 
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
@@ -58,7 +61,6 @@ public class GUI {
 		    Menu fileM = new Menu(file);
 		    menus.add(fileM);//se agrega el menú circular de archivo
                 file.setMenu(fileM);
-                //file.addMouseListener(fileM);//se agrega el menu circualar de archivo como MouseListener
 	    ToolButton action = new ToolButton(GraphicDrawer.REDO);
 		toolKit.add(action);
 		action.addActionListener(al);
@@ -66,11 +68,6 @@ public class GUI {
 		    Menu actionM = new Menu(action);
                     menus.add(actionM);
                 action.setMenu(actionM);
-                //action.addMouseListener(actionM);
-	    /*ToolButton text = new ToolButton(GraphicDrawer.TEXT);
-		toolKit.add(text);
-		text.addActionListener(this);
-		text.setActionCommand("text");*/
 	    ToolButton arrow = new ToolButton(GraphicDrawer.ARROW);
 		toolKit.add(arrow);
 		arrow.addActionListener(al);
@@ -93,9 +90,10 @@ public class GUI {
                 //zoom.addMouseListener(zoomM);
 	}
 	frame = new JFrame("GUI");
-	    members = new Members();{
-	    members.addActionListener(al);
-	    members.setActionCommand("collaborators");
+	members = new Members();{
+            members.addActionListener(al);
+            members.setActionCommand("collaborators");
+            members.setPanel(pc);
 	    }
 	
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,15 +105,17 @@ public class GUI {
         frame.setIconImage(new ImageIcon("./images/iconoGeneral.png").getImage());
         frame.setTitle("Lienzo en blanco - iDraw");
         js.setPreferredSize(new Dimension(100, 100));
-        js.getViewport().setView(panel);
-        js.getViewport().setBackground(Color.red);
+        //js.getViewport().setView(panel);
+        //js.getViewport().setBackground(Color.red);
         
         
         for (core.Menu menu : menus)
 	  frame.getContentPane().add(menu);
 
+        frame.getContentPane().add(pc);
         frame.getContentPane().add(members);
         frame.getContentPane().add(panel);
+        
 	for(int i = 0; i < toolKit.size(); i++)
 	    frame.getContentPane().add(toolKit.get(i));
 	
@@ -169,8 +169,7 @@ public class GUI {
 	for(int i = 0; i < menus.size(); i++){
 	    menus.get(i).updateUI();
 	}
-	
-	fm.updateUI();
+        fm.updateUI();
         
     }
     

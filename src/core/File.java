@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,6 +26,7 @@ import javax.swing.JFileChooser;
 public class File {
     String name;
     Canvas canvas;
+    String owner;
     
     public void saveFile(){
         JFileChooser fcs = new JFileChooser();
@@ -37,6 +42,24 @@ public class File {
                 Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        /*name = JOptionPane.showInputDialog(null,"Introduce el nombre del archivo a guardar");
+        if(name != null)
+        {
+            try
+            {
+                Socket cl = new Socket(ConexionServer.SERVER, ConexionServer.PTOU);
+                DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
+                Mensaje guardar = new Mensaje(3, GUI.getFile().getOwner(), "");
+                ObjectOutputStream oos = new ObjectOutputStream(dos);
+                oos.writeObject(guardar);
+                oos.flush();
+                dos.close();
+                cl.close();
+            }
+            catch(Exception e)
+            {e.printStackTrace();}
+        }*/
     }
     
     public void readFile(){
@@ -63,4 +86,10 @@ public class File {
     
     public String getName()
     {return name;}
+    
+    public String getOwner()
+    {return owner;}
+    
+    public void setOwner(String s)
+    {owner = s;}
 }

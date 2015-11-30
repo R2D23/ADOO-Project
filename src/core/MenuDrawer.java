@@ -36,7 +36,8 @@ public class MenuDrawer{
     public static final int DISPOSE = 18;
     public static final int EXIT2 = 19;
     public static final int TEXT = 20;
-    
+    public static final int ADDUSER = 21;
+    public static final int DELETEUSER = 22;
     /*
     * @author LuisArturo
     */
@@ -210,7 +211,23 @@ public class MenuDrawer{
                     g2.drawImage(in, x + ancho/8, y + alto/4,ancho/2,alto/2, null);
                 }
                 break;
-	    
+                case ADDUSER :
+                {
+                    g2 =(Graphics2D)g;
+                    FileInputStream img = new FileInputStream("./images/addUser.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, x,y,ancho,alto, null);
+                }
+                break;
+                case DELETEUSER :
+                {
+                    g2 =(Graphics2D)g;
+                    FileInputStream img = new FileInputStream("./images/deleteUser.png");
+                    BufferedImage in = ImageIO.read(img);
+                    g2.drawImage(in, x,y,ancho,alto, null);
+                }
+                    
+                break;
 	}
         }
         catch(Exception e)

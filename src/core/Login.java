@@ -6,12 +6,16 @@
 package core;
 
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 
 /**
  *
  * @author Mauricio
  */
 public class Login extends javax.swing.JFrame {
+    
+    
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -168,8 +172,31 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botonRegistroActionPerformed
 
     private void botonIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarActionPerformed
-        this.setVisible(false);
-	core.GUI.initializeGUI();
+            
+        if(!(jTextField1.getText().equals("")) && !(jPasswordField1.getText().equals("")))
+        {
+            Mensaje datos = new Mensaje(0, this.jTextField1.getText(), this.jPasswordField1.getText());
+            ConexionServer cs = new ConexionServer();
+            cs.enviarMensaje(datos);
+            System.out.println("se ha enviado la solicitud");
+            Mensaje recibido = cs.recibirMensaje();
+            System.out.println("se ha recibido algo2");
+            if(recibido.getConfirmacion())
+            {
+                System.out.println("Dentro de segundo if");
+                this.setVisible(false);
+                core.GUI.initializeGUI();
+                GUI.getFile().setOwner(this.jTextField1.getText());
+            }
+            else
+                JOptionPane.showMessageDialog(null, " Has ingresado datos erróneos, favor de revisarlos e intentarlo\n" +
+                "nuevamente."); 
+            cs.cerrarConexion();
+        }    
+        else
+            JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");          
+        
+
     }//GEN-LAST:event_botonIniciarActionPerformed
 
     /**
