@@ -7,7 +7,7 @@ import java.net.*;
  * @author Angeles
  */
 public class ConexionServer {
-    public static final String SERVER = "127.0.0.1";
+    public static final String SERVER = "192.168.0.9";
     public static final int puertoRecibe = 5678;
     public static final int puertoEnvia = 7777;
     
@@ -18,6 +18,8 @@ public class ConexionServer {
     public static final int abrirArchivo = 4;
     public static final int modificaciones = 5;
     public static final int registrarUsuario = 6;
+    public static final short enviarListaUsuarios = 7;
+    public static final short enviarListaColaboradores = 8;
     
     
     
@@ -32,7 +34,6 @@ public class ConexionServer {
             cl = new DatagramSocket();
             dirServer = InetAddress.getByName(SERVER);
             cl.setReuseAddress(true);
-            System.out.println(InetAddress.getLocalHost());
         }
         catch(Exception e)
         {e.printStackTrace();}
@@ -51,6 +52,7 @@ public class ConexionServer {
         {
             //DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
             cl = new DatagramSocket();
+            
             //cl.setReuseAddress(true);
             //dirServer = InetAddress.getByName(SERVER);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -76,7 +78,6 @@ public class ConexionServer {
             //cl.setReuseAddress(true);
             DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
             cl.receive(p);
-            System.out.println("Se recibio algo");
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(p.getData()));
             Mensaje recibido = (Mensaje)ois.readObject();
             cl.close();

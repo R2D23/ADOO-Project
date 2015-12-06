@@ -1,16 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
-import core.Element;
 import static core.Element.AVAILABLE;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Area;
+import graphic.Util;
 
 /**
  *
@@ -48,7 +43,7 @@ public abstract class Figure extends core.Element {
     
     @Override
     public void draw(Graphics g){
-	Graphics2D g2 = (Graphics2D)g;
+	Graphics2D g2 = (Graphics2D)g.create();
         if(state!=AVAILABLE) {
             g2.setColor(Util.negative(bgColor));
             g2.fill(area);

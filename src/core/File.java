@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
+import graphic.Canvas;
+import graphic.GUI;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,9 +12,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,42 +19,53 @@ import javax.swing.JOptionPane;
  * @author LuisAguilar
  */
 public class File {
-    String name;
-    Canvas canvas;
-    String owner;
+    private String name;
+    private String owner;
+    private ArrayList<String> colaboradores;
     
+    public File()
+    {colaboradores = new ArrayList<>();}
+    
+   
     public void saveFile(){
-        JFileChooser fcs = new JFileChooser();
+        String nombre = JOptionPane.showInputDialog(GUI.frame,"Introduzca el nombre del archivo","Guardar Archivo",JOptionPane.PLAIN_MESSAGE);
+        
+        if(nombre == null)
+            return;
+        
+        while(nombre.equals(""))
+        {
+            JOptionPane.showMessageDialog(GUI.frame, "Por favor, introduzca un nombre de archivo", "Sin nombre de archivo", JOptionPane.INFORMATION_MESSAGE);
+            nombre = JOptionPane.showInputDialog(GUI.frame,"Introduzca el nombre del archivo","Guardar Archivo",JOptionPane.PLAIN_MESSAGE);
+            if (nombre == null) return;
+        }
+        
+        boolean ft = false;
+        if(GUI.getFile().getName() == null)//si es la primera vez que se guarda
+            ft = true;
+        Mensaje m = new Mensaje(ConexionServer.guardarArchivo, GUI.dibujante.nomUsuario, nombre, ft,Canvas.elements);
+        ConexionServer cs = new ConexionServer();
+        cs.enviarMensaje(m);
+        m = cs.recibirMensaje();
+        cs.cerrarConexion();
+        
+        if(!m.getConfirmacion())
+            JOptionPane.showMessageDialog(GUI.frame, "Error de Conexion con Base de Datos", "Error", JOptionPane.INFORMATION_MESSAGE);
+        //JOptionPane.showi
+        /*JFileChooser fcs = new JFileChooser();
         int opc = fcs.showSaveDialog(null);
         if(opc == JFileChooser.APPROVE_OPTION)
         {
             name = fcs.getSelectedFile().getName();
             try {
                 ObjectOutputStream salida=new ObjectOutputStream(new FileOutputStream(name+".lz"));
-                salida.writeObject(canvas.elements);
+                salida.writeObject(Canvas.elements);
                 salida.close();
             } catch (IOException ex) {
                 Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        
-        /*name = JOptionPane.showInputDialog(null,"Introduce el nombre del archivo a guardar");
-        if(name != null)
-        {
-            try
-            {
-                Socket cl = new Socket(ConexionServer.SERVER, ConexionServer.PTOU);
-                DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
-                Mensaje guardar = new Mensaje(3, GUI.getFile().getOwner(), "");
-                ObjectOutputStream oos = new ObjectOutputStream(dos);
-                oos.writeObject(guardar);
-                oos.flush();
-                dos.close();
-                cl.close();
-            }
-            catch(Exception e)
-            {e.printStackTrace();}
         }*/
+        
     }
     
     public void readFile(){
@@ -68,10 +74,10 @@ public class File {
         if(opc == JFileChooser.APPROVE_OPTION){
             try {
               ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(fco.getSelectedFile().getPath()));
-              canvas.elements = (ArrayList<Element>)entrada.readObject();
-              for(int i = 0; i < canvas.elements.size(); i++)
-                canvas.elements.get(i).getArea();
-              canvas.repaint();
+              Canvas.elements = (ArrayList<Element>)entrada.readObject();
+              for(int i = 0; i < Canvas.elements.size(); i++)
+                Canvas.elements.get(i).getArea();
+              Canvas.repaint();
               name = fco.getSelectedFile().getName();
             } catch (Exception ex) {
                 Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,4 +98,10 @@ public class File {
     
     public void setOwner(String s)
     {owner = s;}
+    
+    public void addColaborator(String col)
+    {colaboradores.add(col);}
+    
+    public void removeColaborator(String col)
+    {colaboradores.remove(col);}
 }

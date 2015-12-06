@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package core;
+
+package graphic;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import core.*;
 
 //Importing Static Project Variables
-import static core.Canvas.panel;
+import static graphic.Canvas.panel;
 
 /**
  *
@@ -21,12 +18,13 @@ public class GUI {
     private static Members members; //The Collaborators Button
     private static ArrayList<JButton> toolKit; //The list of Tool Buttons
     private static ArrayList<Menu> menus; //Circular Menus
-    static FigureMenu fm; //Circular Create Figure
-    static SelectionMenu sm; //Circular Selection Menu
+    public static FigureMenu fm; //Circular Create Figure
+    public static SelectionMenu sm; //Circular Selection Menu
     public static File archivo;
     private static JScrollPane js;
-    private static PanelColaboradores pc;
-    static JFrame frame;
+    public static PanelColaboradores pc;
+    public static JFrame frame;
+    public static Dibujante dibujante;
     
     //The UI parameters
     public final static int GAP = 50;
@@ -49,6 +47,7 @@ public class GUI {
         archivo = new File();
         js = new JScrollPane(panel);
         pc = new PanelColaboradores();
+        dibujante = new Dibujante();
         
 
 	toolKit = new ArrayList<>();{
@@ -109,7 +108,7 @@ public class GUI {
         //js.getViewport().setBackground(Color.red);
         
         
-        for (core.Menu menu : menus)
+        for (graphic.Menu menu : menus)
 	  frame.getContentPane().add(menu);
 
         frame.getContentPane().add(pc);
@@ -166,8 +165,8 @@ public class GUI {
 	    toolKit.get(i).updateUI();
 	}
 	
-	for(int i = 0; i < menus.size(); i++){
-	    menus.get(i).updateUI();
+	for(Menu m : menus){
+	    m.updateUI();
 	}
         fm.updateUI();
         
@@ -205,4 +204,7 @@ public class GUI {
     
     public SelectionMenu getSelectionMenu()
     {return sm;}
+    
+    public static void setDibujante(String s)
+    {dibujante.nomUsuario = s;}
 }

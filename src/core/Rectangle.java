@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-
+import graphic.Canvas;
 /**
  *
  * @author douxm_000
@@ -28,7 +28,7 @@ public class Rectangle extends core.Figure {
     public Rectangle() {}
 
     public void configure(Canvas canvas) {
-        new ConfigurarCuadrado(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
+        //new ConfigurarCuadrado(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
         
     }
     public void getArea()

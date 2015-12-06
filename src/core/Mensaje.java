@@ -11,7 +11,7 @@ public class Mensaje implements Serializable{
     private int opCode; //indica que operacion se hara, o causa de error
     private String remitente;//usuario
     private String sData;//password,nombreArchivo
-    boolean confirmacion;
+    boolean confirmacion;//indica si se a podido realizar la operacion, al guardar, indica si el usuario es el dueño
     Object multiusos;//agregarCol
     
     public Mensaje(int oc, String r, String s)
@@ -21,17 +21,28 @@ public class Mensaje implements Serializable{
         sData = s;
     }
     
-    public Mensaje(boolean co)
+    public Mensaje(int oc, String t)
+    {
+        opCode = oc;
+        remitente = t;
+    }
+    
+    public Mensaje(boolean co)//Este es para cuando se envian confirmaciones
     {confirmacion = co;}
     
-    public Mensaje(boolean co, int opCode)
-    {confirmacion = co;}
+    public Mensaje(boolean co, int op)//este para cuando se envian confirmaciones con causas de error
+    {confirmacion = co; opCode = op;}
     
-    public Mensaje(int oc, String r, Object o)
+    public Mensaje(int oc, String r, Object o)//Registro, el objeto son los datos extras
     {
         opCode = oc;
         remitente = r;
         multiusos = o;
+    }
+    
+    public Mensaje(int oc, String r, String nom, boolean ft, Object arch)
+    {
+        opCode = oc; remitente = r; sData = nom; confirmacion = ft; multiusos = arch;
     }
     
     public int getOpCode()

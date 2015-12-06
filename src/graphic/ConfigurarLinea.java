@@ -1,11 +1,13 @@
 
-package core;
+package graphic;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import javax.swing.JColorChooser;
+import core.Line;
+import core.Element;
 
 
 public class ConfigurarLinea extends javax.swing.JFrame{
@@ -162,13 +164,13 @@ public ConfigurarLinea(Canvas c, Line li, Point p) {
             grueso = Float.parseFloat(this.Grosor.getText());
             if((largo!=0) && (contorno != null))
             {
-                l.color = contorno;
-                l.length = largo;
-                l.grosor = grueso;
-                java.awt.Rectangle r2d = new java.awt.Rectangle(l.posX-(int)(l.grosor/2), l.posY-(int)(l.grosor/2), (int)(l.length + l.grosor), (int)l.grosor);
+                //l.color = contorno;
+                //l.length = largo;
+                //l.grosor = grueso;
+                //java.awt.Rectangle r2d = new java.awt.Rectangle(l.posX-(int)(l.grosor/2), l.posY-(int)(l.grosor/2), (int)(l.length + l.grosor), (int)l.grosor);
                 AffineTransform atr = new AffineTransform();
                 atr.setToRotation(l.incline);
-                l.area = new Area(r2d);
+                //l.area = new Area(r2d);
                 //l.area.transform(atr);
                 canvas.elements.add(l);
                 l.state = Element.AVAILABLE;
@@ -202,9 +204,9 @@ public ConfigurarLinea(Canvas c, Line li, Point p) {
 
     public final void cargarValores()
     {
-        this.Largo.setText(l.length + "");
-        this.Grosor.setText(l.grosor + "");
-        contorno = l.color;
+//        this.Largo.setText(l.length + "");
+  //      this.Grosor.setText(l.grosor + "");
+    //    contorno = l.color;
         this.EscogerColorLinea.setBackground(contorno);    
     }
     

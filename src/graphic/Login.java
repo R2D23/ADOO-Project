@@ -1,12 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package core;
+
+package graphic;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import core.Mensaje;
+import core.ConexionServer;
 
 
 /**
@@ -21,6 +19,8 @@ public class Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("iDraw - Iniciar Sesion");
         this.setIconImage(new ImageIcon("iconoGeneral.png").getImage());
+        this.jTextField1.setText("");
+        this.jPasswordField1.setText("");
     }
 
     
@@ -184,8 +184,8 @@ public class Login extends javax.swing.JFrame {
             if(recibido.getConfirmacion())
             {
                 this.setVisible(false);
-                core.GUI.initializeGUI();
-                GUI.getFile().setOwner(this.jTextField1.getText());
+                graphic.GUI.initializeGUI();
+                GUI.setDibujante(this.jTextField1.getText());
             }
             else
                 JOptionPane.showMessageDialog(null, " Has ingresado datos erróneos, favor de revisarlos e intentarlo\n" +

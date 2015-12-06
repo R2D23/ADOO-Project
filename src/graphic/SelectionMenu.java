@@ -1,4 +1,4 @@
-package core;
+package graphic;
 
 /**
  *
@@ -16,7 +16,7 @@ import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import javax.swing.*;
-
+import core.Element;
 
 /*Esta es la clase que implementa el menú circular de seleccion*/
 public class SelectionMenu extends JComponent{
@@ -201,15 +201,15 @@ public class SelectionMenu extends JComponent{
                 ConfFrame.showFrame(p);
             break;
             case MOVE:
-                canvas.seleccionado.state = Element.MOVING;
+                Canvas.seleccionado.state = Element.MOVING;
             break;
             case ROTATE:
-                canvas.seleccionado.state = Element.ROTATING;
+                Canvas.seleccionado.state = Element.ROTATING;
             break;
             case DELETE:
-                canvas.deleteElement(canvas.seleccionado);
-                canvas.seleccionado = null;
-                canvas.repaint();
+                Canvas.deleteElement(canvas.seleccionado);
+                Canvas.seleccionado = null;
+                Canvas.repaint();
             break;
             case EXIT :
                 canvas.seleccionado.state = Element.AVAILABLE;

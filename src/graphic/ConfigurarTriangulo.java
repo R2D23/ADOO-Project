@@ -1,12 +1,13 @@
 
-package core;
+package graphic;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Area;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
-
+import core.Element;
+import core.Triangle;
 /**
  *
  * @author MARCO
@@ -315,10 +316,10 @@ public class ConfigurarTriangulo extends javax.swing.JFrame{
             base = Integer.parseInt(this.BaseTriangulo.getText());
             if((altura!=0) && (base!=0)&&(relleno != null)&&(contorno != null))
             {
-                trian.type = comboTipo.getSelectedIndex() + 1;
+//                trian.type = comboTipo.getSelectedIndex() + 1;
                 trian.setWidth(base);
                 trian.bgColor = relleno;
-                trian.height = altura;
+  //              trian.height = altura;
                 trian.lnColor = contorno;
                 trian.pointsX = trian.getCoordsX();
                 trian.pointsY = trian.getCoordsY();
@@ -354,7 +355,7 @@ public class ConfigurarTriangulo extends javax.swing.JFrame{
     
     public final void cargarValores()
     {
-        this.AlturaTriangulo.setText("" + trian.height);
+    //    this.AlturaTriangulo.setText("" + trian.height);
         this.BaseTriangulo.setText("" + trian.getWidth());
         relleno = trian.bgColor;
         contorno = trian.lnColor;

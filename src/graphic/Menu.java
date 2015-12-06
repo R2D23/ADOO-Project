@@ -1,4 +1,6 @@
-package core;
+package graphic;
+import core.File;
+import core.Imagen;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -14,8 +16,8 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
 
 //Importing Static Project Variables
-import static core.Canvas.panel;
-import static core.Canvas.elements;
+import static graphic.Canvas.panel;
+import static graphic.Canvas.elements;
 
 /*Clase que implementa los menus que se asocian a los botones
     Estos menus son:

@@ -1,5 +1,5 @@
 
-package core;
+package graphic;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -7,7 +7,8 @@ import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
-
+import core.RegularPolygon;
+import core.Element;
 /**
  *
  * @author MARCO
@@ -189,9 +190,9 @@ public class ConfigurarPoligono extends javax.swing.JFrame{
                 p.lnColor = contorno;
                 p.setLongSide((int) lado);
                 p.setNumSides(noLados);
-                p.pointsX = p.getCoordsX();
-                p.pointsY = p.getCoordsY();
-                p.area = new Area(new java.awt.Polygon(p.pointsX, p.pointsY, p.pointsX.length));
+//                p.pointsX = p.getCoordsX();
+//                p.pointsY = p.getCoordsY();
+//                p.area = new Area(new java.awt.Polygon(p.pointsX, p.pointsY, p.pointsX.length));
                 canvas.elements.add(p);
                 p.state = Element.AVAILABLE;
                 canvas.repaint();

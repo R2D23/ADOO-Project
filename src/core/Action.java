@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package core;
-import static core.Canvas.elements;
+import static graphic.Canvas.elements;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;

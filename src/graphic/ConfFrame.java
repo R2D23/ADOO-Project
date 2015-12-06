@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core;
+package graphic;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -19,12 +19,14 @@ import java.awt.Color;
 import javax.swing.Box;
 import javax.swing.JColorChooser;
 
-import static core.Canvas.seleccionado;
+import static graphic.Canvas.seleccionado;
 import javax.swing.JComboBox;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+
+import core.*;
 /**
  *
  * @author LuisArturo

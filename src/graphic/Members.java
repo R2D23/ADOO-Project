@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core;
+package graphic;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,9 +17,9 @@ public class Members extends CustomButton{
     private PanelColaboradores pc;
     
     public Members(){
-	this.setSize(50, 200);
-	this.setLocation(0, 75);
-        this.addMouseListener(new MouseAdapter()
+	setSize(50, 200);
+	setLocation(0, 75);
+        addMouseListener(new MouseAdapter()
             {
                 @Override
                 public void mouseClicked(MouseEvent e)

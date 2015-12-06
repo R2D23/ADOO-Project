@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
-import core.Canvas;
-import core.Element;
+import graphic.Canvas;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,6 +10,8 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import static graphic.GUI.GAP;
+import graphic.Util;
 
 /**
  *
@@ -100,7 +97,7 @@ public class Line extends Element {
     @Override
     public void setLast(Point p)
     {
-        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GUI.GAP/2));
+        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GAP/2));
         puntos[1] = nuevoPunto;
         state = Element.AVAILABLE;
         posX = puntos[0].x;

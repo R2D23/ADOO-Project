@@ -1,20 +1,20 @@
 
-package core;
+package graphic;
 
+import core.Action;
 import static core.Action.*;
+import core.Element;
+import static graphic.GUI.fm;
+import static graphic.GUI.frame;
+import static graphic.GUI.sm;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 //Importing Static Project Variables
-import static core.GUI.frame;
-import static core.GUI.fm;
-import static core.GUI.sm;
 import java.awt.event.MouseAdapter;
 
 /**
@@ -129,6 +129,7 @@ public class Canvas {
     }
     
     public static void mouseClicked(MouseEvent e) {
+        
         if(e.getButton() == MouseEvent.BUTTON1)
         {
             switch(frame.getCursor().getName())//if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
@@ -159,7 +160,6 @@ public class Canvas {
                 case "lapiz" :
                     if((seleccionado != null) && (seleccionado.state == Element.GETTINGPOINTS))
                     {
-                        System.out.println("desde1");
                         seleccionado.setLast(e.getPoint());
                         repaint();
                     }

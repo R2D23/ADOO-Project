@@ -1,11 +1,13 @@
 
-package core;
+package graphic;
 
+import graphic.Canvas;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Area;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
+import core.Rectangle;
 
 /**
  *
@@ -16,14 +18,14 @@ public class ConfigurarCuadrado extends javax.swing.JFrame {
     private Color relleno;
     private int base;
     private int Altura;
-    private Canvas canvas;
+//    private Canvas canvas;
     private Rectangle r;
     
     public ConfigurarCuadrado(Canvas c, Rectangle re, Point p) {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         this.setLocation(p);
-        canvas = c;
+        Canvas canvas = c;
         if(re != null)
         {
             r = re;
@@ -191,7 +193,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-        r.state = Element.AVAILABLE;
+//        r.state = Element.AVAILABLE;
         dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
@@ -206,7 +208,7 @@ public class ConfigurarCuadrado extends javax.swing.JFrame {
     }//GEN-LAST:event_EscogerColorLineaActionPerformed
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
-        canvas.actElements();
+//        canvas.actElements();
         try
         {
             base= Integer.parseInt(this.Base.getText());
@@ -215,13 +217,13 @@ public class ConfigurarCuadrado extends javax.swing.JFrame {
             {
                 r.bgColor = relleno;
                 r.lnColor = contorno;
-                r.height = Altura;
-                r.width = base;
+//                r.height = Altura;
+  //              r.width = base;
                 r.area = new Area(new java.awt.Rectangle(r.posX, r.posY, (int)base, (int)Altura));
                 r.incline = 0;
-                canvas.elements.add(r);
-                r.state = Element.AVAILABLE;
-                canvas.repaint(); 
+//                canvas.elements.add(r);
+//                r.state = Element.AVAILABLE;
+//                canvas.repaint(); 
                 dispose();
             }
             else
@@ -246,8 +248,8 @@ public class ConfigurarCuadrado extends javax.swing.JFrame {
 
     public final void cargarValores()
     {
-        this.altura.setText("" + r.height);
-        this.Base.setText("" + r.width);
+  //      this.altura.setText("" + r.height);
+    //    this.Base.setText("" + r.width);
         relleno = r.bgColor;
         contorno = r.lnColor;
         this.EscogerColorRelleno.setBackground(relleno);

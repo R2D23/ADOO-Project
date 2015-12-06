@@ -1,5 +1,5 @@
 
-package core;
+package graphic;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,8 +10,9 @@ import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import javax.swing.*;
+import core.*;
 
-import static core.Canvas.seleccionado;
+import static graphic.Canvas.seleccionado;
 
 /**
  *
@@ -186,13 +187,16 @@ public class FigureMenu extends JComponent{
                 seleccionado = new Line();
                 seleccionado.setFirst(center);
                 seleccionado.state = Element.GETTINGPOINTS;
+                Canvas.elements.add(seleccionado);
+                ConfFrame.create(ConfFrame.LINE, center);
             break;
             case IRREGULAR:
                 setVisible(false);
                 Irregular fig = new Irregular();
-                fig.setFirst(center);
-                Canvas.seleccionado = fig;
-                fig.state = Element.GETTINGPOINTS;
+                seleccionado = fig;
+                seleccionado.setFirst(center);
+                seleccionado.state = Element.GETTINGPOINTS;
+                Canvas.elements.add(seleccionado);
             break;
             case TEXT:
                 canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));

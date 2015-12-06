@@ -1,6 +1,8 @@
 
-package core;
+package graphic;
 
+import core.ConexionServer;
+import core.Mensaje;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -12,11 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -25,10 +25,10 @@ import javax.swing.JScrollPane;
  */
 public class AdministradorColaboradores extends JDialog
 {
-    private JList<String> listaColaboradores;
-    private JButton boton;
-    private JButton cancelar;
-    private int accion;
+    private final JList<String> listaColaboradores;
+    private final JButton boton;
+    private final JButton cancelar;
+    private final int accion;
     private String titulo;
     
     //agregarColaboradores = 0
@@ -44,14 +44,27 @@ public class AdministradorColaboradores extends JDialog
         js.setViewportView(listaColaboradores);
         js.setLocation(listaColaboradores.getLocation());
         this.getContentPane().add(js);
-        
+        ConexionServer cs = new ConexionServer();
+        Mensaje m = new Mensaje(ConexionServer.enviarListaUsuarios, "",GUI.getFile().getName());
+        cs.enviarMensaje(m);
+        m = cs.recibirMensaje();
+        cs.cerrarConexion();
+        java.util.ArrayList<String> al = (java.util.ArrayList<String>)m.getObject();
+        String [] aux = new String[al.size()];
+        al.toArray(aux);
+        listaColaboradores.setListData(aux);
         
         boton = new JButton();
         boton.setSize(80, 30);
         boton.setLocation(20,250);
+        
         getContentPane().add(boton);
         //getContentPane().add(listaColaboradores);
-        
+        boton.addMouseListener(new MouseAdapter()
+            {
+                public void mouseClicked(MouseEvent e)
+                { accionBoton(); }
+           });
         cancelar = new JButton("Cancelar");
         cancelar.setSize(80,30);
         cancelar.setLocation(140,250);
@@ -64,11 +77,12 @@ public class AdministradorColaboradores extends JDialog
         
         getContentPane().add(cancelar);
         setSize(250, 300);
-        setLocation(30,100);
+        setLocation(100,100);
         setUndecorated(true);
         setLayout(null);
         getContentPane().setBackground(Util.normalColor);
         setShape(new RoundRectangle2D.Double(0,0,250.0,300.0, 15,15));
+        setLocationRelativeTo(GUI.pc);
         accion = a;
         if(a == 0)
             titulo = "Agregar";
@@ -95,6 +109,7 @@ public class AdministradorColaboradores extends JDialog
         g2.setStroke(new BasicStroke(5));
         g2.draw(new RoundRectangle2D.Double(0,0,249.0,299.0, 15,15));
         g2.fill(new RoundRectangle2D.Double(0,0,249.0,50, 15,15));
+        
         g2.setFont(new Font("Verdana", BOLD, 16));
         g2.setColor(Color.white);
         String aux = titulo + " colaboradores";
@@ -105,5 +120,25 @@ public class AdministradorColaboradores extends JDialog
         cancelar.repaint();
     }
     
-    
+    public void accionBoton()
+    {
+        if(accion == 0)
+        {
+            java.util.List<String> aux = listaColaboradores.getSelectedValuesList();
+            String a[] = new String[aux.size()];
+            String nomArch = GUI.getFile().getName();
+            if(nomArch == null)
+            {   JOptionPane.showMessageDialog(null, "Es necesario que se guarde el archivo"); return;}
+            Mensaje m = new Mensaje(ConexionServer.agregarColaborador, nomArch, aux.toArray(a));
+            ConexionServer cs  = new ConexionServer();
+            cs.enviarMensaje(m);
+            m = cs.recibirMensaje();
+            if(m.getConfirmacion())
+                JOptionPane.showMessageDialog(null, "Colaboradores agregados");
+            else
+                JOptionPane.showMessageDialog(null, "No se han podido agregar los colaboradores");
+            
+                    
+        }
+    }
 }

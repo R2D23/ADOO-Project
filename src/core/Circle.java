@@ -21,7 +21,7 @@ public class Circle extends Figure{
         this.radio = radio;
     }
 
-    Circle() {
+    public Circle() {
 	super();
 	radio = 50;
     }

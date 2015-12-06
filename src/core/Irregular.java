@@ -5,7 +5,7 @@
  */
 package core;
 
-import static core.Canvas.seleccionado;
+import static graphic.Canvas.seleccionado;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,6 +14,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import static graphic.GUI.GAP;
 
 /**
  *
@@ -77,7 +78,7 @@ public class Irregular extends Figure {
     
     public void setFirst(Point p)
     {
-        first = p;
+        first = new Point(p.x,p.y);
         vertices.add(first);
     }
     
@@ -91,9 +92,17 @@ public class Irregular extends Figure {
     public void move(int posX, int posY)
     {
         int dx = posX - first.x;
+        System.out.println("POSX : " + posX + "  POSY : " + posY);
         int dy = posY - first.y;
+        System.out.println("dX : " + dx + "  dY : " + dy);
         for (Point vertice : vertices) 
+        {
+            System.out.println("xantes : " + vertice.x + " yantes : " + vertice.y);
             vertice.translate(dx, dy);
+            System.out.println("xdespues : " + vertice.x + " ydespues : " + vertice.y);
+            
+        }
+        
         getArea();
     }
     
@@ -112,9 +121,10 @@ public class Irregular extends Figure {
     @Override
     public void setLast(Point p)//Este metodo decide si es el ultimo punto
     {
-        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GUI.GAP/2));
+        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GAP/2));
         if(first.distance(nuevoPunto) > 10)//si no es el ultimo, solo agrega el punto a la lista
             this.newPoint(nuevoPunto);
+        
         else
         {
             this.getArea();

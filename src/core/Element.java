@@ -84,7 +84,7 @@ public abstract class Element implements Cloneable,Serializable{
 	return new Point(posX, posY);
     }
 
-    void move(Point point) {
+    public void move(Point point) {
 	posX = point.x; posY = point.y;
 	getArea();
     }

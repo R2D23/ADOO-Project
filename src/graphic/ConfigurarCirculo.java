@@ -1,5 +1,5 @@
 
-package core;
+package graphic;
 
 
 import java.awt.Color;
@@ -8,6 +8,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
+import core.Circle;
 
 public class ConfigurarCirculo extends javax.swing.JFrame{
 private double radio;
@@ -155,7 +156,7 @@ private Circle circulo;
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-        circulo.state = Element.AVAILABLE;
+        //circulo.state = Element.AVAILABLE;
         this.dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
@@ -186,11 +187,11 @@ private Circle circulo;
                 
                 circulo.bgColor = relleno;
                 circulo.lnColor = contorno;
-                circulo.radio = this.radio;
+                //circulo.radio = this.radio;
                 circulo.area =  new Area(new Ellipse2D.Double(circulo.posX, circulo.posY, (int)radio,(int)radio));
                 if(!canvas.elements.contains(circulo))
                     canvas.elements.add(circulo);
-                circulo.state = Element.AVAILABLE;
+                //circulo.state = Element.AVAILABLE;
                 canvas.repaint();
                 dispose();
             }
@@ -205,7 +206,7 @@ private Circle circulo;
     
     public final void cargarValores()
     {
-        this.Radio.setText(circulo.radio + "");
+        //this.Radio.setText(circulo.radio + "");
         relleno = circulo.bgColor;
         contorno = circulo.lnColor;
         this.BottonEscogerColorRelleno.setBackground(relleno);

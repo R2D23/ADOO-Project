@@ -1,11 +1,8 @@
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package core;
+package graphic;
 
+import core.ConexionServer;
+import core.Mensaje;
 import java.awt.Color;
 import java.util.ArrayList;
 //import java.sql.Connection;
@@ -259,10 +256,33 @@ public class Registro extends javax.swing.JFrame {
         aux.add(usuario.getText());
         aux.add(password.getText());
         aux.add(correo.getText());
+        System.out.println("Se envia solicitud");
         Mensaje  m = new Mensaje(ConexionServer.registrarUsuario,usuario.getText(),aux);
         cs.enviarMensaje(m);
         m = cs.recibirMensaje();
-        System.out.println("resp : " +m.getConfirmacion());
+        System.out.println("resp : " +m.getConfirmacion() + " cod : " + m.getOpCode());
+        if(m.getConfirmacion())
+        {
+            JOptionPane.showMessageDialog(null, "Registro Exitoso");
+            this.dispose();
+        }
+        else
+        {
+            switch(m.getOpCode())
+            {
+                case 0 ://
+                    JOptionPane.showMessageDialog(null, "El Nombre de Usuario ya Existe.");
+                break;
+                case 1 :    
+                    JOptionPane.showMessageDialog(null, "El correo ya está registrado.");
+                break;
+                case 2 :
+                    JOptionPane.showMessageDialog(null, "Registro Fallido");
+                break;
+            }       
+        }
+        
+        
         //if(validarPasswordCorrecta(password.getText(), passConf.getText())== 0 && validarPassword(password.getText())== true)
         
             /*if(!(data.buscar(usuario.getText())) && !(data.buscarcorreo(correo.getText())))
