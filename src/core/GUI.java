@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package core;
+import static core.Canvas.elements;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 //Importing Static Project Variables
 import static core.Canvas.panel;
+import static core.Canvas.seleccionado;
 
 /**
  *
@@ -21,11 +23,11 @@ public class GUI {
     private static Members members; //The Collaborators Button
     private static ArrayList<JButton> toolKit; //The list of Tool Buttons
     private static ArrayList<Menu> menus; //Circular Menus
-    static FigureMenu fm; //Circular Create Figure
-    static SelectionMenu sm; //Circular Selection Menu
+    private static FigureMenu fm; //Circular Create Figure
+    private static SelectionMenu sm; //Circular Selection Menu
     public static File archivo;
     private static JScrollPane js;
-    static JFrame frame;
+    private static JFrame frame;
     
     //The UI parameters
     public final static int GAP = 50;
@@ -171,7 +173,6 @@ public class GUI {
 	}
 	
 	fm.updateUI();
-        
     }
     
     private static void showGUI(){
@@ -200,10 +201,57 @@ public class GUI {
     
     public static File getFile()
     {return archivo;}
+
+    static Cursor getCursor() {
+	return frame.getCursor();
+    }
+
+    static void showSelectionMenu(MouseEvent e) {
+	int sel = sm.cualFigura(e.getPoint());
+        if(sel >= 0){   
+	    seleccionado = elements.get(sel);
+	    seleccionado.setState(Element.BUSY);
+	    elements.remove(seleccionado);//Esto es para que lo traiga al frente
+	    elements.add(seleccionado);
+	sm.setCenter(e.getPoint());
+        sm.obtLocation().setLocation(e.getX() - sm.SIZE/2 + GUI.GAP, e.getY() - sm.SIZE/2 + GUI.GAP);
+        sm.setLocation(sm.obtLocation());
+        Canvas.repaint();
+        sm.setVisible(!sm.isVisible());
+	}
+    }
     
     public FigureMenu getFigureMenu()
     {return fm;}
     
     public SelectionMenu getSelectionMenu()
     {return sm;}
+    
+    //Debugger Main
+    public static void main(String args[]){
+	initializeGUI();
+    }
+    
+    public static void showFigureMenu(MouseEvent e){
+	fm.setCenter(new Point(e.getPoint().x,e.getPoint().y));
+	fm.obtLocation().setLocation(e.getX() - fm.SIZE/2 + GUI.GAP, e.getY() - fm.SIZE/2 + GUI.GAP);
+	fm.setLocation(fm.obtLocation());
+	fm.setVisible(true);
+    }
+    
+    public static boolean areMenusOpened(){
+	boolean aux = false;
+	aux = aux || sm.isVisible();
+	aux = aux || fm.isVisible();
+	for(core.Menu menu : menus)
+	    aux = aux || menu.isVisible();
+	return aux;
+    }
+    
+    public static void closeAllMenus(){
+	sm.setVisible(false);
+	fm.setVisible(false);
+	for(core.Menu menu : menus)
+	    menu.setVisible(false);
+    }
 }

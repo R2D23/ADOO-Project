@@ -14,7 +14,6 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
 
 //Importing Static Project Variables
-import static core.Canvas.panel;
 import static core.Canvas.elements;
 
 /*Clase que implementa los menus que se asocian a los botones
@@ -163,7 +162,7 @@ public class Menu extends JComponent{
                 g2.drawLine(c[0], c[2], c[1], c[3]);
                 md.paint(MenuDrawer.MAS, g, areas.get(1));
                 md.paint(MenuDrawer.MENOS, g, areas.get(3));
-                String indice = Canvas.getIndiceZoom() + "%";
+                String indice = (int)(Canvas.zoom * 100) + "%";
                 g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, 22));
                 g2.drawChars(indice.toCharArray(), 0, indice.length(), 15, 100);
                 break;
@@ -365,11 +364,11 @@ public class Menu extends JComponent{
                 setVisible(false);
             break;
             case MAS :
-		Canvas.doZoom(10);
+		Canvas.doZoom(0.1);
 		repaint();
             break;
             case MENOS :
-		Canvas.doZoom(-10);
+		Canvas.doZoom(-0.1);
 		repaint();
             break;
         }
@@ -383,11 +382,11 @@ public class Menu extends JComponent{
                 setVisible(false);
             break;
             case UNDO :
-                Canvas.returnPast();
+                Action.undo();
                 Canvas.repaint();
             break;
             case REDO :
-                Canvas.toFuture();
+                Action.redo();
                 Canvas.repaint();
             break;
         }    

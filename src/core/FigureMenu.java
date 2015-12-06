@@ -165,8 +165,7 @@ public class FigureMenu extends JComponent{
         this.repaint();
     }
     
-    public void realizarAccion()
-    {
+    public void realizarAccion(){
         switch(areaActual)
         {
             case TRIANGLE:
@@ -185,14 +184,14 @@ public class FigureMenu extends JComponent{
                 setVisible(false);
                 seleccionado = new Line();
                 seleccionado.setFirst(center);
-                seleccionado.state = Element.GETTINGPOINTS;
+                seleccionado.setState(Element.GETTINGPOINTS);
             break;
             case IRREGULAR:
                 setVisible(false);
                 Irregular fig = new Irregular();
                 fig.setFirst(center);
                 Canvas.seleccionado = fig;
-                fig.state = Element.GETTINGPOINTS;
+                fig.setState(Element.GETTINGPOINTS);
             break;
             case TEXT:
                 canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
@@ -279,8 +278,9 @@ public class FigureMenu extends JComponent{
         return -1;
     }
     
-    public void setCenter(Point p)
-    {this.center.setLocation(p);}
+    public void setCenter(Point p){
+	center = p;
+    }
     
     public Point obtLocation()
     {return this.location;}

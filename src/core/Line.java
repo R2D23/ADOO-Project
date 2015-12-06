@@ -33,8 +33,8 @@ public class Line extends Element {
     }
     
     public Line(int finX, int finY, Color color) { //Contructor alternativo a traves de coordenadas
-        length = Math.sqrt(Math.pow(finY-posY, 2)+Math.pow(finX-posX, 2)); //Distancia entre dos puntos
-        incline = Math.atan((finY-posY)/(finX-posX));  //Calcula el angulo a traves de ARCTAN
+        length = Math.sqrt(Math.pow(finY-getPos().y, 2)+Math.pow(finX-getPos().x, 2)); //Distancia entre dos puntos
+        setIncline(Math.atan2(finX-getPos().x, finY - getPos().y));  //Calcula el angulo a traves de ARCTAN
         this.color = color;
     }
     
@@ -45,15 +45,16 @@ public class Line extends Element {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void paint(Graphics g){
+	refreshArea();
         Graphics2D g2 = (Graphics2D) g.create();
         Stroke s = new BasicStroke(grosor);
         g2.setStroke(s);
-        if(state!=GETTINGPOINTS) {
+        if(getState()!=GETTINGPOINTS) {
             g2.setColor(Color.BLACK);
-            g2.draw(area);
-            g2.fill(area);
-            if(state!=AVAILABLE)
+            g2.draw(getArea());
+            g2.fill(getArea());
+            if(getState()!=AVAILABLE)
                 g2.setColor(Util.negative(color));
             else
                 g2.setColor(color);
@@ -63,56 +64,16 @@ public class Line extends Element {
     }
     
     @Override
-    public void getArea()
-    {
-        
-        length = puntos[0].distance(puntos[1]);
-        java.awt.Rectangle r2d = new java.awt.Rectangle(posX,posY, (int)(length), (int)grosor);
-        AffineTransform atr = new AffineTransform();
-        atr.setToRotation(incline, posX, posY);
-        area = new Area(r2d);
-        area.transform(atr);
-
-    }
-    @Override
-   public void doZoom(float escala)
-    {
-        this.length *= (1+escala);  
-        getArea();
-    }
-    
-    @Override
-    public void rotate(java.awt.Point e) {
-        double Y = posY - e.getY();
-        double X = (posX + length/2) - e.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
-    }
-    
-    @Override
-    public void move(Point p)
-    {
-    }
-    
-    @Override
-    public void setLast(Point p)
-    {
+    public void setLast(Point p){
         Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GUI.GAP/2));
         puntos[1] = nuevoPunto;
-        state = Element.AVAILABLE;
-        posX = puntos[0].x;
-        posY = puntos[0].y;
+        setState(Element.AVAILABLE);
+        move(puntos[0].x, puntos[0].y);
         
         double Y = puntos[1].y - puntos[0].y;
         double X = puntos[1].x - puntos[0].x;
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente);
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
+        this.setIncline(Math.atan2(X, Y));
+        repaint();
         Canvas.seleccionado = null;
         
     }
@@ -123,4 +84,12 @@ public class Line extends Element {
     
     public Point getLast()
     {return puntos[0];}
+
+    @Override
+    public void refreshArea() {
+	length = puntos[0].distance(puntos[1]);
+        java.awt.Rectangle r2d = new java.awt.Rectangle(getPos().x, getPos().y, (int)(length), (int)grosor);
+        setArea(new Area(r2d));
+	transformArea();
+    }
 }

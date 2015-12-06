@@ -1,11 +1,6 @@
 
 package core;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
@@ -15,51 +10,44 @@ import java.awt.geom.Ellipse2D;
  */
 public class Circle extends Figure{
     
-    double radio;
+    private double radio;
+    
+    private static double recentRadio = 50;
+    
+    public Circle() {
+	super();
+	radio = recentRadio;
+    }
     
     public Circle(double radio) {
-        this.radio = radio;
-    }
-
-    Circle() {
 	super();
-	radio = 50;
+        this.radio = Math.abs(radio);
     }
     
-    @Override
-    public void getArea()
-    {
-        area = new Area(new Ellipse2D.Double(posX, posY, (int)radio,(int)radio));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+radio/2, posY+radio/2);
-        area.transform(rot);
+    public Circle(Circle c){
+	super(c);
+	this.radio = c.radio;
     }
     
-    @Override
-    public void doZoom(float escala)
-    {   
-        super.doZoom(escala);
-        this.radio *= (1+escala);
-        getArea();
-    }
-    
-    @Override
-     public void rotate(Point e) {
-        double Y = (posY + radio/2) - e.getY();
-        double X = (posX + radio/2) - e.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
-    }
-
     public double getRadius() {
 	return radio;
     }
 
     public void setRadius(Double aDouble) {
 	radio = aDouble;
-	getArea();
+	recentRadio = radio;
+	repaint();
+    }
+
+    @Override
+    public Object clone() {
+	return new Circle(this);
+    }
+
+    @Override
+    public void refreshArea() {
+	setArea(new Area(
+	new Ellipse2D.Double(getPos().x, getPos().y, radio * 2, radio * 2)));
+	transformArea();
     }
 }

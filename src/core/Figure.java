@@ -35,30 +35,31 @@ public abstract class Figure extends core.Element {
     
     public void setBgColor(Color c){
 	bgColor = new Color(c.getRGB());
-	getArea();
+	repaint();
     }
     
     public void setLnColor(Color c){
 	lnColor = new Color(c.getRGB());
-	getArea();
+	repaint();
     }
     
     public Color getBgColor(){return bgColor;}
     public Color getLnColor(){return lnColor;}
     
     @Override
-    public void draw(Graphics g){
+    public void paint(Graphics g){
+	refreshArea();
 	Graphics2D g2 = (Graphics2D)g;
-        if(state!=AVAILABLE) {
+        if(getState()!=AVAILABLE) {
             g2.setColor(Util.negative(bgColor));
-            g2.fill(area);
+            g2.fill(getArea());
             g2.setColor(Util.negative(lnColor));
-            g2.draw(area);
+            g2.draw(getArea());
         } else {
             g2.setColor(bgColor);
-            g2.fill(area);
+            g2.fill(getArea());
             g2.setColor(lnColor);
-            g2.draw(area);
+            g2.draw(getArea());
         }
     }
 }

@@ -34,6 +34,7 @@ public class Action {
     public static final int SQUARE = 9;
     public static final int NO_SIDES = 10;
     public static final int SIDE_SIZE = 11;
+    public static final int TRANSFORM = 12;
     
 //    La clase Action está diseñada para grabar las acciones del usuario
 //    para volver a realizarlas 'make()' o para deshacerlas 'rollback'
@@ -86,6 +87,8 @@ public class Action {
 	    case SIDE_SIZE:
 		prev = ((RegularPolygon) elements.get(id)).getLongSide();
 		break;
+	    case TRANSFORM:
+		prev = ((Element) elements.get(id)).clone();
 	}
     }
     

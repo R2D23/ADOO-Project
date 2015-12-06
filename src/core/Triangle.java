@@ -53,14 +53,14 @@ public class Triangle extends Rectangle{
         int coordX[] = new int[3];
         switch(type) {
             case EQUILATERAL_TRIANGLE: case ISOSCELES_TRIANGLE:
-                coordX[0] = posX;
-                coordX[1] = (int)(posX+width/2);
-                coordX[2] = (int)(posX+width);
+                coordX[0] = getPos().x;
+                coordX[1] = (int)(getPos().x+width/2);
+                coordX[2] = (int)(getPos().x+width);
             break;
             case RIGHT_TRIANGLE:
-                coordX[0] = posX;
-                coordX[1] = posX;
-                coordX[2] = (int)(posX+width);
+                coordX[0] = getPos().x;
+                coordX[1] = getPos().x;
+                coordX[2] = (int)(getPos().x+width);
             break;
         }
         return coordX;
@@ -70,62 +70,38 @@ public class Triangle extends Rectangle{
         int coordY[] = new int[3];
         switch(type) {
             case EQUILATERAL_TRIANGLE: 
-                coordY[0] = (int)(posY+width*Math.sin(Math.PI/3));
-                coordY[1] = posY;
-                coordY[2] = (int)(posY+width*Math.sin(Math.PI/3));
+                coordY[0] = (int)(getPos().y+width*Math.sin(Math.PI/3));
+                coordY[1] = getPos().y;
+                coordY[2] = (int)(getPos().y+width*Math.sin(Math.PI/3));
             break;
             case ISOSCELES_TRIANGLE:
-                coordY[0] = (int)(posY+height);
-                coordY[1] = posY;
-                coordY[2] = (int)(posY+height);
+                coordY[0] = (int)(getPos().y+height);
+                coordY[1] = getPos().y;
+                coordY[2] = (int)(getPos().y+height);
             break;    
             case RIGHT_TRIANGLE:
-                coordY[0] = posY;
-                coordY[1] = (int)(posY+height);
-                coordY[2] = (int)(posY+height);
+                coordY[0] = getPos().y;
+                coordY[1] = (int)(getPos().y+height);
+                coordY[2] = (int)(getPos().y+height);
             break;
         }
         return coordY;
     }
     
-    public void getArea()
-    {
-        pointsX = getCoordsX();
-        pointsY = getCoordsY();
-        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+width/2, posY+height/2);
-        area.transform(rot);
-    }
-    
-    @Override
-    public void doZoom(float escala)
-    {
-        super.doZoom(escala);
-        this.width *= (1+escala);     
-        this.height *= (1+escala);
-        pointsX = getCoordsX();
-        pointsY = getCoordsY();
-        getArea();
-    }
-    
-    @Override
-    public void rotate(Point e) {
-        double Y = (posY + height/2) - e.getY();
-        double X = (posX + width/2) - e.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
-    }
-    
     public void setType(int i){
 	type = i;
-	getArea();
+	repaint();
     }
     
     public int getType(){
 	return type;
+    }
+    
+    @Override
+    public void refreshArea(){
+	pointsX = getCoordsX();
+        pointsY = getCoordsY();
+        setArea(new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length)));
+	transformArea();
     }
 }

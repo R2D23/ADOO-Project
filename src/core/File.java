@@ -21,7 +21,6 @@ import javax.swing.JFileChooser;
  */
 public class File {
     String name;
-    Canvas canvas;
     
     public void saveFile(){
         JFileChooser fcs = new JFileChooser();
@@ -31,7 +30,7 @@ public class File {
             name = fcs.getSelectedFile().getName();
             try {
                 ObjectOutputStream salida=new ObjectOutputStream(new FileOutputStream(name+".lz"));
-                salida.writeObject(canvas.elements);
+                salida.writeObject(Canvas.elements);
                 salida.close();
             } catch (IOException ex) {
                 Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
@@ -45,10 +44,10 @@ public class File {
         if(opc == JFileChooser.APPROVE_OPTION){
             try {
               ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(fco.getSelectedFile().getPath()));
-              canvas.elements = (ArrayList<Element>)entrada.readObject();
-              for(int i = 0; i < canvas.elements.size(); i++)
-                canvas.elements.get(i).getArea();
-              canvas.repaint();
+              Canvas.elements = (ArrayList<Element>)entrada.readObject();
+              for(int i = 0; i < Canvas.elements.size(); i++)
+                Canvas.elements.get(i).getArea();
+              Canvas.repaint();
               name = fco.getSelectedFile().getName();
             } catch (Exception ex) {
                 Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);

@@ -99,15 +99,15 @@ public class ConfFrame extends JFrame{
 		case POSITION:
 		    name.setText("Posición: ");
 		    aux1.setText("X: ");    aux2.setText("Y: ");
-		    field1.setText(String.valueOf(seleccionado.posX));
-		    field2.setText(String.valueOf(seleccionado.posY));
+		    field1.setText(String.valueOf(seleccionado.getPos().x));
+		    field2.setText(String.valueOf(seleccionado.getPos().y));
 		    
 		    add(name);	add(aux1);  add(field1);
 		    add(aux2);	add(field2);
 		    break;
 		case ANGLE:
 		    name.setText("Ángulo: ");
-		    field1.setText(String.valueOf(seleccionado.incline));
+		    field1.setText(String.valueOf(seleccionado.getInclination()));
 		    
 		    add(name); add(field1);
 		    break;
@@ -206,7 +206,7 @@ public class ConfFrame extends JFrame{
 		    } catch(NumberFormatException nfe){
 			
 		    } finally {
-			field1.setText(String.valueOf(seleccionado.incline));
+			field1.setText(String.valueOf(seleccionado.getInclination()));
 		    }
 		} break;
 		case BCOLOR:{
@@ -259,11 +259,9 @@ public class ConfFrame extends JFrame{
 		    try {
 			x1 = Integer.parseInt(field1.getText());
 			y1 = Integer.parseInt(field2.getText());
-			if (x1 < 0 || y1 < 0) {
-			    throw new NumberFormatException();
-			}
+			if (x1 <= 0 || y1 <= 0) throw new NumberFormatException();
 			setSquare(x1, y1);
-		    }catch(NumberFormatException nfe){
+		    } catch(NumberFormatException nfe){
 			
 		    } finally {
 			field1.setText(String.valueOf(((Rectangle) seleccionado).getWidth()));
@@ -438,10 +436,11 @@ public class ConfFrame extends JFrame{
     }
     
     public static void setSquare(int x, int y){
+	System.out.println("Está ajustando Rectángulo");
 	if(!isCreating)
 	Action.createAction(Action.SQUARE, Canvas.elements.indexOf(seleccionado), new Point(x, y));
 	((Rectangle) seleccionado).setWidth(x);
-	((Rectangle) seleccionado).setWidth(y);
+	((Rectangle) seleccionado).setHeight(y);
     }
     
     public static void setFaces(int n){

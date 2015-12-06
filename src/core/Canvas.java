@@ -12,9 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 //Importing Static Project Variables
-import static core.GUI.frame;
-import static core.GUI.fm;
-import static core.GUI.sm;
 import java.awt.event.MouseAdapter;
 
 /**
@@ -27,7 +24,7 @@ public class Canvas {
     public static ArrayList<Element> pastelements;
     public static ArrayList<Element> futureelements;
     public static Element seleccionado;
-    private static int indiceZoom;
+    public static double zoom = 1;
     
  /* 
     El uso de este método estático es para inicializar el Canvas, su panel y
@@ -37,7 +34,6 @@ public class Canvas {
 	pastelements=null;
         futureelements=null;
         seleccionado = null;
-        indiceZoom = 100;
         elements = new ArrayList<>();
 	
 	panel = new JPanel(){
@@ -46,7 +42,7 @@ public class Canvas {
 		super.paint(g);
 		g.clearRect(0, 0, WIDTH, HEIGHT);
 		for(int i = 0; i < elements.size(); i++)
-		    elements.get(i).draw(g);
+		    elements.get(i).paint(g);
 	    }
 	};
 	
@@ -112,64 +108,39 @@ public class Canvas {
 	elements.remove(i);
     }
     
-    public static void doZoom(int escala)
-    {
-        System.out.println("escala : " + (indiceZoom + escala));
-        if(indiceZoom + escala <= 0)
-            JOptionPane.showMessageDialog(null, "No se puede hacer mas zoom");
-        else
-        {
-            indiceZoom += escala;
-            panel.setSize(  (int)(panel.getWidth()*indiceZoom/100),
-			    (int)(panel.getHeight()*indiceZoom/100));
-            for(Element e : elements)
-               e.doZoom(escala/100);
-            panel.repaint();
+    public static void doZoom(double escala){
+        if(zoom + escala <= 0)
+            JOptionPane.showMessageDialog(null, "¡No se puede hacer más zoom!");
+        else{
+	    zoom += escala;
+            repaint();
         }
     }
     
     public static void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1)
-        {
-            switch(frame.getCursor().getName())//if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
+	GUI.closeAllMenus();
+        if(e.getButton() == MouseEvent.BUTTON1){
+            switch(GUI.getCursor().getName())//if((this.getCursor().getName().equals("mano")) && (e.getButton() == MouseEvent.BUTTON1))
             {
                 case "mano":
                     if(seleccionado == null){
-                        int sel = sm.cualFigura(e.getPoint());
-                        if(sel >= 0)
-                        {   
-                            seleccionado = elements.get(sel);
-                            seleccionado.state = Element.BUSY;
-                            elements.remove(seleccionado);//Esto es para que lo traiga al frente
-                            elements.add(seleccionado);
-                            sm.setCenter(e.getPoint());
-                            sm.obtLocation().setLocation(e.getX() - sm.SIZE/2 + GUI.GAP, e.getY() - sm.SIZE/2 + GUI.GAP);
-                            sm.setLocation(sm.obtLocation());
-                            repaint();
-                            sm.setVisible(!sm.isVisible());
-                        }
+                            GUI.showSelectionMenu(e);
                     }
                     else{
-                        seleccionado.state = Element.AVAILABLE;
-                        seleccionado.draw(panel.getGraphics());
+                        seleccionado.setState(Element.AVAILABLE);;
+                        seleccionado.paint(panel.getGraphics());
                         seleccionado = null;
                     }
                        
                 break;
                 case "lapiz" :
-                    if((seleccionado != null) && (seleccionado.state == Element.GETTINGPOINTS))
-                    {
+                    if((seleccionado != null) && (seleccionado.getState() == Element.GETTINGPOINTS)){
                         System.out.println("desde1");
                         seleccionado.setLast(e.getPoint());
                         repaint();
                     }
-                    else
-                    {
-                        fm.setSize(fm.SIZE, fm.SIZE);
-                        fm.obtLocation().setLocation(e.getX() - fm.SIZE/2 + GUI.GAP, e.getY() - fm.SIZE/2 + GUI.GAP);
-                        fm.setCenter(new Point(e.getPoint().x,e.getPoint().y));
-                        fm.setLocation(fm.obtLocation());
-                        fm.setVisible(!fm.isVisible());
+		    else {
+			GUI.showFigureMenu(e);
                     }
                 break;
             }
@@ -178,7 +149,7 @@ public class Canvas {
     
     public static void mouseMoved(MouseEvent e){
         if(seleccionado != null){
-            switch(seleccionado.state)
+            switch(seleccionado.getState())
             {
                 case Element.MOVING:
                     seleccionado.move(e.getX(), e.getY());                    
@@ -197,9 +168,8 @@ public class Canvas {
         }
     }
     
-    
-    public static int getIndiceZoom()
-    {return indiceZoom;}
+    public static double getIndiceZoom()
+    {return zoom;}
     
     public static void repaint(){
 	panel.repaint();

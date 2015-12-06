@@ -10,10 +10,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,7 +22,10 @@ public class Irregular extends Figure {
     public ArrayList<Point> vertices;
     public Point first;
     
-    public Irregular() {
+    public static final int DISTANCE_TRESHOLD = 10;
+    
+    public Irregular(){
+	super();
         vertices = new ArrayList<Point>();
         this.bgColor = Color.BLUE;
         this.lnColor = Color.CYAN;
@@ -36,10 +37,10 @@ public class Irregular extends Figure {
     
    
     @Override
-    public void draw(Graphics g) {
+    public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        if(state!=GETTINGPOINTS) {
-            super.draw(g);
+        if(getState()!=GETTINGPOINTS) {
+            super.paint(g);
         } else {
             for(int i=0; i<vertices.size()-1; i++) {
                 g2.drawLine(vertices.get(i).x, vertices.get(i).y, vertices.get(i+1).x, vertices.get(i+1).y);
@@ -62,21 +63,8 @@ public class Irregular extends Figure {
             coord[i] = vertices.get(i).y;
         return coord;
     }
-
-    @Override
-    public void getArea() {
-        int[] pointsX;
-        int[] pointsY;
-        pointsX = getCoordsX();
-        pointsY = getCoordsY();
-        area = new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, first.x, first.y);
-        area.transform(rot);
-    }
     
-    public void setFirst(Point p)
-    {
+    public void setFirst(Point p){
         first = p;
         vertices.add(first);
     }
@@ -86,40 +74,24 @@ public class Irregular extends Figure {
     
     public Point getLast()
     {return vertices.get(vertices.size() - 1);}
-    
+        
+    //Este metodo decide si es el ultimo punto
     @Override
-    public void move(int posX, int posY)
-    {
-        int dx = posX - first.x;
-        int dy = posY - first.y;
-        for (Point vertice : vertices) 
-            vertice.translate(dx, dy);
-        getArea();
-    }
-    
-    @Override
-    public void rotate(Point p)
-    {
-        double Y = first.y - p.getY();
-        double X = first.x- p.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
-    }
-    
-    @Override
-    public void setLast(Point p)//Este metodo decide si es el ultimo punto
-    {
-        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GUI.GAP/2));
-        if(first.distance(nuevoPunto) > 10)//si no es el ultimo, solo agrega el punto a la lista
-            this.newPoint(nuevoPunto);
-        else
-        {
-            this.getArea();
-            this.state = Element.AVAILABLE;
+    public void setLast(Point p){
+        if(first.distance(p) > DISTANCE_TRESHOLD)//si no es el ultimo, solo agrega el punto a la lista
+            newPoint(p);
+	else {
+            getArea();
+            setState(Element.AVAILABLE);
             seleccionado = null;
         }
+    }
+
+    @Override
+    public void refreshArea() {
+	Area area = new Area(new java.awt.Polygon(
+		getCoordsX(), getCoordsY(), getCoordsX().length));
+	setArea(area);
+        transformArea();
     }
 }
