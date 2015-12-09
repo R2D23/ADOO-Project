@@ -25,6 +25,7 @@ public class GUI {
     public static PanelColaboradores pc;
     public static JFrame frame;
     public static Dibujante dibujante;
+    public static String permiso;//El permiso que el dibujante tiene sobre este archivo
     
     //The UI parameters
     public final static int GAP = 50;
@@ -207,4 +208,7 @@ public class GUI {
     
     public static void setDibujante(String s)
     {dibujante.nomUsuario = s;}
+    
+    public static PanelColaboradores getPanelColaboradores()
+    {return pc;}
 }

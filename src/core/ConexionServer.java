@@ -7,7 +7,7 @@ import java.net.*;
  * @author Angeles
  */
 public class ConexionServer {
-    public static final String SERVER = "192.168.0.9";
+    public static final String SERVER = "192.168.0.40";
     public static final int puertoRecibe = 5678;
     public static final int puertoEnvia = 7777;
     
@@ -20,8 +20,7 @@ public class ConexionServer {
     public static final int registrarUsuario = 6;
     public static final short enviarListaUsuarios = 7;
     public static final short enviarListaColaboradores = 8;
-    
-    
+    public static final short enviarListaArchivos = 9;    
     
     private DatagramSocket cl = null;
     private InetAddress dirServer = null;
@@ -75,6 +74,7 @@ public class ConexionServer {
         try
         {
             cl = new DatagramSocket(puertoRecibe);
+            cl.setReuseAddress(true);
             //cl.setReuseAddress(true);
             DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
             cl.receive(p);
@@ -91,5 +91,45 @@ public class ConexionServer {
     
     public void cerrarConexion()
     {cl.close();}
+    
+    public void enviarListaElementos(java.util.ArrayList<Element> lista)
+    {
+        try
+        {
+            //DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
+            cl = new DatagramSocket();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(lista);
+            oos.flush();
+            
+            byte [] buf = baos.toByteArray();
+            
+            DatagramPacket p = new DatagramPacket(buf, buf.length, dirServer, puertoEnvia);
+            cl.send(p);
+            cl.close();
+        }
+        catch(Exception e)
+        {e.printStackTrace();}
+    }
+    
+    public java.util.ArrayList<Element> recibirListaElementos()
+    {
+        try
+        {
+            cl = new DatagramSocket(puertoRecibe);
+            //cl.setReuseAddress(true);
+            DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
+            System.out.println("EsperandoLista");
+            cl.receive(p);
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(p.getData()));
+            cl.close();
+            return (java.util.ArrayList<Element>)ois.readObject();
+        }
+        catch(Exception e)
+        { e.printStackTrace();}
+        
+        return null;
+    }
     
 }

@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import static java.awt.Font.BOLD;
-import static java.awt.Font.PLAIN;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -15,12 +14,7 @@ import java.awt.geom.Area;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import core.*;
-import java.awt.BasicStroke;
-import java.awt.FlowLayout;
-import java.awt.Label;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
+
 /**
  *
  * @author Angeles
@@ -30,7 +24,7 @@ public class PanelColaboradores extends JComponent{
     private final JScrollPane js;
     private final Area botonAgregar;
     private final Area botonEliminar;
-    private Label owner;
+    private String owner;
     private String title;
     private String permisos;
     
@@ -39,9 +33,6 @@ public class PanelColaboradores extends JComponent{
         setLocation(0,0);
         setSize(new Dimension(300, 500));
         setVisible(false);
-        //setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        //setLayout(new FlowLayout());
-        owner = new Label();
         listaColaboradores = new JList<>();
         listaColaboradores.setSize(230,150);
         listaColaboradores.setVisible(true);
@@ -53,7 +44,7 @@ public class PanelColaboradores extends JComponent{
         if(title == null)
         {
             title = "El archivo no ha sido guardado";
-            owner.setText("El archivo no ha sido guardado");
+            owner = "El archivo no ha sido guardado";
             String [] aux = {"No hay colaboradores"};
             listaColaboradores.setListData(aux);
             permisos = "El archivo no ha sido guardado";
@@ -61,7 +52,7 @@ public class PanelColaboradores extends JComponent{
         else
         {
             title = GUI.getFile().getName();
-            owner.setText( GUI.getFile().getOwner());
+            owner = GUI.getFile().getOwner();
             permisos = "Editar";//if(owner = )
         }
         
@@ -73,7 +64,7 @@ public class PanelColaboradores extends JComponent{
         js.setSize(listaColaboradores.getSize());
         js.setViewportView(listaColaboradores);
         js.setLocation(listaColaboradores.getLocation());
-        //this.add(js);
+        this.add(js);
 
         botonAgregar = new Area(new java.awt.Rectangle(60, 400, 60, 60));
         botonEliminar = new Area(new java.awt.Rectangle(180, 400, 60, 60));
@@ -83,10 +74,7 @@ public class PanelColaboradores extends JComponent{
             public void mouseClicked(MouseEvent e)
             { activarBotones(e.getPoint());}
         });
-        add(owner);
-        owner.setSize(50,50);
-        owner.setLocation(50,50);
-        owner.setBackground(Util.normalColor);
+        
     }
     
     @Override
@@ -102,8 +90,8 @@ public class PanelColaboradores extends JComponent{
         g2.drawLine(this.getWidth() - 1, 250, this.getWidth() - 1, 500);
         g2.drawLine(0,this.getHeight() - 1, this.getWidth() - 1, this.getHeight() - 1);
         
-        //listaColaboradores.setBackground(Util.normalColor);
-        //listaColaboradores.repaint();
+        listaColaboradores.setBackground(Util.normalColor);
+        listaColaboradores.repaint();
         js.getVerticalScrollBar().repaint();
         
         g2.setFont(new Font("Verdana", BOLD, 16));
@@ -118,9 +106,7 @@ public class PanelColaboradores extends JComponent{
         g2.drawString(GUI.dibujante.nomUsuario, 50, 165);
         g2.setColor(Color.blue);
         g2.drawString(title,50,65);
-        owner.paint(g);
-        System.out.println(owner.getLocation());
-        //g2.drawString(owner,50, 115);
+        g2.drawString(owner,50, 115);
         g2.drawString(permisos, 50, 215);
         MenuDrawer md = new MenuDrawer();
         md.paint(MenuDrawer.ADDUSER, g, botonAgregar);
@@ -145,4 +131,7 @@ public class PanelColaboradores extends JComponent{
             ac.setVisible(true);
         }
     }
+    
+    public void actualizarValores(String owner, String nombre, String permisos)
+    {this.owner = owner;    this.title = nombre; this.permisos = permisos;}
 }

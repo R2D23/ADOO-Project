@@ -36,13 +36,6 @@ public class SelectionMenu extends JComponent{
     
     public SelectionMenu(){
         
-        /*Basicamente en este método se define un JComponent y 
-        dentro de este se dibuja la figura de dona. El ArrayList
-        areas es para definir los "botones" y que estos se coloreen 
-        al momento de pasar el cursor del Mouse sobre ellos, además
-        de poder detectar el momento en que se da clic sobre alguno
-        de ellos.*/
-        //canvas = this.canvas = ((GUI)getParent()).getCanvas();
 	setSize(SIZE, SIZE);
 	location = new Point();
 	center = new Point();

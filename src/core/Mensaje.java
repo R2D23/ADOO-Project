@@ -27,22 +27,29 @@ public class Mensaje implements Serializable{
         remitente = t;
     }
     
+    public Mensaje(boolean b, Object o)
+    {confirmacion = b; multiusos = o;}
+    
     public Mensaje(boolean co)//Este es para cuando se envian confirmaciones
     {confirmacion = co;}
     
     public Mensaje(boolean co, int op)//este para cuando se envian confirmaciones con causas de error
     {confirmacion = co; opCode = op;}
     
-    public Mensaje(int oc, String r, Object o)//Registro, el objeto son los datos extras
+    public Mensaje(boolean b, String r, String s)
+    {confirmacion = b; remitente = r; sData = s;}
+    
+    public Mensaje(int oc, String r, Object o)//Registro, el objeto son los datos extras, tambien se usa para obtener la lista de archivos
     {
         opCode = oc;
         remitente = r;
         multiusos = o;
     }
     
-    public Mensaje(int oc, String r, String nom, boolean ft, Object arch)
+    
+    public Mensaje(int oc, String r, String nom, boolean ft)
     {
-        opCode = oc; remitente = r; sData = nom; confirmacion = ft; multiusos = arch;
+        opCode = oc; remitente = r; sData = nom; confirmacion = ft;
     }
     
     public int getOpCode()
