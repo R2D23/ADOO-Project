@@ -27,6 +27,8 @@ public class PanelColaboradores extends JComponent{
     private String owner;
     private String title;
     private String permisos;
+    AdministradorColaboradores ac;
+    private boolean puedeAgregar;
     
     public PanelColaboradores()
     {
@@ -75,6 +77,8 @@ public class PanelColaboradores extends JComponent{
             { activarBotones(e.getPoint());}
         });
         
+        ac = new AdministradorColaboradores();
+        puedeAgregar = true;
     }
     
     @Override
@@ -109,29 +113,42 @@ public class PanelColaboradores extends JComponent{
         g2.drawString(owner,50, 115);
         g2.drawString(permisos, 50, 215);
         MenuDrawer md = new MenuDrawer();
-        md.paint(MenuDrawer.ADDUSER, g, botonAgregar);
-        md.paint(MenuDrawer.DELETEUSER, g, botonEliminar);
+        
+        if(this.owner.equals(GUI.dibujante.nomUsuario))
+        {
+            md.paint(MenuDrawer.ADDUSER, g, botonAgregar);
+            md.paint(MenuDrawer.DELETEUSER, g, botonEliminar);
+        }
         
     }
     
     public void activarBotones(Point p)
     {
+        if(!puedeAgregar)
+            return;
+        
         if(botonAgregar.contains(p))
-        {
-            AdministradorColaboradores ac = new AdministradorColaboradores(0);
-            ac.setVisible(true);
-        }
+            ac.setVisible(true,0);
         else if(botonEliminar.contains(p))
-        {
-            //JOptionPane.showMessageDialog(null, "Eliminar Colaboradores");
-            /*ConexionServer cs = new ConexionServer();
-            Mensaje eliminar = new Mensaje(ConexionServer.eliminarColaborador, GUI.getFile().getOwner(), "");
-            cs.enviarMensaje(eliminar);*/
-            AdministradorColaboradores ac = new AdministradorColaboradores(1);
-            ac.setVisible(true);
-        }
+            ac.setVisible(true,1);
     }
     
     public void actualizarValores(String owner, String nombre, String permisos)
-    {this.owner = owner;    this.title = nombre; this.permisos = permisos;}
+    {
+        this.owner = owner;    this.title = nombre; this.permisos = permisos;
+        puedeAgregar = this.owner.equals(GUI.dibujante.nomUsuario);
+    }
+    
+    public void actualizarListaColaboradores(java.util.ArrayList<String> editores, java.util.ArrayList<String> observadores)
+    {
+        java.util.ArrayList<String> lista = new java.util.ArrayList<>();//(java.util.ArrayList<String>)editores.clone();
+        for(String s : editores)
+            lista.add( s + " * ");
+        lista.addAll(observadores);
+        String [] aux = new String [lista.size()];
+        listaColaboradores.setListData(lista.toArray(aux));
+    }
+    
+    public JList getListaColaboradores()
+    {return listaColaboradores;}
 }

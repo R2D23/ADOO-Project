@@ -46,12 +46,19 @@ public class Mensaje implements Serializable{
         multiusos = o;
     }
     
+    public Mensaje(boolean b, String r, String s, Object o)
+    {confirmacion = b; remitente = r; sData = s; multiusos = o;}
     
     public Mensaje(int oc, String r, String nom, boolean ft)
     {
         opCode = oc; remitente = r; sData = nom; confirmacion = ft;
     }
     
+    public Mensaje(int oc, String r, String nom, Object o)
+    {
+        opCode = oc; remitente = r; sData = nom; multiusos = o;
+    }
+  
     public int getOpCode()
     {return opCode;}
     
@@ -66,4 +73,7 @@ public class Mensaje implements Serializable{
     
     public Object getObject()
     {return multiusos;}
+    
+    public void setBoolean(boolean b)
+    {confirmacion = b;}
 }

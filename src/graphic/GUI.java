@@ -120,7 +120,15 @@ public class GUI {
 	    frame.getContentPane().add(toolKit.get(i));
 	
 	
-	frame.addComponentListener(new ComponentListener(){
+        
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                ConexionServer cs = new ConexionServer();
+                cs.enviarMensaje(new Mensaje(ConexionServer.cerrarSesion,dibujante.nomUsuario, ""));
+            }
+        });
+	/*frame.addComponentListener(new ComponentListener(){
 
 	    @Override
 	    public void componentResized(ComponentEvent ce) {
@@ -136,7 +144,7 @@ public class GUI {
 	    @Override
 	    public void componentHidden(ComponentEvent ce) {}
 	    
-	});
+	});*/
 	
 	frame.pack();
 	updateGUI();
@@ -211,4 +219,6 @@ public class GUI {
     
     public static PanelColaboradores getPanelColaboradores()
     {return pc;}
+    
+    
 }

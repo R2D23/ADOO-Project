@@ -1,10 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package graphic;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -30,6 +25,9 @@ public class Members extends CustomButton{
     
     public void muestraPanel()
     {
+        if(!getCursor().equals(Cursor.getDefaultCursor()))
+            return;
+        
         if(pc.isVisible())
         {
             this.setLocation(0, this.getY());

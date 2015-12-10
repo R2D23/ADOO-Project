@@ -1,10 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package graphic;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,16 +17,14 @@ public class ToolButton extends CustomButton{
 	gd = new GraphicDrawer();
 	this.id = id;
 	setContentAreaFilled(false);
-        
         this.addMouseListener(new MouseAdapter()
         {
            @Override
            public void mouseClicked(MouseEvent me) 
            {
                 if(menu != null)
-                {   Point centroBoton = new Point(getX() + getWidth()/2, getY() + getHeight()/2);
-                    menu.setLocation((int)centroBoton.getX() - Menu.SIZE/2, (int)centroBoton.getY() - Menu.SIZE/2);
-                    menu.setVisible(true);
+                {   
+                    mostrarMenu();
                 }
            }
         });
@@ -53,4 +46,13 @@ public class ToolButton extends CustomButton{
     
     public void setMenu(Menu m)
     {menu = m;}
+    
+    private void mostrarMenu()
+    {
+        if(!getCursor().getName().equals(Cursor.getDefaultCursor().getName()))
+            return;
+        
+        Point centroBoton = new Point(getX() + getWidth()/2, getY() + getHeight()/2);
+        menu.setLocation((int)centroBoton.getX() - Menu.SIZE/2, (int)centroBoton.getY() - Menu.SIZE/2);
+        menu.setVisible(true);}
 }

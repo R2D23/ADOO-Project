@@ -7,7 +7,7 @@ import java.net.*;
  * @author Angeles
  */
 public class ConexionServer {
-    public static final String SERVER = "192.168.0.40";
+    public static final String SERVER = "192.168.0.9";
     public static final int puertoRecibe = 5678;
     public static final int puertoEnvia = 7777;
     
@@ -19,7 +19,7 @@ public class ConexionServer {
     public static final int modificaciones = 5;
     public static final int registrarUsuario = 6;
     public static final short enviarListaUsuarios = 7;
-    public static final short enviarListaColaboradores = 8;
+    public static final short cerrarSesion = 8;
     public static final short enviarListaArchivos = 9;    
     
     private DatagramSocket cl = null;
@@ -97,6 +97,7 @@ public class ConexionServer {
         try
         {
             //DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
+            Thread.sleep(5);
             cl = new DatagramSocket();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);

@@ -183,7 +183,8 @@ public class Login extends javax.swing.JFrame {
             System.out.println("se ha recibido algo2");
             if(recibido.getConfirmacion())
             {
-                this.setVisible(false);
+                this.dispose();
+                recibirNotificaciones();
                 graphic.GUI.initializeGUI();
                 GUI.setDibujante(this.jTextField1.getText());
             }
@@ -230,6 +231,23 @@ public class Login extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Login().setVisible(true);
         });
+    }
+    
+    public void recibirNotificaciones()
+    {
+        ConexionServer cs = new ConexionServer();
+        Mensaje m = cs.recibirMensaje();
+        if(!m.getConfirmacion()) return;
+        System.out.println("Recibiendo notificacione");
+        
+        String [] nuevosArchivos = (String [])m.getObject();
+        
+        String mensaje = "Has sido invitado a ";
+        
+        for(String s : nuevosArchivos)
+            mensaje += (s.charAt(s.length() - 1) == '1' ? "editar" : "observar") + " el archivo " + s.substring(0, s.length() - 1) + "\n"; 
+        mensaje += "Puedes acceder a estos archivos mediante el menú abrir";
+        JOptionPane.showMessageDialog(GUI.frame, mensaje, "Notificaciones", JOptionPane.PLAIN_MESSAGE);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
