@@ -16,8 +16,8 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
 
 //Importing Static Project Variables
-import static graphic.Canvas.panel;
 import static graphic.Canvas.elements;
+import core.Action;
 
 /*Clase que implementa los menus que se asocian a los botones
     Estos menus son:
@@ -53,7 +53,6 @@ public class Menu extends JComponent{
         
         this.setLocation(b.getLocation());//se asocia la localización del menu con la del boton que lo mando llamar
         
-        //dado que cada menu es diferente, se definen diferentes areas para cada uno
         switch (b.getActionCommand()) {
             case "file":
                 obtenerAreasFileMenu();
@@ -85,6 +84,7 @@ public class Menu extends JComponent{
                 switch (b.getActionCommand()) {
                 case "file":
                     clicFileMenu();
+                    areaActual = -1;
                     break;
                 case "lupa":
                     clicZoomMenu();
@@ -92,17 +92,14 @@ public class Menu extends JComponent{
                 case "redo-menu":
                     clicRedoMenu();
                     break;
-        }
+                }
+                
            }
         });
 
         this.setVisible(false);
     }
 
-    /*Esta funcion es un intermedio entre el MouseMotionListener y la clase actual.
-    Dado que desde una clase interior no se pueden modificar atributos de la clase
-    exterior, se hizo enta funcion.*/
-    
     public void updateMenu(int noArea)
     {
         areaActual = noArea;
@@ -165,7 +162,7 @@ public class Menu extends JComponent{
                 g2.drawLine(c[0], c[2], c[1], c[3]);
                 md.paint(MenuDrawer.MAS, g, areas.get(1));
                 md.paint(MenuDrawer.MENOS, g, areas.get(3));
-                String indice = Canvas.getIndiceZoom() + "%";
+                String indice = (int)(Canvas.zoom*100) + "%";
                 g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, 22));
                 g2.drawChars(indice.toCharArray(), 0, indice.length(), 15, 100);
                 break;
@@ -340,12 +337,22 @@ public class Menu extends JComponent{
                     }
                     setVisible(false);    
                 }
+                else
+                {
+                    Canvas.elements = new ArrayList<>();
+                    Canvas.lockCompartidos.lock();
+                    try
+                    {Canvas.compartidos = new ArrayList<>();}
+                    finally
+                    {Canvas.lockCompartidos.unlock();}
+                    GUI.setTitle( "Lienzo en blanco - iDraw");
+                    Canvas.repaint();
+                }
                             
             break;
             case SAVE :
                 File archivo = GUI.getFile();
                 archivo.saveFile();
-                GUI.setTitle(archivo.getName() + " - iDraw");
                 GUI.repaint();
                 setVisible(false);    
                 
@@ -367,11 +374,11 @@ public class Menu extends JComponent{
                 setVisible(false);
             break;
             case MAS :
-		Canvas.doZoom(10);
-		repaint();
+		Canvas.doZoom(0.1);
+		this.repaint();
             break;
             case MENOS :
-		Canvas.doZoom(-10);
+		Canvas.doZoom(-0.1);
 		repaint();
             break;
         }
@@ -385,16 +392,23 @@ public class Menu extends JComponent{
                 setVisible(false);
             break;
             case UNDO :
-                Canvas.returnPast();
+                Canvas.lockCompartidos.lock();
+                    Action.undo();
+                Canvas.lockCompartidos.unlock();
                 Canvas.repaint();
+                this.repaint();
             break;
             case REDO :
-                Canvas.toFuture();
+                Canvas.lockCompartidos.lock();
+                    Action.redo();
+                Canvas.lockCompartidos.unlock();
                 Canvas.repaint();
+                this.repaint();
             break;
         }    
     }
     
-    
+
+
 }
 

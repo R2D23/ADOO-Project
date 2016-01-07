@@ -1,15 +1,15 @@
 
 package core;
 
+import graphic.Canvas;
+import static graphic.Canvas.zoom;
+import graphic.GUI;
+import graphic.PanelConfig;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.Serializable;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -25,48 +25,54 @@ public class Imagen extends Element implements Serializable{
     ImageIcon img;
     public Imagen(String s)
     {
+        super();
         src = s;
         img = new ImageIcon(src);
         width = img.getIconWidth();
         height = img.getIconHeight();
-        getArea();
-        this.posX = 0;
-        this.posY = 0;
-        this.incline = 0;
+        //this.posX = 0;
+        //this.posY = 0;
+        //this.incline = 0;
     }
     
     @Override
-    public void draw(Graphics g)
+    public void paint(Graphics g)
     {
+        refreshArea();
         Graphics2D g2 = (Graphics2D)(g.create()); 
-        g2.rotate(incline, posX + width/2,posY + height/2);
-        g2.drawImage(img.getImage(), posX, posY, width, height,null);
-    }
-
-    @Override
-    public void getArea() {
-        area = new Area(new java.awt.Rectangle(posX, posY, (int)width, (int)height));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+width/2, posY+height/2);
-        area.transform(rot);
+        g2.rotate(getInclination(), getPos().x + width/2,getPos().y + height/2);
+        g2.scale(zoom, zoom);
+        g2.drawImage(img.getImage(), getPos().x, getPos().y, width, height,null);
     }
     
+    
     @Override
-    public void doZoom(float escala)
+    public void refreshArea()
     {
-        this.height *= (1+escala);  
-        this.width *= (1+escala);
-        getArea();
+        setArea(new Area(new java.awt.Rectangle(getPos().x, getPos().y, (int)width, (int)height)));
+        transformArea();
     }
-
+    
+   
+    
     @Override
-    public void rotate(java.awt.Point e) {
-        double Y = (posY + height/2) - e.getY();
-        double X = (posX + width/2) - e.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
+    public void configure()
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.IMAGE);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Modificar", "Cancelar"};
+        Object [] valores = new Object[2];
+        valores[0] = this.width;
+        valores[1] = this.height;
+        pc.setValoresImagen(valores);
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Configurar Circulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresImagen();
+            width = (int)datos[0];
+            height = (int)datos[1];
+        }
+        Canvas.repaint();
     }
+    
 }

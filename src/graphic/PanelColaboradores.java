@@ -128,9 +128,9 @@ public class PanelColaboradores extends JComponent{
             return;
         
         if(botonAgregar.contains(p))
-            ac.setVisible(true,0);
+            ac.mostrar(0);
         else if(botonEliminar.contains(p))
-            ac.setVisible(true,1);
+            ac.mostrar(1);
     }
     
     public void actualizarValores(String owner, String nombre, String permisos)

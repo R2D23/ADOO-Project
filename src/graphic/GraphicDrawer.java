@@ -5,7 +5,6 @@
  */
 package graphic;
 import java.awt.*;
-import javax.swing.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;

@@ -17,6 +17,11 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import javax.swing.*;
 import core.Element;
+import core.Action;
+import static graphic.Canvas.elements;
+import static graphic.Canvas.compartidos;
+import static graphic.Canvas.seleccionadoTemporal;
+import static graphic.Canvas.seleccionadoCompartidos;
 
 /*Esta es la clase que implementa el menú circular de seleccion*/
 public class SelectionMenu extends JComponent{
@@ -24,7 +29,7 @@ public class SelectionMenu extends JComponent{
     public static final int SIZE = 200;
     private Point location;
     private Point center;
-    private ArrayList<Area> areas;
+    private final ArrayList<Area> areas;
     private int areaActual;    
     Canvas canvas;
     
@@ -108,7 +113,10 @@ public class SelectionMenu extends JComponent{
 	    @Override
             public void mouseClicked(MouseEvent me)
             {
-                realizarAccion(me.getLocationOnScreen());
+                if(Canvas.seleccionadoTemporal != null)
+                    realizarAccionTemporal(me.getPoint());
+                else
+                    realizarAccionCompartido(me.getPoint());
             }
         
         });
@@ -182,32 +190,78 @@ public class SelectionMenu extends JComponent{
         md.paint(MenuDrawer.EXIT, g, areas.get(4));
     }
 
-    /*Se agrega un Mouse Listener y se implementan sus métodos, esto para poder saber cuando se 
-    ha dado clic sobre el lienzo y por lo tanto, se debe mostrar el menu*/
-   
     
-    public void realizarAccion(Point p)
+    public void realizarAccionTemporal(Point p)
     {
         switch(areaActual)
         {
             case CONFIGURE:
-                ConfFrame.showFrame(p);
+                Action.createAction(Action.TRANSFORM, elements.indexOf(seleccionadoTemporal),false);
+                Canvas.seleccionadoTemporal.configure();
+                Canvas.seleccionadoTemporal.setState(Element.AVAILABLE);
+                Action.undoStack.lastElement().setNext(seleccionadoTemporal);
+                Canvas.seleccionadoTemporal = null;
+                Canvas.repaint();
             break;
             case MOVE:
-                Canvas.seleccionado.state = Element.MOVING;
+                Action.createAction(Action.ELEMENT_MOVE, elements.indexOf(seleccionadoTemporal),false);
+                Canvas.seleccionadoTemporal.setState(Element.MOVING);
             break;
             case ROTATE:
-                Canvas.seleccionado.state = Element.ROTATING;
+                Action.createAction(Action.ELEMENT_ROTATE, elements.indexOf(seleccionadoTemporal),false);
+                Canvas.seleccionadoTemporal.setState(Element.ROTATING);
             break;
             case DELETE:
-                Canvas.deleteElement(canvas.seleccionado);
-                Canvas.seleccionado = null;
+                seleccionadoTemporal.setState(Element.AVAILABLE);
+                Action.createAction(Action.DELETE, elements.indexOf(seleccionadoTemporal),false);
+                Canvas.deleteElementTemporal(Canvas.seleccionadoTemporal);
+                Canvas.seleccionadoTemporal = null;
                 Canvas.repaint();
             break;
             case EXIT :
-                canvas.seleccionado.state = Element.AVAILABLE;
-                canvas.seleccionado = null;
-                canvas.repaint();
+                Canvas.seleccionadoTemporal.setState(Element.AVAILABLE);
+                Canvas.seleccionadoTemporal = null;
+                Canvas.repaint();
+            break;
+        }
+        this.setVisible(false);
+    }
+    
+    public void realizarAccionCompartido(Point p)
+    {
+        switch(areaActual)
+        {
+            case CONFIGURE:
+                //ConfFrame.showFrame(p);
+                Action.createAction(Action.TRANSFORM, compartidos.indexOf(seleccionadoCompartidos), true);
+                Canvas.lockCompartidos.lock();
+                seleccionadoCompartidos.configure();
+                Action.undoStack.lastElement().setNext(seleccionadoCompartidos);
+                Canvas.lockCompartidos.unlock();
+            break;
+            case MOVE:
+                Canvas.lockCompartidos.lock();
+                    Action.createAction(Action.ELEMENT_MOVE, compartidos.indexOf(seleccionadoCompartidos),true);
+                    seleccionadoCompartidos.setState(Element.MOVING);
+                Canvas.lockCompartidos.unlock();
+            break;
+            case ROTATE:
+                Canvas.lockCompartidos.lock();
+                    Action.createAction(Action.ELEMENT_ROTATE, compartidos.indexOf(seleccionadoCompartidos),true);
+                    seleccionadoCompartidos.setState(Element.ROTATING);
+                Canvas.lockCompartidos.unlock();
+            break;
+            case DELETE:
+                Canvas.lockCompartidos.lock();
+                Action.createAction(Action.DELETE, compartidos.indexOf(Canvas.seleccionadoCompartidos) ,true);
+                Canvas.deleteElementCompartido(seleccionadoCompartidos);
+                seleccionadoCompartidos = null;
+                Canvas.lockCompartidos.unlock();
+                Canvas.repaint();
+            break;
+            case EXIT :
+                Canvas.seleccionadoTemporal = null;
+                Canvas.repaint();
             break;
         }
         this.setVisible(false);
@@ -221,13 +275,7 @@ public class SelectionMenu extends JComponent{
         return -1;
     }
     
-    public int cualFigura(Point p)
-    {
-        for(int i = 0; i < Canvas.elements.size(); i++)
-            if(Canvas.elements.get(i).area.contains(p))
-                return i;
-        return -1;    
-    }
+    
     public void setCenter(Point p)
     {this.center = p;}
     

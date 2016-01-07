@@ -1,11 +1,12 @@
 package core;
 
-import static core.Element.AVAILABLE;
+import graphic.Canvas;
+import graphic.GUI;
+import graphic.PanelConfig;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.io.Serializable;
 import javax.swing.JOptionPane;
@@ -29,44 +30,66 @@ public class Text extends Element implements Serializable{
     
     public Text(String m)
     {
+        super();
         mensaje = m;
         tamanio = 50;
-        incline = 0;
-        posX=posY = 200;
-        getArea();
+        repaint();
     }
     
     @Override
-    public void draw(Graphics g) {
+    public void paint(Graphics g) {
+        refreshArea();
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.rotate(incline, posX +  mensaje.length()*tamanio/2, posY+tamanio/2);
+        g2.rotate(getInclination(), getPos().x +  mensaje.length()*tamanio/2, getPos().y+tamanio/2);
+        g2.setColor(colorLetra);
 	g2.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, tamanio));
-	g2.drawChars(mensaje.toCharArray(), 0, mensaje.length(),posX, posY);
+	g2.drawChars(mensaje.toCharArray(), 0, mensaje.length(),getPos().x,getPos().y);
         //g2.draw(area);
     }
-
+    
     @Override
-    public void getArea()
+    public void configure()
     {
-        area = new Area(new java.awt.Rectangle(posX, posY - tamanio, mensaje.length()*tamanio, tamanio));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX +  mensaje.length()*tamanio/2, posY+tamanio/2);
-        area.transform(rot);
+        PanelConfig pc = new PanelConfig(PanelConfig.TEXT);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Modificar", "Cancelar"};
+        Object [] valores = new Object[4];
+        valores[0] = tamanio;
+        valores[1] = mensaje;
+        valores[2] = colorLetra;
+        pc.setValoresText(valores);
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Configurar Circulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresText();
+            tamanio = (int)datos[0];
+            mensaje = datos[1].toString();
+            colorLetra = (java.awt.Color)datos[2];
+        }
+    }
+
+ 
+    
+    @Override
+    public void refreshArea()
+    {
+        setArea(new Area(new java.awt.Rectangle(getPos().x, getPos().y - tamanio, mensaje.length()*tamanio/2, tamanio)));
+        transformArea();
     }
     
-    public void doZoom(float escala)
+    public static void create(java.awt.Point p)
     {
-        this.tamanio *= (1+escala);  
-        getArea();
-    }
-    
-    public void rotate(java.awt.Point e) {
-        double Y = (posY + tamanio/2) - e.getY();
-        double X = (posX + mensaje.length()*tamanio/2) - e.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
+        PanelConfig pc = new PanelConfig(PanelConfig.TEXT);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Crear","Cancelar"};
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Añadir Texto", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresText();
+            Text t = new Text(datos[1].toString(),(Color)datos[2],(int)datos[0]);
+            t.move(p.x, p.y);
+            Canvas.addElement(t);
+            Canvas.repaint();
+        }
     }
 }

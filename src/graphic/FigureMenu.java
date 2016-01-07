@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import core.*;
 
-import static graphic.Canvas.seleccionado;
+import static graphic.Canvas.seleccionadoTemporal;
 
 /**
  *
@@ -27,7 +27,6 @@ public class FigureMenu extends JComponent{
     public Point center;
     public ArrayList<Area> areas;
     public int areaActual;
-    private Canvas canvas;
     private final int TRIANGLE = 0;
     private final int CIRCLE= 1;
     private final int POLYGON = 2;
@@ -38,28 +37,17 @@ public class FigureMenu extends JComponent{
     private final int EXIT = 7;
     
     public FigureMenu(){
-        
-        /*Basicamente en este método se define un JComponent y 
-        dentro de este se dibuja la figura de dona. El ArrayList
-        areas es para definir los "botones" y que estos se coloreen 
-        al momento de pasar el cursor del Mouse sobre ellos, además
-        de poder detectar el momento en que se da clic sobre alguno
-        de ellos.*/
 	setSize(SIZE, SIZE);
 	setOpaque(false);
         location = new Point();
 	center = new Point();
 	areas = new ArrayList<>();
         areaActual = -1;
-        //this.canvas = ((GUI)getParent()).getCanvas();
         this.setName("FigureMenu");
         this.setVisible(false);
-        //this.addMouseListener(new Escucha(areas, Escucha.FIGUREMENU, canvas));
         Area gen = new Area(new Ellipse2D.Double(0, 0, 200, 200));
 	gen.subtract(new Area(new Ellipse2D.Double(SIZE/3, SIZE/3, SIZE/3, SIZE/3)));
-        /*Cada una de las areas corresponde a cada boton,
-        comenzando el area 0 con el boton del triangulo y continuando
-        en orden ascendente en sentido contrario a las manecillas del reloj*/
+        
         //AREA 0 TRIANGLE
             Polygon p = new Polygon();
             p.addPoint(SIZE/2, SIZE/2);
@@ -118,7 +106,6 @@ public class FigureMenu extends JComponent{
             p.addPoint(SIZE/2, SIZE/2);
 	    p.addPoint(SIZE/2, SIZE);
 	    p.addPoint(SIZE, SIZE);
-	    //p.addPoint(SIZE, SIZE/2);
             s = ((Area)gen.clone());
             s.intersect(new Area(p));
             areas.add(s);    
@@ -128,7 +115,6 @@ public class FigureMenu extends JComponent{
             p.addPoint(SIZE/2, SIZE/2);
 	    p.addPoint(SIZE, SIZE);
 	    p.addPoint(SIZE, SIZE/2);
-	    //p.addPoint(SIZE, SIZE/2);
             s = ((Area)gen.clone());
             s.intersect(new Area(p));
             areas.add(s);    
@@ -155,52 +141,53 @@ public class FigureMenu extends JComponent{
         
     }
 
-    /*Esta funcion es un intermedio entre el MouseMotionListener y la clase actual.
-    Dado que desde una clase interior no se pueden modificar atributos de la clase
-    exterior, se hizo enta funcion.
     
-    El areaActual es el area donde el puntero del mouse esta en ese momento*/
+    /* El areaActual es el area donde el puntero del mouse esta en ese momento*/
     public void updateMenu(int noArea)
     {
         areaActual = noArea;
         this.repaint();
     }
     
+    /* Las acciones del FigureMenu solo se aplican a elementos temporales */
+    
     public void realizarAccion()
     {
         switch(areaActual)
         {
             case TRIANGLE:
-                ConfFrame.create(ConfFrame.TRIANGLE, center);
+                //ConfFrame.create(ConfFrame.TRIANGLE, center);
+                Triangle.create(this.center);
             break;
             case CIRCLE:
-		ConfFrame.create(ConfFrame.CIRCLE, center);
+                Circle.create(this.center);
             break;
             case POLYGON:
-                ConfFrame.create(ConfFrame.RPOLYGON, center);
+                RegularPolygon.create(this.center);
             break;
             case RECTANGLE:
-                ConfFrame.create(ConfFrame.RECTANGLE, center);
+                Rectangle.create(this.center);
             break;
             case LINE:
                 setVisible(false);
-                seleccionado = new Line();
-                seleccionado.setFirst(center);
-                seleccionado.state = Element.GETTINGPOINTS;
-                Canvas.elements.add(seleccionado);
-                ConfFrame.create(ConfFrame.LINE, center);
+                seleccionadoTemporal = new Line();
+                seleccionadoTemporal.setFirst(center);
+                seleccionadoTemporal.setState(Element.GETTINGPOINTS);
+                Canvas.addElement(seleccionadoTemporal);
             break;
             case IRREGULAR:
                 setVisible(false);
                 Irregular fig = new Irregular();
-                seleccionado = fig;
-                seleccionado.setFirst(center);
-                seleccionado.state = Element.GETTINGPOINTS;
-                Canvas.elements.add(seleccionado);
+                fig.setFirst(center);
+                seleccionadoTemporal = fig;
+                seleccionadoTemporal.setState(Element.GETTINGPOINTS);
+                Canvas.addElement(seleccionadoTemporal);
             break;
             case TEXT:
-                canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
-                canvas.repaint();
+                /*Canvas.elements.add(new Text(JOptionPane.showInputDialog("Introduzca el texto")));
+                Canvas.elements.get(Canvas.elements.size() - 1).move(center);
+                Canvas.repaint();*/
+                Text.create(center);
             break;
             case EXIT :
                 this.setVisible(false);
@@ -289,8 +276,6 @@ public class FigureMenu extends JComponent{
     public Point obtLocation()
     {return this.location;}
     
-    public final void setCanvas(Canvas c)
-    {canvas = c;}
     
     @Override
     public void setVisible(boolean v)

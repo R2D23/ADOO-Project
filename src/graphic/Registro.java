@@ -249,39 +249,39 @@ public class Registro extends javax.swing.JFrame {
         }
         
         ConexionServer cs = new ConexionServer();
-        ArrayList<String> aux = new ArrayList<>();
-        //Orden de lo que se envia: nombre, apellidos, usuario, contraseña, correo
-        aux.add(nombre.getText());
-        aux.add(apellidos.getText());
-        aux.add(usuario.getText());
-        aux.add(password.getText());
-        aux.add(correo.getText());
+        if(!cs.establecerConexion()) //si no se puede establecer la conexion
+        {ConexionServer.mostrarError(); return;}
+        
+        //Orden de lo que se envia: nombre, apellidos, correo
+        String [] aux = {nombre.getText(), apellidos.getText(), correo.getText()};
         System.out.println("Se envia solicitud");
-        Mensaje  m = new Mensaje(ConexionServer.registrarUsuario,usuario.getText(),aux);
-        cs.enviarMensaje(m);
-        m = cs.recibirMensaje();
-        System.out.println("resp : " +m.getConfirmacion() + " cod : " + m.getOpCode());
-        if(m.getConfirmacion())
+        Mensaje solicitudRegistro = new Mensaje(ConexionServer.registrarUsuario,password.getText(), usuario.getText(), aux);
+        cs.enviarMensaje(solicitudRegistro);
+        Mensaje resp = cs.recibirMensaje();
+        System.out.println("resp : " +resp.getConfirmacion() + " cod : " + resp.getOpCode());
+        if(resp.getConfirmacion())
         {
             JOptionPane.showMessageDialog(null, "Registro Exitoso");
+            cs.cerrarConexion();
             this.dispose();
         }
         else
         {
-            switch(m.getOpCode())
+            switch(resp.getOpCode())
             {
-                case 0 ://
+                case ConexionServer.usuarioYaExiste :
                     JOptionPane.showMessageDialog(null, "El Nombre de Usuario ya Existe.");
                 break;
-                case 1 :    
+                case ConexionServer.correoYaExiste :    
                     JOptionPane.showMessageDialog(null, "El correo ya está registrado.");
                 break;
-                case 2 :
+                case ConexionServer.errorEnBD :
                     JOptionPane.showMessageDialog(null, "Registro Fallido");
                 break;
             }       
         }
         
+        cs.cerrarConexion();
         
         //if(validarPasswordCorrecta(password.getText(), passConf.getText())== 0 && validarPassword(password.getText())== true)
         

@@ -54,5 +54,6 @@ public class ToolButton extends CustomButton{
         
         Point centroBoton = new Point(getX() + getWidth()/2, getY() + getHeight()/2);
         menu.setLocation((int)centroBoton.getX() - Menu.SIZE/2, (int)centroBoton.getY() - Menu.SIZE/2);
-        menu.setVisible(true);}
+        menu.setVisible(true);
+    }
 }

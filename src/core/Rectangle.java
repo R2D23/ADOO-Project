@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import graphic.Canvas;
+import graphic.GUI;
+import graphic.PanelConfig;
+import java.awt.Point;
+import java.awt.geom.Area;
+import java.awt.Dimension;
+import javax.swing.JOptionPane;
 /**
  *
  * @author douxm_000
@@ -19,15 +16,90 @@ public class Rectangle extends core.Figure {
 
     int width;
     int height;
-            
-    public Rectangle(int width, int height) {
+
+    public Rectangle(){}
+    
+    /*public Rectangle(int width, int height) {
         this.width = width;
         this.height = height;
+    }*/
+
+    public Rectangle(int w, int h)
+    {width = w; height = h;}
+    
+    public void setWidth(int b)
+    {width = b; repaint();}
+    
+    public int getWidth()
+    {return width;}
+    
+    public void setHeight(int h)
+    {height = h; repaint();}
+    
+    public int getHeight()
+    {return height;}
+    
+    public void setSize(Point p)
+    {
+        width = p.x;
+        height = p.y;
     }
-
-    public Rectangle() {}
-
-    public void configure(Canvas canvas) {
+    
+    public Dimension getSize()
+    {return new Dimension(width, height);}
+    
+    @Override
+    public void refreshArea()
+    {
+        setArea(new Area(new java.awt.Rectangle(getPos().x, getPos().y, width, height)));
+        transformArea();
+    }
+    
+    public static void create(Point p)
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.RECTANGLE);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Crear","Cancelar"};
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Crear Rectangulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        
+        /* Si se dio aceptar */
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresRectangulo();
+            Rectangle r = new Rectangle((int)datos[0],(int)datos[1]);
+            r.setLnColor((java.awt.Color)datos[2]);
+            r.setBgColor((java.awt.Color)datos[3]);
+            r.move(p.x, p.y);
+            Canvas.addElement(r);
+            Canvas.repaint();
+        }
+            
+    }
+    
+    @Override
+    public void configure()
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.RECTANGLE);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Modificar", "Cancelar"};
+        Object [] valores = new Object[4];
+        valores[0] = this.width;
+        valores[1] = this.height;
+        valores[2] = lnColor;
+        valores[3] = bgColor;
+        pc.setValoresRectangulo(valores);
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Configurar Circulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresRectangulo();
+            width = (int)datos[0];
+            height = (int)datos[1];
+            lnColor = (java.awt.Color)datos[2];
+            bgColor = (java.awt.Color)datos[3];
+        }
+    }
+    
+    /*public void configure(Canvas canvas) {
         //new ConfigurarCuadrado(canvas,this,new Point(this.posX, this.posY)).setVisible(true);
         
     }
@@ -80,5 +152,5 @@ public class Rectangle extends core.Figure {
     
     public Point getSize(){
 	return new Point(width, height);
-    }
+    }*/
 }

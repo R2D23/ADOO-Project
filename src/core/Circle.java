@@ -1,13 +1,12 @@
 
 package core;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
+import graphic.Canvas;
+import graphic.GUI;
+import graphic.PanelConfig;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,51 +14,84 @@ import java.awt.geom.Ellipse2D;
  */
 public class Circle extends Figure{
     
-    double radio;
+    private double radio;
     
-    public Circle(double radio) {
-        this.radio = radio;
-    }
-
+    private static double recentRadio = 50;
+    
     public Circle() {
 	super();
-	radio = 50;
+	radio = recentRadio;
     }
     
-    @Override
-    public void getArea()
+    public Circle(double radio) {
+        super();
+        this.radio = Math.abs(radio);
+    }
+    
+    public Circle(Circle c)
     {
-        area = new Area(new Ellipse2D.Double(posX, posY, (int)radio,(int)radio));
-        AffineTransform rot = new AffineTransform();
-        rot.setToRotation(incline, posX+radio/2, posY+radio/2);
-        area.transform(rot);
+        super(c);
+        this.radio = c.radio;
+    }
+    
+    public double getRadius()
+    {return radio;}
+    
+    public void setRadius(Double aDouble)
+    {
+        radio = aDouble;
+        recentRadio = radio;
+        repaint();
+    }
+    
+  
+    public Object clone()
+    {return new Circle(this);}
+    
+    @Override
+    public void refreshArea()
+    {
+        setArea(new Area(new Ellipse2D.Double(getPos().x, getPos().y, radio*2, radio*2)));
+        transformArea();
     }
     
     @Override
-    public void doZoom(float escala)
-    {   
-        super.doZoom(escala);
-        this.radio *= (1+escala);
-        getArea();
+    public void configure()
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.CIRCLE);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Modificar", "Cancelar"};
+        Object [] valores = new Object[3];
+        valores[0] = this.radio;
+        valores[1] = this.lnColor;
+        valores[2] = this.bgColor;
+        pc.setValoresCirculo(valores);
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Configurar Circulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresCirculo();
+            setRadius((double)datos[0]);
+            setLnColor((java.awt.Color)datos[1]);
+            setBgColor((java.awt.Color)datos[2]);
+        }
     }
     
-    @Override
-     public void rotate(Point e) {
-        double Y = (posY + radio/2) - e.getY();
-        double X = (posX + radio/2) - e.getX();
-        double pendiente = Y/X;
-        this.incline = Math.atan(pendiente) + Math.PI/2;
-        if(X < 0)
-            this.incline += Math.PI;
-        getArea();
+    public static void create(java.awt.Point p)
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.CIRCLE);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Crear","Cancelar"};
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Crear Circulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresCirculo();
+            Circle c = new Circle((Double)datos[0]);
+            c.setLnColor((java.awt.Color)datos[1]);
+            c.setBgColor((java.awt.Color)datos[2]);
+            c.move(p.x, p.y);
+            Canvas.addElement(c);
+            Canvas.repaint();
+        }
     }
-
-    public double getRadius() {
-	return radio;
-    }
-
-    public void setRadius(Double aDouble) {
-	radio = aDouble;
-	getArea();
-    }
+    
 }

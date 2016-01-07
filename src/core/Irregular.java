@@ -1,20 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package core;
 
-import static graphic.Canvas.seleccionado;
+import graphic.Canvas;
+import static graphic.Canvas.seleccionadoTemporal;
+import graphic.GUI;
+import graphic.PanelConfig;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import static graphic.GUI.GAP;
 
 /**
  *
@@ -25,8 +22,11 @@ public class Irregular extends Figure {
     public ArrayList<Point> vertices;
     public Point first;
     
+    public static final int DISTANCE_THRESHOLD = 10;
+    
     public Irregular() {
-        vertices = new ArrayList<Point>();
+        super();
+        vertices = new ArrayList<>();
         this.bgColor = Color.BLUE;
         this.lnColor = Color.CYAN;
     }
@@ -37,10 +37,11 @@ public class Irregular extends Figure {
     
    
     @Override
-    public void draw(Graphics g) {
+    public void paint(Graphics g) {
+        refreshArea();
         Graphics2D g2 = (Graphics2D) g;
-        if(state!=GETTINGPOINTS) {
-            super.draw(g);
+        if(getState() != GETTINGPOINTS) {
+            super.paint(g);
         } else {
             for(int i=0; i<vertices.size()-1; i++) {
                 g2.drawLine(vertices.get(i).x, vertices.get(i).y, vertices.get(i+1).x, vertices.get(i+1).y);
@@ -63,8 +64,10 @@ public class Irregular extends Figure {
             coord[i] = vertices.get(i).y;
         return coord;
     }
+    
+    
 
-    @Override
+    /*@Override
     public void getArea() {
         int[] pointsX;
         int[] pointsY;
@@ -74,8 +77,9 @@ public class Irregular extends Figure {
         AffineTransform rot = new AffineTransform();
         rot.setToRotation(incline, first.x, first.y);
         area.transform(rot);
-    }
+    }*/
     
+    @Override
     public void setFirst(Point p)
     {
         first = new Point(p.x,p.y);
@@ -85,10 +89,11 @@ public class Irregular extends Figure {
     public Point getFirst()
     {return first;}
     
+    @Override
     public Point getLast()
     {return vertices.get(vertices.size() - 1);}
     
-    @Override
+    /*@Override
     public void move(int posX, int posY)
     {
         int dx = posX - first.x;
@@ -116,20 +121,65 @@ public class Irregular extends Figure {
         if(X < 0)
             this.incline += Math.PI;
         getArea();
-    }
+    }*/
     
     @Override
     public void setLast(Point p)//Este metodo decide si es el ultimo punto
     {
-        Point nuevoPunto = new Point((int)p.getX(),(int)( p.getY() + GAP/2));
-        if(first.distance(nuevoPunto) > 10)//si no es el ultimo, solo agrega el punto a la lista
-            this.newPoint(nuevoPunto);
+        if(first.distance(p) > DISTANCE_THRESHOLD)//si no es el ultimo, solo agrega el punto a la lista
+            newPoint(p);
         
         else
         {
-            this.getArea();
-            this.state = Element.AVAILABLE;
-            seleccionado = null;
+            refreshArea();
+            PanelConfig pc = new PanelConfig(PanelConfig.IPOLYGON);
+            javax.swing.JPanel pn = pc.getPanel();
+            Object [] options = {"Crear","Cancelar"};
+            int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Crear Poligono Irregular", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+            setState(Element.AVAILABLE);
+            if(op != 0)
+                Canvas.deleteElementTemporal(seleccionadoTemporal);
+            Object [] valores = pc.getValoresPoligonoI();
+            lnColor = (Color)valores[0];
+            bgColor = (Color)valores[1];
+            seleccionadoTemporal = null;
+            
         }
     }
+    
+    @Override
+    public void refreshArea()
+    {
+        Area area = new Area(new java.awt.Polygon(getCoordsX(),getCoordsY(),getCoordsX().length));
+        setArea(area);
+        transformArea();
+    }
+    
+    @Override
+    public void move(int posX, int posY)
+    {
+        int dx = posX - first.x;
+        int dy = posY - first.y;
+        for (Point vertice : vertices) 
+            vertice.translate(dx, dy);
+    }
+    
+    public void configure()
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.IPOLYGON);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Modificar", "Cancelar"};
+        Object [] valores = new Object[2];
+        valores[0] = lnColor;
+        valores[1] = bgColor;
+        pc.setValoresPoligonoI(valores);
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Configurar Polígono Irregular", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresPoligonoI();
+            lnColor = (java.awt.Color)datos[0];
+            bgColor = (java.awt.Color)datos[1];
+        }
+    }
+            
 }

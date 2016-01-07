@@ -1,12 +1,11 @@
 
 package core;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
+import graphic.Canvas;
+import graphic.GUI;
+import graphic.PanelConfig;
 import java.awt.geom.Area;
-import graphic.Util;
+import javax.swing.JOptionPane;
 
 /**
  * 
@@ -19,7 +18,7 @@ public class RegularPolygon extends Figure {
     int pointsX[];
     int pointsY[];
     
-    public RegularPolygon(int numSides, int longSide) {
+    public RegularPolygon( int longSide, int numSides) {
         /*Poligono Regular de numSides lados, donde cada lado mide longSide
           numSides >= 3   */
         this.numSides = numSides;
@@ -33,7 +32,7 @@ public class RegularPolygon extends Figure {
 	numSides = 5;
     }
 
-    @Override
+    /*@Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();        
         if(state!=AVAILABLE) {
@@ -47,14 +46,14 @@ public class RegularPolygon extends Figure {
             g2.setColor(lnColor);
 	    g2.draw(area);
         }
-    }
+    }*/
     
     public int[] getCoordsX() {
         double littleAngle = 2*Math.PI/numSides; //Es el ángulo de uno de los sectores
         double radius = longSide/(2*Math.sin(littleAngle/2)); //Radio del Poligono
         int coordX[] = new int[numSides];
         for(int i=0; i<numSides; i++) {
-            coordX[i] = posX + (int)(radius * Math.cos(littleAngle*i));
+            coordX[i] = getPos().x + (int)(radius * Math.cos(littleAngle*i));
         }
         return coordX;
     }
@@ -64,11 +63,53 @@ public class RegularPolygon extends Figure {
         double radius = longSide/(2*Math.sin(littleAngle/2)); //Radio del Poligono
         int coordY[] = new int[numSides];
         for(int i=0; i<numSides; i++) {
-            coordY[i] = posY + (int)(radius * Math.sin(littleAngle*i));
+            coordY[i] = getPos().y + (int)(radius * Math.sin(littleAngle*i));
         }
         return coordY;
     }
-    public void getArea()
+    
+    @Override
+    public void configure()
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.RPOLYGON);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Modificar", "Cancelar"};
+        Object [] valores = new Object[4];
+        valores[0] = numSides;
+        valores[1] = longSide;
+        valores[2] = lnColor;
+        valores[3] = bgColor;
+        pc.setValoresPoligonoR(valores);
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Configurar Circulo", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresPoligonoR();
+            numSides = (int)datos[0];
+            longSide = (int)datos[1];
+            lnColor = (java.awt.Color)datos[2];
+            bgColor = (java.awt.Color)datos[3];
+        }
+    }
+    
+    
+    public static void create(java.awt.Point p)
+    {
+        PanelConfig pc = new PanelConfig(PanelConfig.RPOLYGON);
+        javax.swing.JPanel pn = pc.getPanel();
+        Object [] options = {"Crear","Cancelar"};
+        int op = JOptionPane.showOptionDialog(GUI.frame,pn, "Crear Polígono Regular", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if(op == 0)
+        {
+            Object [] datos = pc.getValoresPoligonoR();
+            RegularPolygon rp  = new RegularPolygon((int)datos[0],(int)datos[1]);
+            rp.setLnColor((java.awt.Color)datos[2]);
+            rp.setBgColor((java.awt.Color)datos[3]);
+            rp.move(p.x, p.y);
+            Canvas.addElement(rp);
+            Canvas.repaint();
+        }
+    }
+    /*public void getArea()
     {
         pointsX = getCoordsX();
         pointsY = getCoordsY();
@@ -95,7 +136,7 @@ public class RegularPolygon extends Figure {
         if(X < 0)
             this.incline += Math.PI;
         getArea();
-    }
+    }*/
 
     public int getNumSides() {
 	return numSides;
@@ -103,7 +144,7 @@ public class RegularPolygon extends Figure {
 
     public void setNumSides(int numSides) {
 	this.numSides = numSides;
-	getArea();
+	repaint();
     }
 
     public int getLongSide() {
@@ -112,6 +153,15 @@ public class RegularPolygon extends Figure {
 
     public void setLongSide(int longSide) {
 	this.longSide = longSide;
-	getArea();
+	repaint();
+    }
+    
+    @Override
+    public void refreshArea()
+    {
+        pointsX = getCoordsX();
+        pointsY = getCoordsY();
+        setArea(new Area(new java.awt.Polygon(pointsX, pointsY, pointsX.length)));
+        transformArea();
     }
 }

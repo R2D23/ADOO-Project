@@ -18,20 +18,22 @@ public class GUI {
     private static Members members; //The Collaborators Button
     private static ArrayList<JButton> toolKit; //The list of Tool Buttons
     private static ArrayList<Menu> menus; //Circular Menus
-    public static FigureMenu fm; //Circular Create Figure
-    public static SelectionMenu sm; //Circular Selection Menu
-    public static File archivo;
+    private static FigureMenu fm; //Circular Create Figure
+    private static SelectionMenu sm; //Circular Selection Menu
+    private static File archivo;
     private static JScrollPane js;
     public static PanelColaboradores pc;
     public static JFrame frame;
+    
     public static Dibujante dibujante;
-    public static String permiso;//El permiso que el dibujante tiene sobre este archivo
+    public static boolean permiso;//El permiso que el dibujante tiene sobre este archivo
     
     //The UI parameters
     public final static int GAP = 50;
 
     public static void setTitle(String s) {
 	frame.setName(s);
+        frame.setTitle(s);
     }
 
     public static String getName() {
@@ -39,10 +41,14 @@ public class GUI {
     }
     
     public static void initializeGUI() {
+        
+       
+        
 	Canvas.initializeCanvas();
 	ActionListener al = (ActionEvent ae) -> {
 	    GUI.actionPerformed(ae);
 	};
+        permiso = true;
         fm = new FigureMenu();
         sm = new SelectionMenu();
         archivo = new File();
@@ -50,7 +56,6 @@ public class GUI {
         pc = new PanelColaboradores();
         dibujante = new Dibujante();
         
-
 	toolKit = new ArrayList<>();{
 	    menus = new ArrayList<>();
 	    
@@ -89,32 +94,37 @@ public class GUI {
                 zoom.setMenu(zoomM);
                 //zoom.addMouseListener(zoomM);
 	}
+        
 	frame = new JFrame("GUI");
 	members = new Members();{
             members.addActionListener(al);
             members.setActionCommand("collaborators");
             members.setPanel(pc);
-	    }
+         }
 	
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setMinimumSize(new Dimension(800, 600));
 	frame.getContentPane().setLayout(null);
-        frame.getContentPane().add(fm);
-        frame.getContentPane().add(sm);
-        frame.getContentPane().add(js);
-        frame.setIconImage(new ImageIcon("./images/iconoGeneral.png").getImage());
-        frame.setTitle("Lienzo en blanco - iDraw");
-        js.setPreferredSize(new Dimension(100, 100));
-        //js.getViewport().setView(panel);
-        //js.getViewport().setBackground(Color.red);
-        
-        
-        for (graphic.Menu menu : menus)
-	  frame.getContentPane().add(menu);
-
         frame.getContentPane().add(pc);
         frame.getContentPane().add(members);
-        frame.getContentPane().add(panel);
+        frame.getContentPane().add(fm);
+        frame.getContentPane().add(sm);
+        for (graphic.Menu menu : menus)
+	  frame.getContentPane().add(menu);
+        
+        frame.getContentPane().add(js);
+
+        
+        frame.setIconImage(new ImageIcon("./images/iconoGeneral.png").getImage());
+        frame.setTitle("Lienzo en blanco - iDraw");
+        
+        
+        
+        
+        
+
+        
+        //frame.getContentPane().add(panel);
         
 	for(int i = 0; i < toolKit.size(); i++)
 	    frame.getContentPane().add(toolKit.get(i));
@@ -125,10 +135,14 @@ public class GUI {
         @Override
         public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 ConexionServer cs = new ConexionServer();
-                cs.enviarMensaje(new Mensaje(ConexionServer.cerrarSesion,dibujante.nomUsuario, ""));
+                cs.establecerConexion();
+                String [] aux = {GUI.getFile().getName(), GUI.getFile().getOwner()};
+                cs.enviarMensaje(new Mensaje(ConexionServer.cerrarSesion,GUI.dibujante.nomUsuario, aux));
+                cs.cerrarConexion();
+                //cs.enviarMensaje(new Mensaje(ConexionServer.cerrarSesion,dibujante.nomUsuario, ""));
             }
         });
-	/*frame.addComponentListener(new ComponentListener(){
+	frame.addComponentListener(new ComponentListener(){
 
 	    @Override
 	    public void componentResized(ComponentEvent ce) {
@@ -144,7 +158,7 @@ public class GUI {
 	    @Override
 	    public void componentHidden(ComponentEvent ce) {}
 	    
-	});*/
+	});
 	
 	frame.pack();
 	updateGUI();
@@ -155,17 +169,23 @@ public class GUI {
 		showGUI();
 	    }
 	});
+        
+        new Thread(new RecibidorActualizaciones()).start();
     }
     
     public static void updateGUI(){
-	panel.setBackground(Color.WHITE);
-        panel.setLocation(GAP, GAP);
-        panel.setSize(
-            new Dimension(frame.getContentPane().getWidth()  - GAP*2,
+	js.setLocation(GAP,GAP);
+        js.setSize(new Dimension(frame.getContentPane().getWidth()  - GAP*2,
 			  frame.getContentPane().getHeight() - GAP*2));
+        
+        panel.setBackground(Color.WHITE);
+        panel.setLocation(0, 0);
+        panel.setSize(
+            new Dimension(frame.getContentPane().getWidth()  - GAP*2 - 30,
+			  frame.getContentPane().getHeight() - GAP*2 - 30));
         panel.setPreferredSize(new Dimension(
-		frame.getContentPane().getWidth()  - GAP*2,
-		frame.getContentPane().getHeight() - GAP*2));
+		frame.getContentPane().getWidth()  - GAP*2 - 50,
+		frame.getContentPane().getHeight() - GAP*2 - 50));
         panel.updateUI();
 	for(int i = 0; i < toolKit.size(); i++){
 	    toolKit.get(i).setLocation
@@ -178,6 +198,11 @@ public class GUI {
 	    m.updateUI();
 	}
         fm.updateUI();
+        
+        
+        
+        Canvas.setOrigSize(panel.getPreferredSize());
+        
         
     }
     
@@ -208,17 +233,63 @@ public class GUI {
     public static File getFile()
     {return archivo;}
     
-    public FigureMenu getFigureMenu()
+    public static Cursor getCursor()
+    {return frame.getCursor();}
+    
+    
+    public static void showSelectionMenu(MouseEvent e)
+    {
+        sm.setCenter(e.getPoint());
+        sm.obtLocation().setLocation(e.getX() - sm.SIZE/2 + GUI.GAP, e.getY() - sm.SIZE/2 + GUI.GAP);
+        sm.setLocation(sm.obtLocation());
+        sm.setVisible(true);
+    }
+    
+    public static FigureMenu getFigureMenu()
     {return fm;}
     
-    public SelectionMenu getSelectionMenu()
+    public static SelectionMenu getSelectionMenu()
     {return sm;}
     
     public static void setDibujante(String s)
     {dibujante.nomUsuario = s;}
     
+    /*public static void main(String [] args)
+    {initializeGUI();}*/
+    
+    public static void showFigureMenu(MouseEvent e)
+    {
+        fm.setCenter(new Point(e.getPoint().x,e.getPoint().y));        
+        fm.obtLocation().setLocation(e.getX() - fm.SIZE/2 + GUI.GAP, e.getY() - fm.SIZE/2 + GUI.GAP);
+        fm.setLocation(fm.obtLocation());
+        fm.setVisible(true);
+    }
+    
+    
+    public static boolean areMenusOpened()
+    {
+        boolean aux = false;
+        aux = aux || sm.isVisible();
+        aux = aux || fm.isVisible();
+        for(graphic.Menu menu : menus)
+            aux = aux || menu.isVisible();
+        return aux;
+    }
+    
+    public static void closeAllMenus()
+    {
+        sm.setVisible(false);
+        fm.setVisible(false);
+        for(graphic.Menu menu : menus)
+            menu.setVisible(false);
+        pc.setVisible(false);
+        members.setLocation(0, members.getY());
+    }
+    
+    public static void setFile(File f)
+    {archivo = f;}
+    
     public static PanelColaboradores getPanelColaboradores()
     {return pc;}
-    
     
 }

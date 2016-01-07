@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package core;
 import static graphic.Canvas.elements;
+import static graphic.Canvas.compartidos;
+import graphic.GUI;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Stack;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,10 +16,12 @@ public class Action {
     public static Stack<Action> undoStack = new Stack();
     public static Stack<Action> redoStack = new Stack();
     
+    
     private Object next;
     private Object prev;
     private int id;
     private int type;
+    private boolean isShared;
     
     public static final int CREATE = 1;
     public static final int DELETE = 2;
@@ -34,6 +34,7 @@ public class Action {
     public static final int SQUARE = 9;
     public static final int NO_SIDES = 10;
     public static final int SIDE_SIZE = 11;
+    public static final int TRANSFORM = 12;
     
 //    La clase Action está diseñada para grabar las acciones del usuario
 //    para volver a realizarlas 'make()' o para deshacerlas 'rollback'
@@ -42,11 +43,17 @@ public class Action {
 //    una operación. Por ejemplo, digamos que queresmo volver un objeto a su 
 //    lugar original, entonces, 'o' debe tener almacenado un objeto Point
     
-    private Action(int t, int id, Object o){
-	this.next = o;
+    private Action(int t, int id, boolean b){
 	type = t;
-	prev = new ArrayList();
-	
+        isShared = b;
+        this.id = id;
+	//prev = new ArrayList();
+	ArrayList lista;
+        if(!isShared)
+            lista = elements;
+        else
+            lista = compartidos;
+        
 	switch (type){
 //	    Crear no requiere un identificador, pero si que se le pase la
 //	    dirección del objeto creado por medio de 'o'
@@ -55,132 +62,168 @@ public class Action {
 //	    Borrar requiere que se le pase el identificador del arreglo del
 //	    objeto que será eliminado.
 	    case DELETE:
-		prev = elements.get(id);
+		prev = lista.get(id);
 		break;
 //	    Mover un elemento requiere el identificador de este, más un
 //	    objeto Point que servirá de referencia a las nuevas coordenadas.
 	    case ELEMENT_MOVE:
-		prev = ((Element) elements.get(id)).getPos();
+		prev = ((Element) lista.get(id)).getPos();
 		break;
 	    case ELEMENT_ROTATE:
-		prev = ((Element) elements.get(id)).getInclination();
+		prev = ((Element) lista.get(id)).getInclination();
 		break;
 	    case FIGURE_BCOLOR:
-		prev = ((Figure) elements.get(id)).getBgColor();
+		prev = ((Figure) lista.get(id)).getBgColor();
 		break;
 	    case FIGURE_LCOLOR:
-		prev = ((Figure) elements.get(id)).getLnColor();
+		prev = ((Figure) lista.get(id)).getLnColor();
 		break;
 	    case CIRCLE_RADIUS:
-		prev = ((Circle) elements.get(id)).getRadius();
+		prev = ((Circle) lista.get(id)).getRadius();
 		break;
 	    case TRIANGLE_TYPE:
-		prev = ((Triangle) elements.get(id)).getType();
+		prev = ((Triangle) lista.get(id)).getType();
 		break;
 	    case SQUARE:
-		prev = ((Rectangle) elements.get(id)).getSize();
+		prev = ((Rectangle) lista.get(id)).getSize();
 		break;
 	    case NO_SIDES:
-		prev = ((RegularPolygon) elements.get(id)).getNumSides();
+		prev = ((RegularPolygon) lista.get(id)).getNumSides();
 		break;
 	    case SIDE_SIZE:
-		prev = ((RegularPolygon) elements.get(id)).getLongSide();
+		prev = ((RegularPolygon) lista.get(id)).getLongSide();
 		break;
+	    case TRANSFORM:
+		prev = ((Element) lista.get(id)).clone();
+                ((Element) prev).setState(Element.AVAILABLE);
+            break;
 	}
     }
     
-    public static void createAction(int t, int id, Object o){
-	undoStack.add(new Action(t, id, o));
+    public static void createAction(int t, int id,boolean b){
+	undoStack.add(new Action(t, id, b));
 	redoStack.clear();
     }
     
     public void make(){
+        ArrayList<Element> lista;
+        
+        if(!isShared)
+            lista = elements;
+        else
+            lista = compartidos;
+        
 	switch (type){
 	    case CREATE: 
-		elements.add((Element) next);
+		lista.add((Element) next);
 		break;
 	    case DELETE: 
-		elements.remove(prev);
+		lista.remove((Element)prev);
 		break;
 	    case ELEMENT_MOVE:
-		elements.get(id).move((Point) next);
+		lista.get(id).move((Point) next);
 		break;
 	    case ELEMENT_ROTATE:
-		elements.get(id).setIncline((Double) next);
+		lista.get(id).setIncline((Double) next);
 		break;
 	    case FIGURE_BCOLOR:
-		((Figure) elements.get(id)).setBgColor((Color) next);
+		((Figure) lista.get(id)).setBgColor((Color) next);
 		break;
 	    case FIGURE_LCOLOR:
-		((Figure) elements.get(id)).setLnColor((Color) next);
+		((Figure) lista.get(id)).setLnColor((Color) next);
 		break;
 	    case CIRCLE_RADIUS:
-		((Circle) elements.get(id)).setRadius((Double) next);
+		((Circle) lista.get(id)).setRadius((Double) next);
 		break;
 	    case TRIANGLE_TYPE:
-		((Triangle) elements.get(id)).setType((Integer) next);
+		((Triangle) lista.get(id)).setType((Integer) next);
 		break;
 	    case SQUARE:
-		((Rectangle) elements.get(id)).setSize((Point) next);
+		((Rectangle) lista.get(id)).setSize((Point) next);
 		break;
 	    case NO_SIDES:
-		((RegularPolygon) elements.get(id)).setNumSides((Integer) next);
+		((RegularPolygon) lista.get(id)).setNumSides((Integer) next);
 		break;
 	    case SIDE_SIZE:
-		((RegularPolygon) elements.get(id)).setLongSide((Integer) next);
+		((RegularPolygon) lista.get(id)).setLongSide((Integer) next);
 		break;
+            case TRANSFORM :
+                lista.set(id, (Element)next);
+                break;
 	}
     }
     
     public void rollback(){
+        
+        ArrayList<Element> lista;
+        if(!isShared)
+            lista = elements;
+        else
+            lista = compartidos;
+        
 	switch (type){
 	    case CREATE: 
-		elements.remove(next);
+		lista.remove((Element)next);
 		break;
 	    case DELETE: 
-		elements.add(id, (Element) prev);
+		lista.add(id, (Element) prev);
 		break;
 	    case ELEMENT_MOVE:
-		elements.get(id).move((Point) prev);
+		lista.get(id).move((Point) prev);
 		break;
 	    case ELEMENT_ROTATE:
-		elements.get(id).setIncline((Double) prev);
+		lista.get(id).setIncline((Double) prev);
 		break;
 	    case FIGURE_BCOLOR:
-		((Figure) elements.get(id)).setBgColor((Color) prev);
+		((Figure) lista.get(id)).setBgColor((Color) prev);
 		break;
 	    case FIGURE_LCOLOR:
-		((Figure) elements.get(id)).setLnColor((Color) prev);
+		((Figure) lista.get(id)).setLnColor((Color) prev);
 		break;
 	    case CIRCLE_RADIUS:
-		((Circle) elements.get(id)).setRadius((Double) prev);
+		((Circle) lista.get(id)).setRadius((Double) prev);
 		break;
 	    case TRIANGLE_TYPE:
-		((Triangle) elements.get(id)).setType((Integer) prev);
+		((Triangle) lista.get(id)).setType((Integer) prev);
 		break;
 	    case SQUARE:
-		((Rectangle) elements.get(id)).setSize((Point) prev);
+		((Rectangle) lista.get(id)).setSize((Point) prev);
 		break;
 	    case NO_SIDES:
-		((RegularPolygon) elements.get(id)).setNumSides((Integer) prev);
+		((RegularPolygon) lista.get(id)).setNumSides((Integer) prev);
 		break;
 	    case SIDE_SIZE:
-		((RegularPolygon) elements.get(id)).setLongSide((Integer) prev);
-		break;
+		((RegularPolygon) lista.get(id)).setLongSide((Integer) prev);
+                break;
+            case TRANSFORM :
+                lista.set(id, (Element)prev);
+                break;
+            
 	}
     }
     
     public static void undo(){
-	Action act;
-	act = undoStack.pop();
-	act.rollback();
-	redoStack.add(act);
+	try
+        {            
+            Action act;
+            act = undoStack.pop();
+            act.rollback();
+            redoStack.add(act);
+        }
+        catch(Exception e)
+        {JOptionPane.showMessageDialog(GUI.frame, "Aún no ha realizado una acción", "No se puede deshacer", JOptionPane.INFORMATION_MESSAGE);}
     }
     
     public static void redo(){
-	Action act;
-	act = redoStack.pop();
-	act.make();
-	undoStack.add(act);
+        try
+        {
+            Action act;
+            act = redoStack.pop();
+            act.make();
+            undoStack.add(act);
+        }catch(Exception e){}
     }
+    
+    public void setNext(Object o)
+    {next = o;}
 }

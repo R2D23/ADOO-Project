@@ -18,7 +18,7 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("iDraw - Iniciar Sesion");
-        this.setIconImage(new ImageIcon("iconoGeneral.png").getImage());
+        this.setIconImage(new ImageIcon("./images/iconoGeneral.png").getImage());
         this.jTextField1.setText("");
         this.jPasswordField1.setText("");
     }
@@ -175,8 +175,12 @@ public class Login extends javax.swing.JFrame {
             
         if(!(jTextField1.getText().equals("")) && !(jPasswordField1.getText().equals("")))
         {
-            Mensaje datos = new Mensaje(0, this.jTextField1.getText(), this.jPasswordField1.getText());
+            //Mensaje datos = new Mensaje(0, this.jTextField1.getText(), this.jPasswordField1.getText());
+            Mensaje datos = new Mensaje(ConexionServer.iniciarSesion, this.jTextField1.getText(), this.jPasswordField1.getText());
             ConexionServer cs = new ConexionServer();
+            if(!cs.establecerConexion())
+            {    ConexionServer.mostrarError(); return ;}
+            
             cs.enviarMensaje(datos);
             System.out.println("se ha enviado la solicitud");
             Mensaje recibido = cs.recibirMensaje();
@@ -184,7 +188,7 @@ public class Login extends javax.swing.JFrame {
             if(recibido.getConfirmacion())
             {
                 this.dispose();
-                recibirNotificaciones();
+                mostrarNotificaciones(recibido.getOtherData());
                 graphic.GUI.initializeGUI();
                 GUI.setDibujante(this.jTextField1.getText());
             }
@@ -194,7 +198,7 @@ public class Login extends javax.swing.JFrame {
             cs.cerrarConexion();
         }    
         else
-            JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");          
+            JOptionPane.showMessageDialog(null, "No has llenado todos los campos obligatorios.");
         
 
     }//GEN-LAST:event_botonIniciarActionPerformed
@@ -233,21 +237,51 @@ public class Login extends javax.swing.JFrame {
         });
     }
     
-    public void recibirNotificaciones()
+    public void mostrarNotificaciones(String [] archivos)
     {
-        ConexionServer cs = new ConexionServer();
-        Mensaje m = cs.recibirMensaje();
-        if(!m.getConfirmacion()) return;
-        System.out.println("Recibiendo notificacione");
+        String mensajeArchivosEliminados = "";
+        String mensajeArchivosAgregados = "";
+        String mensajeEliminados = "Has sido eliminado como colaborador de \n";
+        String mensajeAgregados = "Has sido invitado a colaborar a \n";
         
-        String [] nuevosArchivos = (String [])m.getObject();
+        for(String s : archivos)
+        {
+            String [] aux = s.split("/");
+            switch(aux[1])
+            {
+                case "00" :
+                    mensajeArchivosEliminados += aux [0] + "\n";
+                break;    
+                case "01" :
+                    mensajeArchivosAgregados += aux [0] + " como observador\n";
+                break;
+                case "11" :
+                    mensajeArchivosAgregados += aux [0] + " como editor\n";
+                break;
+            }
+        }
+        
+        if(mensajeArchivosEliminados.length() > 0)
+        {
+            mensajeEliminados += mensajeArchivosEliminados + " Ya no podrás tener acceso a estos archivos";
+            JOptionPane.showMessageDialog(GUI.frame, mensajeEliminados);
+        }
+        
+        if(mensajeArchivosAgregados.length() > 0)
+        {
+            mensajeAgregados += mensajeArchivosAgregados + "Puedes tener acceso a estos archivos desde el menu Abrir";
+            JOptionPane.showMessageDialog(GUI.frame, mensajeAgregados);
+        }
+           
+        
+        /*String [] nuevosArchivos = (String [])m.getObject();
         
         String mensaje = "Has sido invitado a ";
         
         for(String s : nuevosArchivos)
             mensaje += (s.charAt(s.length() - 1) == '1' ? "editar" : "observar") + " el archivo " + s.substring(0, s.length() - 1) + "\n"; 
         mensaje += "Puedes acceder a estos archivos mediante el menú abrir";
-        JOptionPane.showMessageDialog(GUI.frame, mensaje, "Notificaciones", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(GUI.frame, mensaje, "Notificaciones", JOptionPane.PLAIN_MESSAGE);*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
